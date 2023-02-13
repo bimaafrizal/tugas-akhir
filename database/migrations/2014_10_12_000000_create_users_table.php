@@ -18,6 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone_num')->unique();
+            $table->timestamp('phone_num_verified_at')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
+            $table->foreignId('role_id');
+            $table->enum('status', [0.1]);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
