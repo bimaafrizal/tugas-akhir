@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('select', 'active')
+@section('foms', 'active')
+
 @section('title')
 Select
 @endsection

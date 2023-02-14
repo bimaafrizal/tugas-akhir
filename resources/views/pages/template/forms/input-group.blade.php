@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('input-group', 'active')
+@section('forms', 'active')
+
 @section('title')
 Input Group
 @endsection

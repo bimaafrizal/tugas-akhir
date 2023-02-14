@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('collapse', 'active')
+@section('component', 'active')
+
 @section('title')
 Collapse
 @endsection

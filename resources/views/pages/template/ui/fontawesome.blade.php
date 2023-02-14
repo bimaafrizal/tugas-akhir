@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('fontawesome', 'active')
+@section('icons', 'active')
+
 @section('title')
 Fontawesome
 @endsection

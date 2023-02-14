@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('list-group', 'active')
+@section('component', 'active')
+
 @section('title')
 List Group
 @endsection

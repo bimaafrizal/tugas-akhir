@@ -1,4 +1,7 @@
 @extends('layouts.dashboard.main')
+
+@section('gallery', 'active')
+
 @section('title')
 Gallery
 @endsection

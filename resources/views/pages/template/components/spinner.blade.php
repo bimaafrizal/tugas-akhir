@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('spinner', 'active')
+@section('component', 'active')
+
 @section('title')
 Spinner
 @endsection

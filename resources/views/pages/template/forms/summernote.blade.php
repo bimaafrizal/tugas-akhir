@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('summer', 'active')
+@section('editor', 'active')
+
 @section('title')
 Summer Note
 @endsection

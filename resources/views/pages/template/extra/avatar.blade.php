@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('avatar', 'active')
+@section('extra', 'active')
+
 @section('title')
 Avatar
 @endsection

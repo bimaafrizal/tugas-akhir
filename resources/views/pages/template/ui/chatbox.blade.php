@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('chatbox', 'active')
+@section('widgets', 'active')
+
 @section('title')
 Chat Box
 @endsection

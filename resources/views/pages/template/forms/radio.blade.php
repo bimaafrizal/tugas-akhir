@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('radio', 'active')
+@section('forms', 'active')
+
 @section('title')
 Radio
 @endsection

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('parsley', 'active')
+@section('form-validation', 'active')
+
 @section('title')
 Form Validation
 @endsection

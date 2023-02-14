@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('breadcrumb', 'active')
+@section('component', 'active')
+
 @section('title')
 Breadcrumb
 @endsection

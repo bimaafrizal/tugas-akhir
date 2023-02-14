@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('vector', 'active')
+@section('maps', 'active')
+
 @section('title')
 Vector Map
 @endsection

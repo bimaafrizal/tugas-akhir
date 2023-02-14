@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('navs', 'active')
+@section('component', 'active')
+
 @section('title')
 Navs
 @endsection

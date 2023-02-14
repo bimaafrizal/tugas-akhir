@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('input', 'active')
+@section('forms', 'active')
+
 @section('title')
 Input
 @endsection

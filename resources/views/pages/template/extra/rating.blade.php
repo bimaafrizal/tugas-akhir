@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('rating', 'active')
+@section('extra', 'active')
+
 @section('title')
 Rating
 @endsection

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('ck', 'active')
+@section('editor', 'active')
+
 @section('title')
 CK Editor
 @endsection

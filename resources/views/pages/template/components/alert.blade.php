@@ -1,7 +1,12 @@
 @extends('layouts.dashboard.main')
+
+@section('alert', 'active')
+@section('component', 'active')
+
 @section('title')
 Alert
 @endsection
+
 
 @section('content')
 <div class="page-heading">

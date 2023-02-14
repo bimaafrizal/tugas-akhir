@@ -1,4 +1,7 @@
 @extends('layouts.dashboard.main')
+
+@section('email', 'active')
+
 @section('title')
 Email
 @endsection

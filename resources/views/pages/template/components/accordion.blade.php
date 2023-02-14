@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('accordion', 'active')
+@section('component', 'active')
+
 @section('title')
 Accordion
 @endsection

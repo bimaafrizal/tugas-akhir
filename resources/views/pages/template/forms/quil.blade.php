@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('quill', 'active')
+@section('editor', 'active')
+
 @section('title')
 Quil
 @endsection

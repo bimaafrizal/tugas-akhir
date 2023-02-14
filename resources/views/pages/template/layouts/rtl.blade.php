@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('rtl', 'active')
+@section('layouts', 'active')
+
 @section('title')
 RTL Layout
 @endsection

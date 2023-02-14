@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('dropdown', 'active')
+@section('component', 'active')
+
 @section('title')
 Drop Down
 @endsection

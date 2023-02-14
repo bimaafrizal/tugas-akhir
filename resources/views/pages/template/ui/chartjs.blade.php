@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('js', 'active')
+@section('chart', 'active')
+
 @section('title')
 Chart JS
 @endsection

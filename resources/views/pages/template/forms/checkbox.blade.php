@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('checkbox', 'active')
+@section('forms', 'active')
+
 @section('title')
 Check Box
 @endsection

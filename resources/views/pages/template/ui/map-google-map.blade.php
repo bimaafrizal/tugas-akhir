@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('google', 'active')
+@section('maps', 'active')
+
 @section('title')
 Google Map
 @endsection

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('defaults', 'active')
+@section('layouts', 'active')
+
 @section('title')
 Default Layout
 @endsection

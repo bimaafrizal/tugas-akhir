@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('datatable-jquery', 'active')
+@section('datatable', 'active')
+
 @section('title')
 Data Table Jquery
 @endsection

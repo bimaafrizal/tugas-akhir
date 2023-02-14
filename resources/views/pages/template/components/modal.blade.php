@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('modal', 'active')
+@section('component', 'active')
+
 @section('title')
 Modal
 @endsection

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('divider', 'active')
+@section('extra', 'active')
+
 @section('title')
 Driver
 @endsection

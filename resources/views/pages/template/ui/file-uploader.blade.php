@@ -1,4 +1,7 @@
 @extends('layouts.dashboard.main')
+
+@section('file', 'active')
+
 @section('title')
 File Uploader
 @endsection

@@ -1,4 +1,7 @@
 @extends('layouts.dashboard.main')
+
+@section('checkout', 'active')
+
 @section('title')
 Checkout
 @endsection

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('todolist', 'active')
+@section('widgets', 'active')
+
 @section('title')
 To Do List
 @endsection

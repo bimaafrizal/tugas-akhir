@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('toastify', 'active')
+@section('extra', 'active')
+
 @section('title')
 Toastify
 @endsection

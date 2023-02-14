@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('progress', 'active')
+@section('component', 'active')
+
 @section('title')
 Progress
 @endsection

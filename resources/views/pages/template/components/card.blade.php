@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('card', 'active')
+@section('component', 'active')
+
 @section('title')
 Card
 @endsection

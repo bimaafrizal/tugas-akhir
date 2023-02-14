@@ -1,6 +1,10 @@
 <?php 
 use Illuminate\Support\Facades\Route;
 
+Route::get('index', function () {
+    return view('pages.template.index');
+});
+
 //aplication
 Route::get('chat', function () {
     return view('pages.template.aplication.chat');

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('tooltip', 'active')
+@section('component', 'active')
+
 @section('title')
 Tooltip
 @endsection

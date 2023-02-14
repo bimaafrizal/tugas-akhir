@@ -1,5 +1,6 @@
 @extends('layouts.dashboard.main')
-@section('dashboard', 'active')
+
+@section('index', 'active')
 
 @section('title')
 Dashboard

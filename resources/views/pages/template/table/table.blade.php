@@ -1,4 +1,7 @@
 @extends('layouts.dashboard.main')
+
+@section('table', 'active')
+
 @section('title')
 Table
 @endsection

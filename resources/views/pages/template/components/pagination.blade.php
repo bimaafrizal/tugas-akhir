@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('pagination', 'active')
+@section('component', 'active')
+
 @section('title')
 Pagination
 @endsection

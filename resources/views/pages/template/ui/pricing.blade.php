@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('pricing', 'active')
+@section('widgets', 'active')
+
 @section('title')
 Pricing
 @endsection

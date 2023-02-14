@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('dripicons', 'active')
+@section('icons', 'active')
+
 @section('title')
 Dripi Icons
 @endsection

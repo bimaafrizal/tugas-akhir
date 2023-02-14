@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('button', 'active')
+@section('component', 'active')
+
 @section('title')
 Button
 @endsection

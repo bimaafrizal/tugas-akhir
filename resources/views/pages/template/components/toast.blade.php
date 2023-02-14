@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('list-group', 'active')
+@section('toast', 'active')
+
 @section('title')
 Toast
 @endsection

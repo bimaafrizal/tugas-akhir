@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('sweetalert', 'active')
+@section('extra', 'active')
+
 @section('title')
 Sweet Alert
 @endsection

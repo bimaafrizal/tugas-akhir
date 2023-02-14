@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('apex', 'active')
+@section('chart', 'active')
+
 @section('title')
 Apex Chart
 @endsection

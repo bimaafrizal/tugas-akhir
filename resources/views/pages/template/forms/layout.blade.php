@@ -1,4 +1,7 @@
 @extends('layouts.dashboard.main')
+
+@section('form-layouts', 'active')
+
 @section('title')
 Layout
 @endsection

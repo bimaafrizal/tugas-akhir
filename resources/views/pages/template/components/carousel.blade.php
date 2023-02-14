@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('carousel', 'active')
+@section('component', 'active')
+
 @section('title')
 Carousel
 @endsection

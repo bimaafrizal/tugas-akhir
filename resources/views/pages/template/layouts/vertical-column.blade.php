@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('vertical-column', 'active')
+@section('layouts', 'active')
+
 @section('title')
 Vertical Column Layout
 @endsection

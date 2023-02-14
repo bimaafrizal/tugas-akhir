@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('tiny', 'active')
+@section('editor', 'active')
+
 @section('title')
 Tinymce
 @endsection

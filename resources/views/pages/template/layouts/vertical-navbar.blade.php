@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('vertical-navbar', 'active')
+@section('layouts', 'active')
+
 @section('title')
 Vertical Navbar Layout
 @endsection

@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('textarea', 'active')
+@section('forms', 'active')
+
 @section('title')
 Text Area
 @endsection

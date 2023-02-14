@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('datatable2', 'active')
+@section('datatable', 'active')
+
 @section('title')
 Data Table
 @endsection

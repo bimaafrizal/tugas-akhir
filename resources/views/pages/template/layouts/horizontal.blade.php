@@ -1,4 +1,8 @@
 @extends('layouts.dashboard.main')
+
+@section('horizontal', 'active')
+@section('layouts', 'active')
+
 @section('title')
 Horizontal Layout
 @endsection

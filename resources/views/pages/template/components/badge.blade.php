@@ -1,4 +1,5 @@
 @extends('layouts.dashboard.main')
+@section('badge', 'active')
 @section('title')
 Badge
 @endsection
