@@ -52,6 +52,13 @@
                     </a>
                 </li>
 
+                <li class="sidebar-item" class='sidebar-link'>
+                    <form action="/logout" method="POST" >
+                        @csrf
+                        <button type="submit" class="btn btn-primary"> <i class="bi bi-box-arrow-right"></i> Logout</button>
+                    </form>
+                </li>
+
                 @include('components.dashboard.template')
             </ul>
         </div>
