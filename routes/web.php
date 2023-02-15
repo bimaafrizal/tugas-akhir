@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingPageController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,14 +24,27 @@ Route::controller(LandingPageController::class)->group(function () {
 });
 
 Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'login');
-    Route::post('/login', 'auth');
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', 'login');
+        Route::post('/login', 'auth');
+        Route::get('/register', 'register');
+        Route::post('/register', 'sendRegister');
+        Route::get('/forgot-password', 'forgotPassword');
+    });
     Route::post('/logout', 'logout');
-    Route::get('/register', 'register');
-    Route::post('/register', 'sendRegister');
-    Route::get('/forgot-password', 'forgotPassword');
+    Route::get('email/verify', 'verify')->middleware(['auth'])->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', 'verified')->middleware(['auth', 'signed'])->name('verification.verify');
+    Route::post('email/verification-notification', 'reSendEmail')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
 
-Route::get('dashboard', function () {
-    return view('pages.dashboard.index');
+Route::post('email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', function () {
+        return view('pages.dashboard.index');
+    });
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -46,8 +47,13 @@ class AuthController extends Controller
         $validateData['status'] = 1;
         $validateData['password'] = Hash::make($validateData['password']);
 
-        User::create($validateData);
-        return redirect('/login')->with('success', 'Registration sucessfull! Please login');
+        // event(new Registered($validateData));
+        $user = User::create($validateData);
+        Auth::login($user);
+
+        $user->sendEmailVerificationNotification();
+
+        return redirect('/email/verify')->with('success', 'Registration sucessfull! Please confrim your email');
     }
 
     public function forgotPassword()
@@ -62,5 +68,22 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->intended('/login');
+    }
+
+    public function verify()
+    {
+        return view('pages.auth.verify-email');
+    }
+
+    public function verified(Request $request)
+    {
+        $request->user()->markEmailAsVerified();
+        return redirect('/dashboard');
+    }
+
+    public function reSendEmail(Request $request)
+    {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('message', 'Verification link sent!');
     }
 }
