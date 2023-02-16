@@ -32,9 +32,11 @@ Route::controller(AuthController::class)->group(function () {
         Route::get('/forgot-password', 'forgotPassword');
     });
     Route::post('/logout', 'logout');
-    Route::get('email/verify', 'verify')->middleware(['auth'])->name('verification.notice');
-    Route::get('email/verify/{id}/{hash}', 'verified')->middleware(['auth', 'signed'])->name('verification.verify');
+    Route::get('email/verify', 'verificationEmail')->middleware(['auth'])->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', 'verifiyEmail')->middleware(['auth', 'signed'])->name('verification.verify');
     Route::post('email/verification-notification', 'reSendEmail')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    Route::get('otp/verify', 'sendOtp')->middleware(['auth'])->name('verification.otp');
+    Route::post('otp/verify', 'verifyOtp')->middleware(['auth', 'throttle:6,1'])->name('otp.verify');
 });
 
 Route::post('email/verification-notification', function (Request $request) {
@@ -43,7 +45,7 @@ Route::post('email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'otp'])->group(function () {
     Route::get('dashboard', function () {
         return view('pages.dashboard.index');
     });

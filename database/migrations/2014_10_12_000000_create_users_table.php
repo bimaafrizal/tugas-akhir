@@ -20,6 +20,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone_num')->unique();
             $table->timestamp('phone_num_verified_at')->nullable();
+            $table->string('otp')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
             $table->string('longitude')->nullable();
             $table->string('latitude')->nullable();
             $table->foreignId('role_id')->default(1);
