@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\Livewire\KategoryArticle as LivewireKategoryArticle;
+use App\Http\Livewire\KategoryArticle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +28,9 @@ Route::controller(LandingPageController::class)->group(function () {
 
 Route::controller(AuthController::class)->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::get('/login', 'login');
+        Route::get('/login', 'login')->name('login');
         Route::post('/login', 'auth');
-        Route::get('/register', 'register');
+        Route::get('/register', 'register')->name('register');
         Route::post('/register', 'sendRegister');
         Route::get('/forgot-password', 'forgotPassword');
     });
@@ -48,5 +51,9 @@ Route::post('email/verification-notification', function (Request $request) {
 Route::middleware(['auth', 'verified', 'otp'])->group(function () {
     Route::get('dashboard', function () {
         return view('pages.dashboard.index');
+    });
+
+    Route::controller(KategoryArticleController::class)->group(function () {
+        Route::get('/kategory-article', 'index')->name('kategory-article');
     });
 });

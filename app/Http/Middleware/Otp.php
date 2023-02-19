@@ -17,7 +17,8 @@ class Otp
     public function handle(Request $request, Closure $next)
     {
         if (auth()->user()->phone_num_verified_at === null) {
-            abort(403);
+            // abort(403);
+            return redirect(route('verification.otp'));
         }
         return $next($request);
     }

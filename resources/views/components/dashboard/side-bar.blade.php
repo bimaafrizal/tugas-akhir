@@ -51,6 +51,12 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+                <li class="sidebar-item @yield('kategory-article')">
+                    <a href="{{ route('kategory-article') }}" class='sidebar-link'>
+                        <i class="bi bi-tag"></i>
+                        <span>Kategori Article</span>
+                    </a>
+                </li>
 
                 <li class="sidebar-item" class='sidebar-link'>
                     <form action="/logout" method="POST" >

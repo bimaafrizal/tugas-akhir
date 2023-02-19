@@ -2,26 +2,24 @@
 
 namespace App\Providers;
 
+use App\Models\KategoryArticle;
 use App\Repositories\KategoryArticle\KategoryArticleRepository;
 use App\Repositories\KategoryArticle\KategoryArticleRepositoryImplement;
-use App\Services\KategoryArticle\KategoryArticleService;
-use App\Services\KategoryArticle\KategoryArticleServiceImplement;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class RepoServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
-        $this->app->bind(KategoryArticleRepository::class, KategoryArticleRepositoryImplement::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
