@@ -55,5 +55,6 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
     Route::controller(KategoryArticleController::class)->group(function () {
         Route::get('/kategory-article', 'index')->name('kategory-article');
+        Route::get('/kategory-article/{id}/edit', 'edit')->name('kategory-edit');
     });
 });

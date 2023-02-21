@@ -8,6 +8,7 @@ Kategori Article
 
 @push('styles')
 @livewireStyles
+<script src="https://cdn.jsdelivr.net/npm/livewire@2.4.3/dist/livewire.js"></script>
 @endpush
 
 @push('scripts')
@@ -51,6 +52,7 @@ Kategori Article
 </div>
 
 @livewire('create-kategory-article')
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#myTable').DataTable();
@@ -61,6 +63,19 @@ Kategori Article
     window.addEventListener('close-modal', event => {
         $('#create-kategory').modal('hide');
     })
+
+</script>
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('refresh-datatable', function () {
+            Livewire.hook('afterDomUpdate', function () {
+                // Initialize DataTables in the $nextTick callback
+                Livewire.once('afterDomUpdate', () => {
+                    const table = $('#myTable').DataTable();
+                });
+            });
+        });
+    });
 
 </script>
 @endsection

@@ -56,9 +56,11 @@ class KategoryArticleController extends Controller
      * @param  \App\Models\KategoryArticle  $kategoryArticle
      * @return \Illuminate\Http\Response
      */
-    public function edit(KategoryArticle $kategoryArticle)
+    public function edit($id)
     {
-        //
+        $decryptId = decrypt($id);
+        $data = KategoryArticle::find($decryptId);
+        return view('pages.dashboard.kategory-article.edit', compact('data'));
     }
 
     /**

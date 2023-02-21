@@ -32,4 +32,16 @@ class KategoryArticleRepository
     {
         return KategoryArticle::create($data);
     }
+
+    public function editStatus($id, $status)
+    {
+        return KategoryArticle::where('id', $id)->update([
+            'status' => $status
+        ]);
+    }
+
+    public function update($id, $data)
+    {
+        return $this->model->where('id', $id)->update($data);
+    }
 }

@@ -25,11 +25,12 @@ class CreateKategoryArticle extends Component
     {
         $data = $this->validate((new StoreKategoryArticleRequest())->rules());
         $this->service->insert($data);
-        
+
         $this->makeNull();
-        
+
         session()->flash('success', 'Kategory Article Berhasil Dibuat');
         $this->emit('categoryStore');
+        $this->dispatchBrowserEvent('close-modal');
     }
 
     public function makeNull()
