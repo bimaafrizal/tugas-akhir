@@ -19,6 +19,9 @@
 
     {{-- livewire --}}
     @stack('styles')
+
+    {{-- trix --}}
+    @stack('trix')
 </head>
 
 <body>
@@ -32,6 +35,9 @@
             @include('components.dashboard.footer')
         </div>
     </div>
+
+    {{-- trix --}}
+    @stack('attachment-file')
 
     {{-- livewire --}}
     @stack('scripts')

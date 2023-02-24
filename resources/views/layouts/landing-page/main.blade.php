@@ -25,6 +25,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('landing-page/css/style.css') }}" rel="stylesheet">
+  <link href="{{ asset('plugins/summernote/summernote-bs4.css') }}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: SoftLand - v4.10.0
@@ -50,6 +51,7 @@
 
   <!-- Template Main JS File -->
   <script src="{{ asset('landing-page/js/main.js') }}"></script>
+  <script src="{{ asset('plugins/summernote/summernote-bs4.js') }}"></script>
 
 </body>
 

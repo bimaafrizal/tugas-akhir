@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->string('cover');
+            $table->foreignId('kategory_article_id');
+            $table->string('title');
+            $table->string('slug');
+            $table->longText('body');
+            $table->enum('is_active', ['1', '0']);
             $table->timestamps();
         });
     }

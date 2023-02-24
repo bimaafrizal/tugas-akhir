@@ -127,7 +127,6 @@ class AuthController extends Controller
         
         //check otp correct or not
         if (Hash::check($request->otp, $user->otp)) {
-            dd($user);
             //save phone num verification
             $user->phone_num_verified_at = Carbon::now();
             $user->save();

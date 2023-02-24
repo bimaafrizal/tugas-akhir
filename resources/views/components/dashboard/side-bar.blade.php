@@ -57,6 +57,12 @@
                         <span>Kategori Article</span>
                     </a>
                 </li>
+                <li class="sidebar-item @yield('article')">
+                    <a href="{{ route('article.index') }}" class='sidebar-link'>
+                        <i class="bi bi-newspaper"></i>
+                        <span>Berita</span>
+                    </a>
+                </li>
 
                 <li class="sidebar-item" class='sidebar-link'>
                     <form action="/logout" method="POST" >
