@@ -13,7 +13,7 @@ class UpdateArticleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class UpdateArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required|min:3|max:255',
+            'slug' => 'required',
+            'kategory_article_id' => 'required',
+            'body' =>  'required|min:10',
+            'cover' => 'file|image|mimes:jpg,jpeg,png|max:50000'
         ];
     }
 }

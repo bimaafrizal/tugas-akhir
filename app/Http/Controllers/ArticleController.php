@@ -6,13 +6,18 @@ use App\Models\Article;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Models\KategoryArticle;
-// use Illuminate\Http\Request;
+use App\Services\Article\ArticleServiceImplement;
 use Illuminate\Support\Facades\Storage;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
+    protected $service;
+    public function __construct(ArticleServiceImplement $article)
+    {
+        $this->service = $article;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +25,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        $articles = $this->service->all();
         return view('pages.dashboard.article.index', compact('articles'));
     }
 
@@ -41,23 +46,9 @@ class ArticleController extends Controller
      * @param  \App\Http\Requests\StoreArticleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreArticleRequest $request)
     {
-        $validateData = $request->validate([
-            'title' => 'required|min:3|max:255',
-            'slug' => 'required',
-            'kategory_article_id' => 'required',
-            'body' =>  'required|min:10',
-            'cover' => 'required|file|image|mimes:jpg,jpeg,png|max:50000'
-        ]);
-
-        $validateData['is_active'] = 1;
-        $foto = $request->file('cover');
-        $name = $foto->hashName();
-        $validateData['cover'] = 'berita/cover/' . $name;
-        $foto->move(public_path('/berita/cover'), $name);
-
-        Article::create($validateData);
+        $this->service->storeArticle($request->all(), $request);
         return redirect(route('article.index'));
     }
 
@@ -94,29 +85,9 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Article $slug)
+    public function update(UpdateArticleRequest $request, Article $slug)
     {
-        $oldCover = $slug->cover;
-        $validateData = $request->validate([
-            'title' => 'required|min:3|max:255',
-            'slug' => 'required',
-            'kategory_article_id' => 'required',
-            'body' =>  'required|min:10',
-            'cover' => 'required|file|image|mimes:jpg,jpeg,png|max:50000'
-        ]);
-
-        if ($request->cover != null) {
-            if ($oldCover != null) {
-                if (file_exists($oldCover)) {
-                    unlink(public_path($oldCover));
-                }
-            }
-            $foto = $request->file('cover');
-            $name = $foto->hashName();
-            $validateData['cover'] = 'berita/cover/' . $name;
-            $foto->move(public_path('/berita/cover'), $name);
-        }
-        $slug->update($validateData);
+        $this->service->updateArticle($request->all(), $request, $slug);
         return redirect(route('article.index'));
     }
 
@@ -133,9 +104,7 @@ class ArticleController extends Controller
 
     public function editStatus($slug, Request $request)
     {
-        Article::where('slug', $slug)->update([
-            'is_active' => $request->is_active
-        ]);
+        $this->service->updateStatusArticle($slug, $request->is_active);
         return redirect(route('article.index'));
     }
 
