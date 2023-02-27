@@ -92,6 +92,7 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
+            'email' => 'pages.auth.reset-password-email',
             'expire' => 60,
             'throttle' => 60,
         ],

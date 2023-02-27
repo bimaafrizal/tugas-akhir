@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
+    //standar auth
     public function login()
     {
         return view('pages.auth.login');
     }
-
     public function auth(Request $request)
     {
         $credentials = $request->validate([
@@ -31,7 +31,6 @@ class AuthController extends Controller
 
         return back()->with('loginError', 'Login failed');
     }
-
     public function register()
     {
         return view('pages.auth.register');
@@ -51,17 +50,9 @@ class AuthController extends Controller
 
         $user = User::create($validateData);
         Auth::login($user);
-
         $user->sendEmailVerificationNotification();
-
         return redirect('/email/verify')->with('success', 'Registration sucessfull! Please confrim your email');
     }
-
-    public function forgotPassword()
-    {
-        return view('pages.auth.forgot-password');
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
@@ -71,23 +62,77 @@ class AuthController extends Controller
         return redirect()->intended('/login');
     }
 
+    //forgot password
+    public function forgotPassword()
+    {
+        return view('pages.auth.forgot-password');
+    }
+    public function sendResetEmail(Request $request)
+    {
+        $request->validate(['email' => 'required']);
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status == Password::RESET_LINK_SENT
+            ? back()->with('status', __($status))
+            : back()->with(['error' => __($status)]);
+    }
+    public function showResetForm(Request $request, $token)
+    {
+        $email = $request->input('email');
+
+        if (is_null($token)) {
+            return redirect()->route('password.request')->with(['error' => 'Invalid password reset token']);
+        }
+
+        return view('pages.auth.reset-password')->with(['token' => $token, 'email' => $email]);
+    }
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:5|max:255',
+        ]);
+
+        $credentials = $request->only(
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
+        );
+        $response = Password::reset($credentials, function ($user, $password) {
+            $user->forceFill([
+                'password' => bcrypt($password)
+            ])->save();
+        });
+
+        if ($response == Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('success', 'Your password has been reset!');
+        } else {
+            return back()->withErrors(['error' => [trans($response)]]);
+        }
+    }
+
+
+    //email verification
     public function verificationEmail()
     {
         return view('pages.auth.verify-email');
     }
-
     public function verifiyEmail(Request $request)
     {
         $request->user()->markEmailAsVerified();
         return redirect(route('verification.otp'));
     }
-
     public function reSendEmail(Request $request)
     {
         $request->user()->sendEmailVerificationNotification();
         return back()->with('message', 'Verification link sent!');
     }
 
+    //otp for phone verification
     public function createOtp()
     {
         //generate otp
@@ -105,12 +150,7 @@ class AuthController extends Controller
     public function sendOtp()
     {
         $otp = $this->createOtp();
-
-        //send to whatsapp(for now using email)
-        // $data = $this->view('pages.auth.otp_verification')
-        //     ->with(['otp' => $otp]);
         $user = Auth::user();
-        // Mail::to($user->email)->send($data);
         $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
 
         return view('pages.auth.verify-otp');
@@ -119,12 +159,12 @@ class AuthController extends Controller
     public function verifyOtp(Request $request)
     {
         $user = User::where('id', Auth::user()->id)->first();
-        
+
         //check otp expired or not
         if (Carbon::now()->gt(Carbon::parse($user->otp_expires_at))) {
             return back()->with('error', 'The OTP code has expired. Please request a new OTP code.');
         }
-        
+
         //check otp correct or not
         if (Hash::check($request->otp, $user->otp)) {
             //save phone num verification
