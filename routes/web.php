@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +25,8 @@ Route::controller(LandingPageController::class)->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'otp'])->group(function () {
-    Route::get('dashboard', function () {
-        return view('pages.dashboard.index');
-    });
+    Route::get('dashboard', [DashboardController::class, 'index']);
+    Route::get('send-location', [DashboardController::class, 'sendLocation'])->name('send-location');
 
     Route::controller(KategoryArticleController::class)->group(function () {
         Route::get('/kategory-article', 'index')->name('kategory-article');
