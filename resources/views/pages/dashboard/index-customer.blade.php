@@ -85,30 +85,19 @@ Dashboard
             </div>
             <div class="row mb-2">
                 <div class="col-12">
-                    <div id="map" style="height: 400px; width:100%"></div>
-                    <div id="map2" style="height: 400px; width:100%" hidden></div>
-
-                    {{-- <iframe src="https://www.bing.com/maps/embed?h=400&w=500&cp=-7.5590216,110.8385776&lvl=12&typ=d&amp;sty=r&amp;src=SHELL&amp;FORM=MBEDV8" scrolling="no"></iframe> --}}
-                    {{-- <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=110.8385776,-7.5590216&amp;layer=mapnik" style="border: 1px solid black; width: 100%"></iframe> --}}
-                    {{-- <iframe width="100%" height="600"
-                        src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;coord=-7.5590119, 110.8385722&amp;q=1%20Grafton%20Street%2C%20Dublin%2C%20Ireland&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed"
-                        frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe> --}}
+                    <div id="map" style="height: 400px; width:100%; position: relative;"></div>
+                    <div id="map2" style="height: 400px; width:100%; position: relative;" hidden></div>
                     <br />
-
-                    {{-- <iframe width="100%" height="600" src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;coord=52.70967533219885, -8.020019531250002&amp;q=1%20Grafton%20Street%2C%20Dublin%2C%20Ireland&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><br /> --}}
-
                 </div>
                 <div class="col-12">
                     <div class="d-flex justify-content-center">
-                        {{-- <form action="" method="POST"> --}}
-                        {{-- @csrf --}}
-
                         <p id="demo"></p>
-                        <input type="text" id="latitude" name="latitude" value="{{ $user->latitude != null ? $user->latitude : '' }}">
-                        <input type="text" id="longitude" name="longitude" value="{{ $user->longitude != null ? $user->longitude : '' }}">
+                        <input type="text" id="latitude" name="latitude"
+                            value="{{ $user->latitude != null ? $user->latitude : '' }}" hidden>
+                        <input type="text" id="longitude" name="longitude"
+                            value="{{ $user->longitude != null ? $user->longitude : '' }}" hidden>
                         <button class="btn btn-primary" id="button-location" onclick="getLocation()">Get Your
                             Location</button>
-                        {{-- </form> --}}
                     </div>
                 </div>
             </div>
@@ -288,8 +277,8 @@ Dashboard
             })
         });
 
-        document.getElementById('map2').hidden = false;
         // Create a map centered on a specific location
+        document.getElementById('map2').hidden = false;
         var map = L.map('map2').setView([latitude, longitude], 13);
         document.getElementById('map').hidden = true;
 
@@ -304,47 +293,48 @@ Dashboard
         let marker = L.marker([latitude, longitude]).addTo(map);
 
         map.on('click', function (e) {
-        // Get the latitude and longitude of the clicked location
-        if (marker) {
-            map.removeLayer(marker);
-        }
-        marker = L.marker(e.latlng).addTo(map);
-        var lat = e.latlng.lat.toFixed(4);
-        var lng = e.latlng.lng.toFixed(4);
+            // Get the latitude and longitude of the clicked location
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker(e.latlng).addTo(map);
+            var lat = e.latlng.lat.toFixed(4);
+            var lng = e.latlng.lng.toFixed(4);
 
-        // Log the coordinates to the console
-        console.log('Latitude:', lat, 'Longitude:', lng);
-        $("#longitude").attr('value', lng);
-        $('#latitude').attr('value', lat);
+            // Log the coordinates to the console
+            console.log('Latitude:', lat, 'Longitude:', lng);
+            $("#longitude").attr('value', lng);
+            $('#latitude').attr('value', lat);
 
-        //update data
-        $(function () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            //update data
             $(function () {
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('send-location') }}",
-                    data: {
-                        latitude: lat,
-                        longitude: lng,
-                    },
-                    cache: false,
-
-                    success: function (msg) {
-                        console.log(msg);
-                    },
-                    error: function (data) {
-                        console.log('error: ', data)
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-            })
+                $(function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('send-location') }}",
+                        data: {
+                            latitude: lat,
+                            longitude: lng,
+                        },
+                        cache: false,
+
+                        success: function (msg) {
+                            console.log(msg);
+                        },
+                        error: function (data) {
+                            console.log('error: ', data)
+                        }
+                    });
+                })
+            });
         });
-    });
     }
+
 </script>
 
 // manual
@@ -353,11 +343,11 @@ Dashboard
     // Create a map centered on a specific location
     let map = L.map('map').setView([-7.50000, 111.000], 10);
     let marker = null;
-    if($('#longitude').val() !== '') {
+    if ($('#longitude').val() !== '') {
         map.setView([$('#latitude').val(), $('#longitude').val()], 14);
         marker = L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map);
-    } 
-    
+    }
+
     // Add a tile layer to the map (in this example, we're using the OpenStreetMap tile layer)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -406,5 +396,6 @@ Dashboard
             })
         });
     });
+
 </script>
 @endsection

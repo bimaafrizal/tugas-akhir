@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EwsController;
 use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
 use Illuminate\Support\Facades\Route;
@@ -43,4 +44,11 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         });
     });
     Route::resource('/article', ArticleController::class)->only('index', 'create', 'store');
+
+    Route::resource('/ews', EwsController::class)->only('index', 'create', 'store');
+    Route::controller(EwsController::class)->prefix('ews')->group(function () {
+        Route::post('edit-status/{id}', 'editStatus')->name('ews.edit-status');
+        Route::get('/{id}/edit', 'edit')->name('ews.edit');
+        Route::post('/{id}', 'update')->name('ews.update');
+    });
 });

@@ -63,6 +63,12 @@
                         <span>Berita</span>
                     </a>
                 </li>
+                <li class="sidebar-item @yield('ews')">
+                    <a href="{{ route('ews.index') }}" class='sidebar-link'>
+                        <i class="bi bi-calendar2-plus"></i>
+                        <span>EWS</span>
+                    </a>
+                </li>
 
                 <li class="sidebar-item" class='sidebar-link'>
                     <form action="/logout" method="POST" >
