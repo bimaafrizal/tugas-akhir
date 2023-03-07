@@ -301,7 +301,49 @@ Dashboard
 
         //set marker
         // Add a marker to the map
-        L.marker([latitude, longitude]).addTo(map);
+        let marker = L.marker([latitude, longitude]).addTo(map);
+
+        map.on('click', function (e) {
+        // Get the latitude and longitude of the clicked location
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        var lat = e.latlng.lat.toFixed(4);
+        var lng = e.latlng.lng.toFixed(4);
+
+        // Log the coordinates to the console
+        console.log('Latitude:', lat, 'Longitude:', lng);
+        $("#longitude").attr('value', lng);
+        $('#latitude').attr('value', lat);
+
+        //update data
+        $(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('send-location') }}",
+                    data: {
+                        latitude: lat,
+                        longitude: lng,
+                    },
+                    cache: false,
+
+                    success: function (msg) {
+                        console.log(msg);
+                    },
+                    error: function (data) {
+                        console.log('error: ', data)
+                    }
+                });
+            })
+        });
+    });
     }
 </script>
 
@@ -310,11 +352,11 @@ Dashboard
     // console.log($('#latitude').val());
     // Create a map centered on a specific location
     let map = L.map('map').setView([-7.50000, 111.000], 10);
-    if($('#longitude').val() !== null) {
-        map.setView([$('#latitude').val(), $('#longitude').val()], 14);
-        L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map);
-    } 
     let marker = null;
+    if($('#longitude').val() !== '') {
+        map.setView([$('#latitude').val(), $('#longitude').val()], 14);
+        marker = L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map);
+    } 
     
     // Add a tile layer to the map (in this example, we're using the OpenStreetMap tile layer)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
