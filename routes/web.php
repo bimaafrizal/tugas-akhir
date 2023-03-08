@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EwsController;
+use App\Http\Controllers\FloodController;
 use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
 use Illuminate\Support\Facades\Route;
@@ -52,3 +53,5 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::post('/{id}', 'update')->name('ews.update');
     });
 });
+
+Route::get('test-ews', [FloodController::class, 'store']);
