@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EarthquakeController;
 use App\Http\Controllers\EwsController;
 use App\Http\Controllers\FloodController;
 use App\Http\Controllers\KategoryArticleController;
@@ -55,3 +56,4 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 });
 
 Route::get('test-ews', [FloodController::class, 'store']);
+Route::get('test-gempa', [EarthquakeController::class, 'store']);
