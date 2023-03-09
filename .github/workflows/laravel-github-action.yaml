@@ -3,7 +3,7 @@ name: Laravel-github-action
 on:
   push:
     branches: [main]
-job:
+jobs:
   laravel-test:
   runs-on: ubuntu-latest
   steps:
