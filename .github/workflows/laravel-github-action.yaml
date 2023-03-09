@@ -24,5 +24,5 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: https://v3420018.mhs.d3tiuns.com/
-          username: ${{ secrets.ftp_username }
-          password: ${{ secrets.ftp_password }
+          username: ${{ secrets.ftp_username }}
+          password: ${{ secrets.ftp_password }}
