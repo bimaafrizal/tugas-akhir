@@ -41,18 +41,46 @@ class EarthquakeController extends Controller
         $data = json_decode($response->getBody()->getContents());
         $detailData = $data->Infogempa->gempa;
 
-        $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
-        $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
-        $strength = $detailData->Magnitude;
-        $depth = $detailData->Kedalaman;
+        $earthquake = Earthquake::orderBy('created_at', 'desc')->first();
+        // dd($detailData);
+        // dd(gettype($detailData->DateTime));
+        // dd($earthquake->created_at == (string)$detailData->DateTime);
+        if ($earthquake  == null) {
+            $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
+            $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
+            $strength = $detailData->Magnitude;
+            $depth = $detailData->Kedalaman;
+            $tanggal = $detailData->Tanggal;
+            $jam = $detailData->Jam;
 
-        Earthquake::create([
-            'longitude' => $longitude,
-            'latitude' => $latitude,
-            'strength' => $strength,
-            'depth' => $depth
-        ]);
-        dd('data berhasil ditambahkan');
+            Earthquake::create([
+                'longitude' => $longitude,
+                'latitude' => $latitude,
+                'strength' => $strength,
+                'depth' => $depth,
+                'tanggal' => $tanggal,
+                'jam' => $jam
+            ]);
+            dd('data berhasil ditambahkan');
+        } else {
+            if ($earthquake->tanggal != $detailData->Tanggal && $earthquake->jam  != $detailData->Jam) {
+                $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
+                $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
+                $strength = $detailData->Magnitude;
+                $depth = $detailData->Kedalaman;
+                $createdAt = $detailData->DateTime;
+
+                Earthquake::insert([
+                    'longitude' => $longitude,
+                    'latitude' => $latitude,
+                    'strength' => $strength,
+                    'depth' => $depth,
+                    'created_at' => $createdAt
+                ]);
+                dd('data berhasil ditambahkan');
+            }
+        }
+        dd('Data sudah ada');
     }
 
     /**
