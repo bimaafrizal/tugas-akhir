@@ -49,6 +49,7 @@ class FloodController extends Controller
             $detailData = $data->feeds[0];
             $arrayTemp = [];
             $flood = Flood::where('ews_id', $item->id)->orderBy('created_at', 'desc')->first();
+
             if ($flood == null) {
                 if (property_exists($detailData, 'field2') == false) {
                     $arrayTemp['ews_id'] = $item->id;
@@ -79,7 +80,7 @@ class FloodController extends Controller
                 }
             } else {
                 if (property_exists($detailData, 'field2') == false) {
-                    if($detailData->created_at != $flood->created_at) {
+                    if ($detailData->created_at != date("Y-m-d\TH:i:s\Z", strtotime($flood->created_at))) {
                         $arrayTemp['ews_id'] = $item->id;
                         if ($detailData->field1 <= 1024) {
                             $arrayTemp['level'] = 0;
@@ -93,9 +94,9 @@ class FloodController extends Controller
                         $arrayTemp['created_at'] = $detailData->created_at;
                         array_push($array, $arrayTemp);
                     }
-                    dd('Data sudah ada');
+                    // dd('Data sudah ada');
                 } else {
-                    if ($detailData->created_at != $flood->created_at) {
+                    if ($detailData->created_at != date("Y-m-d\TH:i:s\Z", strtotime($flood->created_at))) {
                         $arrayTemp['ews_id'] = $item->id;
                         if ($detailData->field1 == 1) {
                             $arrayTemp['level'] = 0;
@@ -109,13 +110,14 @@ class FloodController extends Controller
                         $arrayTemp['created_at'] = $detailData->created_at;
                         array_push($array, $arrayTemp);
                     }
-                    dd('Data sudah ada');
+                    // dd('Data sudah ada');
                 }
             }
+            // dd('Berhasil menambahkan data baru');
         }
-        // dd($array);
         Flood::insert($array);
-        dd('Berhasil menambahkan data baru');
+        // dd($array);
+        // dd('Gagal menambahkan data baru');
     }
 
     /**

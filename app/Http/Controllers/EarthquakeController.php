@@ -42,16 +42,14 @@ class EarthquakeController extends Controller
         $detailData = $data->Infogempa->gempa;
 
         $earthquake = Earthquake::orderBy('created_at', 'desc')->first();
-        // dd($detailData);
-        // dd(gettype($detailData->DateTime));
-        // dd($earthquake->created_at == (string)$detailData->DateTime);
+
+        $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
+        $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
+        $strength = $detailData->Magnitude;
+        $depth = $detailData->Kedalaman;
+        $tanggal = $detailData->Tanggal;
+        $jam = $detailData->Jam;
         if ($earthquake  == null) {
-            $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
-            $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
-            $strength = $detailData->Magnitude;
-            $depth = $detailData->Kedalaman;
-            $tanggal = $detailData->Tanggal;
-            $jam = $detailData->Jam;
 
             Earthquake::create([
                 'longitude' => $longitude,
@@ -61,26 +59,22 @@ class EarthquakeController extends Controller
                 'tanggal' => $tanggal,
                 'jam' => $jam
             ]);
-            dd('data berhasil ditambahkan');
+            // dd('data berhasil ditambahkan');
         } else {
             if ($earthquake->tanggal != $detailData->Tanggal && $earthquake->jam  != $detailData->Jam) {
-                $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
-                $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
-                $strength = $detailData->Magnitude;
-                $depth = $detailData->Kedalaman;
-                $createdAt = $detailData->DateTime;
 
-                Earthquake::insert([
+                Earthquake::create([
                     'longitude' => $longitude,
                     'latitude' => $latitude,
                     'strength' => $strength,
                     'depth' => $depth,
-                    'created_at' => $createdAt
+                    'tanggal' => $tanggal,
+                    'jam' => $jam
                 ]);
-                dd('data berhasil ditambahkan');
+                // dd('data berhasil ditambahkan');
             }
         }
-        dd('Data sudah ada');
+        // dd('Data sudah ada');
     }
 
     /**
