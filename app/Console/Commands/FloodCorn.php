@@ -30,7 +30,7 @@ class FloodCorn extends Command
      */
     public function handle()
     {
-        $ews = Ews::all();
+        $ews = Ews::where('status', 1)->get();
         $client = new Client();
         $array = [];
 

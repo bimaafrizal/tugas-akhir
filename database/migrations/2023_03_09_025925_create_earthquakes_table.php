@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('depth');
             $table->string('tanggal');
             $table->string('jam');
-            $table->timestamps();
+            $table->string('created_at');
+            // $table->timestamps();
         });
     }
 

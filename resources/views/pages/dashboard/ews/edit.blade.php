@@ -1,6 +1,6 @@
 @extends('layouts.dashboard.main')
 
-@section('article', 'active')
+@section('ews', 'active')
 
 @section('title')
 Edit EWS

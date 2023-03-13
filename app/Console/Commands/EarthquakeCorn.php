@@ -42,25 +42,28 @@ class EarthquakeCorn extends Command
         $depth = $detailData->Kedalaman;
         $tanggal = $detailData->Tanggal;
         $jam = $detailData->Jam;
+        $createdAt = $detailData->DateTime;
+
         if ($earthquake  == null) {
-            Earthquake::create([
+            Earthquake::insert([
                 'longitude' => $longitude,
                 'latitude' => $latitude,
                 'strength' => $strength,
                 'depth' => $depth,
                 'tanggal' => $tanggal,
-                'jam' => $jam
+                'jam' => $jam,
+                'created_at' => $createdAt
             ]);
         } else {
-            if ($earthquake->longitude != $longitude && $earthquake->latitude != $latitude && $earthquake->tanggal != $detailData->Tanggal && $earthquake->jam  != $detailData->Jam) {
-
-                Earthquake::create([
+            if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->tanggal != $detailData->Tanggal || $earthquake->jam  != $detailData->Jam) {
+                Earthquake::insert([
                     'longitude' => $longitude,
                     'latitude' => $latitude,
                     'strength' => $strength,
                     'depth' => $depth,
                     'tanggal' => $tanggal,
-                    'jam' => $jam
+                    'jam' => $jam,
+                    'created_at' => $createdAt
                 ]);
             }
         }
