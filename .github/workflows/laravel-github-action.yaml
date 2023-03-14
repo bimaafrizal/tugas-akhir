@@ -19,11 +19,12 @@ jobs:
           php-version: 8.0
           tools: composer:v2
           coverage: none
+
       - name: Install Composer dependencies
-           run: composer update
+        run: composer update
       
       - name: Install dependencies
-          run: composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress
       
       - name: npm install
         run: npm install
