@@ -1,4 +1,4 @@
-name: deploy
+name: Deploy Aplication
 
 on:
   push:
@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -19,10 +20,26 @@ jobs:
           tools: composer:v2
           coverage: none
       - name: Install Composer dependencies
-        run: composer update
+          id: composer-cache
+          uses: actions/cache@v2
+          with:
+            path: vendor
+            key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+            restore-keys: |
+              ${{ runner.os }}-php-
+      
+      - name: Install dependencies
+          run: composer install --prefer-dist --no-progress
+      
+      - name: npm install
+        run: npm install
+
+      - name: npm run production
+        run: npm run production
+
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          server: v3420018.mhs.d3tiuns.com	
+          server: v3420018.mhs.d3tiuns.com
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
