@@ -22,15 +22,15 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer update
-      
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
-      
+
       - name: npm install
         run: npm install
 
-      - name: npm run production
-        run: npm run production
+      # - name: npm run production
+      #   run: npm run production
 
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
