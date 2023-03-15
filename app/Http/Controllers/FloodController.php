@@ -39,7 +39,7 @@ class FloodController extends Controller
      */
     public function store()
     {
-        $ews = Ews::where('status', 1)->get();
+        $ews = Ews::where('status', '1')->get();
         $client = new Client();
         $array = [];
 
