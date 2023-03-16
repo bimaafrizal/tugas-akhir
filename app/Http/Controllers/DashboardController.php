@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,11 +19,23 @@ class DashboardController extends Controller
             $cuaca = null;
             if ($user->longitude != null && $user->latitude != null) {
                 $client = new Client();
-                $response = $client->request('GET', 'http://api.openweathermap.org/data/2.5/weather?lat=' . $user->latitude . '&lon=' . $user->longitude . '&appid=' . config('services.OPEN_WEATHER_API_KEY'));
+                $response = $client->request('GET', 'http://api.openweathermap.org/data/2.5/weather?lat=' . $user->latitude . '&lon=' . $user->longitude . '&units=metric&lang=id' . '&appid=' . config('services.OPEN_WEATHER_API_KEY'));
+                $responseCuacaJam = $client->request('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' . $user->latitude . '&lon=' . $user->longitude . '&units=metric&appid=' . config('services.OPEN_WEATHER_API_KEY'));
                 $cuaca = json_decode($response->getBody()->getContents());
-                // dd($cuaca);
+                $cuacaJam = json_decode($responseCuacaJam->getBody()->getContents());
+                $time = Carbon::now();
+                $cuacas = [];
+
+                foreach ($cuacaJam->list as $item) {
+                    if (count($cuacas) < 4) {
+                        if ($item->dt_txt > $time) {
+                            array_push($cuacas, $item);
+                        }
+                    }
+                }
+                // dd($cuacas);
             }
-            return view('pages.dashboard.index-customer', compact('user', 'cuaca'));
+            return view('pages.dashboard.index-customer', compact('user', 'cuaca', 'time', 'cuacas'));
         } else {
             return view('pages.dashboard.index');
         }

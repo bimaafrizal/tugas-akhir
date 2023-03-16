@@ -12,6 +12,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/css/shared/iconly.css') }}">
+    <script src="https://kit.fontawesome.com/52cf1628fd.js" crossorigin="anonymous"></script>
     {{-- Jquery --}}
     {{-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
