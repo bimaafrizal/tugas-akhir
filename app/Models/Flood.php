@@ -9,4 +9,10 @@ class Flood extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    // protected $with = ['ews'];
+
+    public function ews()
+    {
+        return $this->belongsTo(Ews::class);
+    }
 }

@@ -47,11 +47,16 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
     });
     Route::resource('/article', ArticleController::class)->only('index', 'create', 'store');
 
-    Route::resource('/ews', EwsController::class)->only('index', 'create', 'store');
+    Route::resource('/ews', EwsController::class)->only('index', 'create', 'store', 'show');
     Route::controller(EwsController::class)->prefix('ews')->group(function () {
         Route::post('edit-status/{id}', 'editStatus')->name('ews.edit-status');
         Route::get('/{id}/edit', 'edit')->name('ews.edit');
         Route::post('/{id}', 'update')->name('ews.update');
+        Route::post('/get-data', 'getDetailData')->name('ews.get-data');
+    });
+
+    Route::controller(EarthquakeController::class)->prefix('gempa')->group(function () {
+        Route::get('/', 'index')->name('earthquake.index');
     });
 });
 

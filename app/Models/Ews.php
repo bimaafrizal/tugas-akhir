@@ -9,4 +9,10 @@ class Ews extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    // protected $with = ['flood'];
+
+    public function flood()
+    {
+        return $this->hasMany(Flood::class);
+    }
 }

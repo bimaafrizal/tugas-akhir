@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ews;
 use App\Http\Requests\StoreEwsRequest;
 use App\Http\Requests\UpdateEwsRequest;
+use App\Models\Flood;
 use App\Services\Ews\EwsService;
 use Illuminate\Http\Request;
 
@@ -54,9 +55,13 @@ class EwsController extends Controller
      * @param  \App\Models\Ews  $ews
      * @return \Illuminate\Http\Response
      */
-    public function show(Ews $ews)
+    public function show($ew)
     {
-        //
+        $idDecrypt = decrypt($ew);
+        $ews = Ews::where('id', $idDecrypt)->first();
+        $flood = Flood::with('ews')->where('ews_id', $idDecrypt)->orderBy('id', 'desc')->get();
+        // dd($flood);
+        return view('pages.dashboard.ews.detail', compact('ews', 'flood'));
     }
 
     /**
@@ -104,5 +109,16 @@ class EwsController extends Controller
 
         $this->service->updateStatus($decryptId, $request->is_active);
         return redirect(route('ews.index'))->with('success', 'Status EWS berhasil dirubah');
+    }
+
+    public function getDetailData(Request $request)
+    {
+        // $decryptId = decrypt($request->id);
+        // $floods = Flood::where('ews_id', $decryptId)->orderBy('id', 'desc')->take(30)->get();
+        // $labels = ['0', '1', '2', '3'];
+        // $data = $floods->pluck('level');
+
+        // return response()->json(compact('labels', 'data'));
+        echo $request->id;
     }
 }

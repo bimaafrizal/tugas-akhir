@@ -69,6 +69,12 @@
                         <span>EWS</span>
                     </a>
                 </li>
+                <li class="sidebar-item @yield('earthquake')">
+                    <a href="{{ route('earthquake.index') }}" class='sidebar-link'>
+                        <i class="bi bi-activity"></i>
+                        <span>Gempa</span>
+                    </a>
+                </li>
 
                 <li class="sidebar-item" class='sidebar-link'>
                     <form action="/logout" method="POST" >
