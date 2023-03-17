@@ -16,7 +16,8 @@ class EarthquakeController extends Controller
      */
     public function index()
     {
-        //
+        $gempa = Earthquake::orderBy('id', 'desc')->first();
+        return view('pages.dashboard.earthquake.index', compact('gempa'));
     }
 
     /**
