@@ -62,3 +62,6 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
 Route::get('test-ews', [FloodController::class, 'store']);
 Route::get('test-gempa', [EarthquakeController::class, 'store']);
+Route::get('new-verify', function() {
+    return view('pages.auth.new-verify-otp');
+});

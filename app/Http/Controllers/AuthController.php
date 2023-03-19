@@ -15,7 +15,7 @@ class AuthController extends Controller
     //standar auth
     public function login()
     {
-        return view('pages.auth.login');
+        return view('pages.auth.new-login');
     }
     public function auth(Request $request)
     {
@@ -33,7 +33,7 @@ class AuthController extends Controller
     }
     public function register()
     {
-        return view('pages.auth.register');
+        return view('pages.auth.new-register');
     }
 
     public function sendRegister(Request $request)
@@ -65,7 +65,7 @@ class AuthController extends Controller
     //forgot password
     public function forgotPassword()
     {
-        return view('pages.auth.forgot-password');
+        return view('pages.auth.new-forgot-password');
     }
     public function sendResetEmail(Request $request)
     {
@@ -86,7 +86,7 @@ class AuthController extends Controller
             return redirect()->route('password.request')->with(['error' => 'Invalid password reset token']);
         }
 
-        return view('pages.auth.reset-password')->with(['token' => $token, 'email' => $email]);
+        return view('pages.auth.new-reset-password')->with(['token' => $token, 'email' => $email]);
     }
     public function reset(Request $request)
     {
@@ -119,7 +119,7 @@ class AuthController extends Controller
     //email verification
     public function verificationEmail()
     {
-        return view('pages.auth.verify-email');
+        return view('pages.auth.new-verify-email');
     }
     public function verifiyEmail(Request $request)
     {
@@ -151,13 +151,20 @@ class AuthController extends Controller
     {
         $otp = $this->createOtp();
         $user = Auth::user();
+
+        // if ($user->otp != null) {
+        //     $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
+        //     return back()->with('success', 'Verification OTP sent!');
+        // }
+
         $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
 
-        return view('pages.auth.verify-otp');
+        return view('pages.auth.new-verify-otp');
     }
 
     public function verifyOtp(Request $request)
     {
+        $otp = $request->digit1 . $request->digit2 . $request->digit3 . $request->digit4;
         $user = User::where('id', Auth::user()->id)->first();
 
         //check otp expired or not
@@ -166,7 +173,7 @@ class AuthController extends Controller
         }
 
         //check otp correct or not
-        if (Hash::check($request->otp, $user->otp)) {
+        if (Hash::check($otp, $user->otp)) {
             //save phone num verification
             $user->phone_num_verified_at = Carbon::now();
             $user->save();

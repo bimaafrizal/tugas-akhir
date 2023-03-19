@@ -17,14 +17,14 @@ class DashboardController extends Controller
 
         if ($user->role_id == 1) {
             $cuaca = null;
+            $cuacas = [];
+            $time = Carbon::now();
             if ($user->longitude != null && $user->latitude != null) {
                 $client = new Client();
                 $response = $client->request('GET', 'http://api.openweathermap.org/data/2.5/weather?lat=' . $user->latitude . '&lon=' . $user->longitude . '&units=metric&lang=id' . '&appid=' . config('services.OPEN_WEATHER_API_KEY'));
                 $responseCuacaJam = $client->request('GET', 'https://api.openweathermap.org/data/2.5/forecast?lat=' . $user->latitude . '&lon=' . $user->longitude . '&units=metric&appid=' . config('services.OPEN_WEATHER_API_KEY'));
                 $cuaca = json_decode($response->getBody()->getContents());
                 $cuacaJam = json_decode($responseCuacaJam->getBody()->getContents());
-                $time = Carbon::now();
-                $cuacas = [];
 
                 foreach ($cuacaJam->list as $item) {
                     if (count($cuacas) < 4) {
@@ -33,7 +33,6 @@ class DashboardController extends Controller
                         }
                     }
                 }
-                // dd($cuacas);
             }
             return view('pages.dashboard.index-customer', compact('user', 'cuaca', 'time', 'cuacas'));
         } else {
