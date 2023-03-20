@@ -34,9 +34,9 @@ class DashboardController extends Controller
                     }
                 }
             }
-            return view('pages.dashboard.index-customer', compact('user', 'cuaca', 'time', 'cuacas'));
+            return view('pages.dashboard2.index-user', compact('user', 'cuaca', 'time', 'cuacas'));
         } else {
-            return view('pages.dashboard.index');
+            return view('pages.dashboard2.index');
         }
     }
 
