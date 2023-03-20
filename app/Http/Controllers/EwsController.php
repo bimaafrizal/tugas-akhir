@@ -24,7 +24,7 @@ class EwsController extends Controller
     public function index()
     {
         $datas = $this->service->all();
-        return view('pages.dashboard.ews.index', compact('datas'));
+        return view('pages.dashboard2.ews.index', compact('datas'));
     }
 
     /**
@@ -34,7 +34,7 @@ class EwsController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard.ews.create');
+        return view('pages.dashboard2.ews.create');
     }
 
     /**
@@ -61,7 +61,7 @@ class EwsController extends Controller
         $ews = Ews::where('id', $idDecrypt)->first();
         $flood = Flood::with('ews')->where('ews_id', $idDecrypt)->orderBy('id', 'desc')->get();
         // dd($flood);
-        return view('pages.dashboard.ews.detail', compact('ews', 'flood'));
+        return view('pages.dashboard2.ews.detail', compact('ews', 'flood'));
     }
 
     /**
@@ -74,7 +74,7 @@ class EwsController extends Controller
     {
         $decryptId = decrypt($id);
         $data = Ews::where('id', $decryptId)->first();
-        return view('pages.dashboard.ews.edit', compact('data'));
+        return view('pages.dashboard2.ews.edit', compact('data'));
     }
 
     /**

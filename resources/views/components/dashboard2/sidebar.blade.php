@@ -38,6 +38,26 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-widgets">Dashboards</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('kategory-article')" href="{{ route('kategory-article') }}">
+                        <i class=" ri-file-mark-line"></i> <span data-key="t-widgets">Kategori Article</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('article')" href="{{ route('article.index') }}">
+                        <i class=" ri-newspaper-line"></i> <span data-key="t-widgets">Article</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('ews')" href="{{ route('ews.index') }}">
+                        <i class=" ri-flood-line"></i> <span data-key="t-widgets">EWS</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('earthquake')" href="{{ route('earthquake.index') }}">
+                        <i class="ri-earthquake-line"></i> <span data-key="t-widgets">Gempa</span>
+                    </a>
+                </li>
 
             </ul>
         </div>
