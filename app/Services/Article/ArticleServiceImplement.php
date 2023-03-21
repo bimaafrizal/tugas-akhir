@@ -26,12 +26,13 @@ class ArticleServiceImplement extends Service implements ArticleService
     return $this->mainRepository->getAll();
   }
 
-  public function storeArticle($data, $request)
+  public function storeArticle($data, $request, $id)
   {
     $data['is_active'] = 1;
     $foto = $request->file('cover');
     $name = $foto->hashName();
     $data['cover'] = 'berita/cover/' . $name;
+    $data['user_id'] = $id;
     $foto->move(public_path('/berita/cover'), $name);
 
     return $this->mainRepository->store($data);

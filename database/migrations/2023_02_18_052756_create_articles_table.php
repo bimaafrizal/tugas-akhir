@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('cover');
             $table->foreignId('kategory_article_id');
+            $table->foreignId('user_id');
             $table->string('title');
             $table->string('slug');
             $table->longText('body');

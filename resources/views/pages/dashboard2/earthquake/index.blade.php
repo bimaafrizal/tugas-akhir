@@ -51,7 +51,7 @@ Gempa
                                 <input type="text" id="longitude" value="{{ $gempa->longitude }}" hidden>
                             </div>
 
-                            <div class="d-flex justify-content-center mx-5">
+                            <div class="d-flex justify-content-center mx-5 mb-4">
                                 <div id="map" style="height: 400px; width:100%; position: relative;"></div>
                             </div>
                         </div> <!-- end card-body-->

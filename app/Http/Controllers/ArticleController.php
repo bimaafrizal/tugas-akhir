@@ -10,6 +10,7 @@ use App\Services\Article\ArticleServiceImplement;
 use Illuminate\Support\Facades\Storage;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -26,7 +27,7 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = $this->service->all();
-        return view('pages.dashboard.article.index', compact('articles'));
+        return view('pages.dashboard2.article.index', compact('articles'));
     }
 
     /**
@@ -37,7 +38,7 @@ class ArticleController extends Controller
     public function create()
     {
         $kategories = KategoryArticle::where('status', 1)->get();
-        return view('pages.dashboard.article.create', compact('kategories'));
+        return view('pages.dashboard2.article.create', compact('kategories'));
     }
 
     /**
@@ -48,8 +49,9 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $this->service->storeArticle($request->all(), $request);
-        return redirect(route('article.index'));
+        $userId = Auth::user()->id;
+        $this->service->storeArticle($request->all(), $request, $userId);
+        return redirect(route('article.index'))->with('success', 'Berhasil menambahkan article');
     }
 
     /**
@@ -72,7 +74,7 @@ class ArticleController extends Controller
     public function edit(Article $slug)
     {
         $kategories = KategoryArticle::where('status', 1)->get();
-        return view('pages.dashboard.article.edit', [
+        return view('pages.dashboard2.article.edit', [
             'article' => $slug,
             'kategories' => $kategories
         ]);;
@@ -105,7 +107,7 @@ class ArticleController extends Controller
     public function editStatus($slug, Request $request)
     {
         $this->service->updateStatusArticle($slug, $request->is_active);
-        return redirect(route('article.index'));
+        return redirect(route('article.index'))->with('success', 'Berhasil Merubah Status');
     }
 
     public function checkSlug(Request $request)
