@@ -8,6 +8,10 @@ use App\Http\Requests\UpdateFloodRequest;
 use App\Models\Ews;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 
 class FloodController extends Controller
 {
@@ -163,5 +167,51 @@ class FloodController extends Controller
     public function destroy(Flood $flood)
     {
         //
+    }
+
+    public function getDetailData(Request $request)
+    {
+        // $decryptId = decrypt($request->id);
+        try {
+            $decrypted = Crypt::decrypt($request->id);
+        } catch (DecryptException $e) {
+            echo $e;
+        }
+        $floods = Flood::where('ews_id', $decrypted)->orderBy('id', 'desc')->take(30)->get();
+        $labels = $floods->pluck('created_at');
+        // $labels = substr($label, strpos($label, 'T') + 1, -1);
+        $data = $floods->pluck('level');
+
+        return response()->json(compact('labels', 'data'));
+    }
+
+    public function downloadData($id)
+    {
+        try {
+            $decrypted = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            echo $e;
+        }
+        $data = Flood::with('ews')->where('ews_id', $decrypted)->get();
+
+        //create a csv file with fatched data
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=data-ews" . Carbon::now() . '.csv',
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function () use ($data) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, array('Nama EWS', 'Level', 'Created At'));
+            foreach ($data as $row) {
+                fputcsv($file, array($row->ews->name, $row->level, $row->created_at));
+            }
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
     }
 }

@@ -59,8 +59,7 @@ class EwsController extends Controller
     {
         $idDecrypt = decrypt($ew);
         $ews = Ews::where('id', $idDecrypt)->first();
-        $flood = Flood::with('ews')->where('ews_id', $idDecrypt)->orderBy('id', 'desc')->get();
-        // dd($flood);
+        $flood = Flood::with('ews')->where('ews_id', $idDecrypt)->orderBy('id', 'desc')->take(30)->get();;
         return view('pages.dashboard2.ews.detail', compact('ews', 'flood'));
     }
 

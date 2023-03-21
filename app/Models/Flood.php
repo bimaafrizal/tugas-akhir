@@ -13,6 +13,6 @@ class Flood extends Model
 
     public function ews()
     {
-        return $this->belongsTo(Ews::class);
+        return $this->belongsTo(Ews::class, 'ews_id', 'id');
     }
 }

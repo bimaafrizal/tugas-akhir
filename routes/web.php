@@ -52,7 +52,11 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::post('edit-status/{id}', 'editStatus')->name('ews.edit-status');
         Route::get('/{id}/edit', 'edit')->name('ews.edit');
         Route::post('/{id}', 'update')->name('ews.update');
-        Route::post('/get-data', 'getDetailData')->name('ews.get-data');
+    });
+
+    Route::controller(FloodController::class)->group(function () {
+        Route::get('/get-data', 'getDetailData')->name('ews.get-data');
+        Route::get('/download-data/{id}', 'downloadData')->name('ews.download-data');
     });
 
     Route::controller(EarthquakeController::class)->prefix('gempa')->group(function () {
