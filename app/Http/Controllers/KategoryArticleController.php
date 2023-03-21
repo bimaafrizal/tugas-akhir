@@ -15,7 +15,7 @@ class KategoryArticleController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.kategory-article.index');
+        return view('pages.dashboard2.kategory-article.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class KategoryArticleController extends Controller
     {
         $decryptId = decrypt($id);
         $data = KategoryArticle::find($decryptId);
-        return view('pages.dashboard.kategory-article.edit', compact('data'));
+        return view('pages.dashboard2.kategory-article.edit', compact('data'));
     }
 
     /**

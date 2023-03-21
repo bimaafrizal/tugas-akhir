@@ -35,7 +35,7 @@
     integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    {{-- @stack('css') --}}
+    @stack('styles')
 </head>
 
 <body>
@@ -796,6 +796,8 @@
             </div>
         </div>
     </div>
+
+    @stack('scripts')
 
     <!-- JAVASCRIPT -->
     <script src="{{ asset('/auth/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }} "></script>

@@ -4,11 +4,12 @@
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-kategory">Tambah
                 Permintaan</button>
         </div>
-        <table id="myTable" class="table ">
+        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+            style="width:100%">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Name</th>
+                    <th data-ordering="false">No.</th>
+                    <th data-ordering="false">Name</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -26,13 +27,16 @@
                         @endif
                     </td>
                     <td>
-                        <a class="btn btn-warning" href="{{ route('kategory-edit', ['id' => encrypt($kategory->id)]) }}">Edit</a>
+                        <a class="btn btn-warning"
+                            href="{{ route('kategory-edit', ['id' => encrypt($kategory->id)]) }}">Edit</a>
                         @if ($kategory->status == 1)
-                        <form class="d-inline" wire:submit.prevent="editStatus({{ $kategory->id }}, {{ $kategory->status }})">
+                        <form class="d-inline"
+                            wire:submit.prevent="editStatus({{ $kategory->id }}, {{ $kategory->status }})">
                             <button class="btn btn-danger">Non Active</button>
                         </form>
                         @else
-                        <form class="d-inline" wire:submit.prevent="editStatus({{ $kategory->id }}, {{ $kategory->status }})">
+                        <form class="d-inline"
+                            wire:submit.prevent="editStatus({{ $kategory->id }}, {{ $kategory->status }})">
                             <button class="btn btn-success">Active</button>
                         </form>
                         @endif
@@ -43,4 +47,3 @@
         </table>
     </div>
 </div>
-
