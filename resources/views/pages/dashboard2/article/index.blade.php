@@ -58,6 +58,7 @@ Article
                             <th data-ordering="false">Title</th>
                             <th>Created By</th>
                             <th>Create Date</th>
+                            <th>Kategory</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -69,6 +70,7 @@ Article
                             <td>{{ $article->title }}</td>
                             <td>{{ $article->user->name }}</td>
                             <td>{{ $article->created_at }}</td>
+                            <td>{{ $article->kategory->name }}</td>
                             <td>
                                 @if ($article->is_active == 1)
 
