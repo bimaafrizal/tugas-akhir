@@ -23,4 +23,5 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('email/verification-notification', 'reSendEmail')->middleware(['auth', 'throttle:6,1'])->name('verification.send');
     Route::get('otp/verify', 'sendOtp')->middleware(['auth'])->name('verification.otp');
     Route::post('otp/verify', 'verifyOtp')->middleware(['auth', 'throttle:6,1'])->name('otp.verify');
+    Route::post('resend-otp', 'resendOtp')->middleware(['auth'])->name('otp.resend');
 });

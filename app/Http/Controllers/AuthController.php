@@ -161,14 +161,18 @@ class AuthController extends Controller
         }
         $otp = $this->createOtp();
 
-        // if ($user->otp != null) {
-        //     $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
-        //     return back()->with('success', 'Verification OTP sent!');
-        // }
-
         $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
 
         return view('pages.auth.new-verify-otp');
+    }
+
+    public function resendOtp()
+    {
+        $user = Auth::user();
+        $otp = $this->createOtp();
+        $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
+
+        return view('pages.auth.new-verify-otp')->with('success', 'Berhasil mengirim kode otp');
     }
 
     public function verifyOtp(Request $request)

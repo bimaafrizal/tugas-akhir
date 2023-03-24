@@ -124,8 +124,14 @@ Verify Phone Number
                     <!-- end card -->
 
                     <div class="mt-4 text-center">
-                        <p class="mb-0">Didn't receive a code ? <a href="{{ route('verification.otp') }}"
-                                class="fw-semibold text-primary text-decoration-underline">Resend</a> </p>
+                        <p class="mb-0">Didn't receive a code ? 
+                            <form action="{{ route('otp.resend') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="fw-semibold text-primary text-decoration-underline">Resend</button>
+                            </form>
+                            {{-- <a href="{{ route('otp.resend') }}"
+                                class="fw-semibold text-primary text-decoration-underline">Resend</a>  --}}
+                            </p>
                     </div>
 
                 </div>
