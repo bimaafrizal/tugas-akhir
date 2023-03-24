@@ -70,7 +70,7 @@ Forgot Password
                                         <label class="form-label">Email</label>
                                         <input type="email" name="email"
                                             class="form-control @error('email') is-invalid @enderror" id="email"
-                                            placeholder="Enter Email">
+                                            placeholder="Enter Email" value="{{ old('email', $email) }}">
                                         @error('email')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -88,10 +88,12 @@ Forgot Password
                     </div>
                     <!-- end card -->
 
+                    @if (Auth::user() == null)
                     <div class="mt-4 text-center">
                         <p class="mb-0">Wait, I remember my password... <a href="/login"
                                 class="fw-semibold text-primary text-decoration-underline"> Click here </a> </p>
                     </div>
+                    @endif
 
                 </div>
             </div>

@@ -58,7 +58,11 @@
                         <i class="ri-earthquake-line"></i> <span data-key="t-widgets">Gempa</span>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('profile')" href="{{ route('profile.index') }}">
+                        <i class=" ri-user-line"></i> <span data-key="t-widgets">Profile</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

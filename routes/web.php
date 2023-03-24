@@ -7,6 +7,7 @@ use App\Http\Controllers\EwsController;
 use App\Http\Controllers\FloodController;
 use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -61,5 +62,11 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
     Route::controller(EarthquakeController::class)->prefix('gempa')->group(function () {
         Route::get('/', 'index')->name('earthquake.index');
+    });
+
+    Route::controller(ProfileController::class)->prefix('profile')->group(function () {
+        Route::get('/', 'index')->name('profile.index');
+        Route::post('/edit-data', 'editData')->name('profile.edit-data');
+        Route::post('/change-password', 'changePassword')->name('profile.change-password');
     });
 });

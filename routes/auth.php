@@ -9,13 +9,12 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('login', 'auth');
         Route::get('register', 'register')->name('register');
         Route::post('register', 'sendRegister');
-
-        //forgot password
-        Route::get('forgot-password', 'forgotPassword')->name('password.request');
-        Route::post('forgot-password', 'sendResetEmail')->name('password.email');
-        Route::get('reset-password/{token}', 'showResetForm')->name('password.reset');
-        Route::post('reset-password', 'reset')->name('password.update');
     });
+    //forgot password
+    Route::get('forgot-password', 'forgotPassword')->name('password.request');
+    Route::post('forgot-password', 'sendResetEmail')->name('password.email');
+    Route::get('reset-password/{token}', 'showResetForm')->name('password.reset');
+    Route::post('reset-password', 'reset')->name('password.update');
     Route::post('/logout', 'logout');
 
     //phone & email verify

@@ -65,7 +65,13 @@ class AuthController extends Controller
     //forgot password
     public function forgotPassword()
     {
-        return view('pages.auth.new-forgot-password');
+        $email = null;
+        // dd(Auth::user() );
+        if (Auth::user()) {
+            $email = Auth::user()->email;
+        }
+
+        return view('pages.auth.new-forgot-password', compact('email'));
     }
     public function sendResetEmail(Request $request)
     {
@@ -149,8 +155,11 @@ class AuthController extends Controller
 
     public function sendOtp()
     {
-        $otp = $this->createOtp();
         $user = Auth::user();
+        if ($user->phone_num_verified_at != null) {
+            return redirect('/dashboard');
+        }
+        $otp = $this->createOtp();
 
         // if ($user->otp != null) {
         //     $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
