@@ -7,6 +7,7 @@ use App\Http\Controllers\EwsController;
 use App\Http\Controllers\FloodController;
 use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -68,5 +69,12 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('/', 'index')->name('profile.index');
         Route::post('/edit-data', 'editData')->name('profile.edit-data');
         Route::post('/change-password', 'changePassword')->name('profile.change-password');
+    });
+
+    Route::resource('manajemen-user', ManajemenUserController::class)->only('index', 'create', 'store');
+    Route::controller(ManajemenUserController::class)->prefix('manajemen-user')->group(function () {
+        Route::post('edit-status/{id}', 'editStatus')->name('manajemen-user.edit-status');
+        Route::get('/{id}/edit', 'edit')->name('manajemen-user.edit');
+        Route::post('/{id}', 'update')->name('manajemen-user.update');
     });
 });

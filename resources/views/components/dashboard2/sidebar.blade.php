@@ -60,7 +60,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link  @yield('profile')" href="{{ route('profile.index') }}">
-                        <i class=" ri-user-line"></i> <span data-key="t-widgets">Profile</span>
+                        <i class="ri-user-line"></i> <span data-key="t-widgets">Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('manajemen-user')" href="{{ route('manajemen-user.index') }}">
+                        <i class="ri-team-line"></i> <span data-key="t-widgets">Manajemen User</span>
                     </a>
                 </li>
             </ul>
