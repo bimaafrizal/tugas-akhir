@@ -33,7 +33,6 @@ Manajemen User
     </div>
 </div>
 <!-- end page title -->
-
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -42,7 +41,12 @@ Manajemen User
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-start mb-2">
-                    <a href="{{ route('manajemen-user.create') }}" class="btn btn-primary">Tambah Admin</a>
+                    <div class="mx-1">
+                        <a href="{{ route('manajemen-user.create') }}" class="btn btn-primary">Tambah Admin</a>
+                    </div>
+                    <div class="mx-1">
+                        <a href="{{ route('manajemen-user.download', ['id' => Crypt::encrypt($admins[0]->role_id)]) }}" class="btn btn-success">Download Data Admin</a>
+                    </div>
                 </div>
                 @if (session()->has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -132,12 +136,9 @@ Manajemen User
                 <h5 class="card-title mb-0">Daftar User</h5>
             </div>
             <div class="card-body">
-                {{-- @if (session()->has('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="d-flex justify-content-start mb-2">
+                    <a href="{{ route('manajemen-user.download', ['id' => Crypt::encrypt($users[0]->role_id)]) }}" class="btn btn-success">Download Data User</a>
                 </div>
-                @endif --}}
                 <table id="myTable" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                     style="width:100%">
                     <thead>

@@ -7,6 +7,10 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\ManajemenUser\ManajemenUserService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 
 class ManajemenUserController extends Controller
 {
@@ -117,5 +121,51 @@ class ManajemenUserController extends Controller
 
         $this->service->updateStatus($decryptId, $request->is_active);
         return redirect(route('manajemen-user.index'))->with('success', 'Status Admin berhasil dirubah');
+    }
+
+    public function downloadData($id)
+    {
+        try {
+            $decrypted = Crypt::decrypt($id);
+        } catch (DecryptException $e) {
+            echo $e;
+        }
+        $data = User::with('role')->where('role_id', $decrypted)->get();
+
+        $namaFile = 'Admin';
+        if ($decrypted == 1) {
+            $namaFile = 'User';
+        }
+
+        //create a csv file with fatched data
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=" . $namaFile . '-' . Carbon::now() . '.csv',
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        if ($decrypted == 1) {
+            $callback = function () use ($data) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, array('Name', 'Email', 'Nomor Hp'));
+                foreach ($data as $row) {
+                    fputcsv($file, array($row->name, $row->email, $row->phone_num));
+                }
+                fclose($file);
+            };
+        } else {
+            $callback = function () use ($data) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, array('Name', 'Email', 'Nomor Hp', 'Role', 'Status'));
+                foreach ($data as $row) {
+                    fputcsv($file, array($row->name, $row->email, $row->role->name, $row->status));
+                }
+                fclose($file);
+            };
+        }
+
+        return Response::stream($callback, 200, $headers);
     }
 }

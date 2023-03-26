@@ -76,5 +76,6 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::post('edit-status/{id}', 'editStatus')->name('manajemen-user.edit-status');
         Route::get('/{id}/edit', 'edit')->name('manajemen-user.edit');
         Route::post('/{id}', 'update')->name('manajemen-user.update');
+        Route::get('/download-data/{id}', 'downloadData')->name('manajemen-user.download');
     });
 });
