@@ -27,7 +27,12 @@ EWS
 
 <div class="row">
     <div class="d-flex justify-content-start mb-2">
-        <a href="{{ route('ews.create') }}" class="btn btn-primary">Tambah EWS</a>
+        <div class="mx-1">
+            <a href="{{ route('ews.create') }}" class="btn btn-primary">Tambah EWS</a>
+        </div>
+        <div class="mx-1">
+            <a href="{{ route('ews.download-data', ['id' => Crypt::encrypt(0)]) }}" class="btn btn-success">Download Semua Data</a>
+        </div>
     </div>
     @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

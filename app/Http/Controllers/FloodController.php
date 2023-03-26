@@ -193,6 +193,9 @@ class FloodController extends Controller
             echo $e;
         }
         $data = Flood::with('ews')->where('ews_id', $decrypted)->get();
+        if ($decrypted == 0) {
+            $data = Flood::with('ews')->get();
+        }
 
         //create a csv file with fatched data
         $headers = [
@@ -205,9 +208,9 @@ class FloodController extends Controller
 
         $callback = function () use ($data) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, array('Nama EWS', 'Level', 'Created At'));
+            fputcsv($file, array('Nama EWS', 'Lokasi', 'Level', 'Created At'));
             foreach ($data as $row) {
-                fputcsv($file, array($row->ews->name, $row->level, $row->created_at));
+                fputcsv($file, array($row->ews->name, $row->ews->location, $row->level, $row->created_at));
             }
             fclose($file);
         };

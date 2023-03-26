@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Earthquake;
 use App\Http\Requests\StoreEarthquakeRequest;
 use App\Http\Requests\UpdateEarthquakeRequest;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 
 class EarthquakeController extends Controller
 {
@@ -120,5 +124,30 @@ class EarthquakeController extends Controller
     public function destroy(Earthquake $earthquake)
     {
         //
+    }
+
+    public function downloadData()
+    {
+        $data = Earthquake::all();
+
+        //create a csv file with fatched data
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=data-gempa" . Carbon::now() . '.csv',
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function () use ($data) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, array('Longitude', 'Latitude', 'Strength', 'Depth', 'Date', 'Time', 'Created At', 'Inserted At', 'Potency'));
+            foreach ($data as $row) {
+                fputcsv($file, array($row->longitude, $row->latitude, $row->strength, $row->depth, $row->date, $row->time, $row->created_at, $row->inserted_at, $row->potency));
+            }
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
     }
 }

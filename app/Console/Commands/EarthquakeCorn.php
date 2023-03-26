@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Earthquake;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 
 class EarthquakeCorn extends Command
@@ -43,6 +44,7 @@ class EarthquakeCorn extends Command
         $tanggal = $detailData->Tanggal;
         $jam = $detailData->Jam;
         $createdAt = $detailData->DateTime;
+        $potensi = $detailData->Potensi;
 
         if ($earthquake  == null) {
             Earthquake::insert([
@@ -50,9 +52,11 @@ class EarthquakeCorn extends Command
                 'latitude' => $latitude,
                 'strength' => $strength,
                 'depth' => $depth,
-                'tanggal' => $tanggal,
-                'jam' => $jam,
-                'created_at' => $createdAt
+                'date' => $tanggal,
+                'time' => $jam,
+                'created_at' => $createdAt,
+                'potency' => $potensi,
+                'inserted_at' => Carbon::now()
             ]);
         } else {
             if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->tanggal != $detailData->Tanggal || $earthquake->jam  != $detailData->Jam) {
@@ -61,9 +65,11 @@ class EarthquakeCorn extends Command
                     'latitude' => $latitude,
                     'strength' => $strength,
                     'depth' => $depth,
-                    'tanggal' => $tanggal,
-                    'jam' => $jam,
-                    'created_at' => $createdAt
+                    'date' => $tanggal,
+                    'time' => $jam,
+                    'created_at' => $createdAt,
+                    'potency' => $potensi,
+                    'inserted_at' => Carbon::now()
                 ]);
             }
         }

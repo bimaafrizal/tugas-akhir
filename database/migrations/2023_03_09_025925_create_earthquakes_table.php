@@ -19,9 +19,11 @@ return new class extends Migration
             $table->string('latitude');
             $table->string('strength');
             $table->string('depth');
-            $table->string('tanggal');
-            $table->string('jam');
+            $table->string('date');
+            $table->string('time');
             $table->string('created_at');
+            $table->string('inserted_at');
+            $table->string('potency');
             // $table->timestamps();
         });
     }

@@ -41,12 +41,16 @@ Gempa
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body p-0">
+                            <div class="d-flex justify-content-start m-2">
+                                <a href="" class="btn btn-success">Download Semua Data</a>
+                            </div>
                             <div class="text-center mt-3">
                                 <h1>Gempa Terbaru</h1>
                                 <p>Kekuatan Gempa: {{ $gempa->strength }} M </p>
                                 <p>Kedalaman: {{ $gempa->depth }} </p>
-                                <p>Jam: {{ $gempa->jam }}</p>
-                                <p>Tanggal: {{ $gempa->tanggal }} </p>
+                                <p>Tanggal: {{ $gempa->date }} </p>
+                                <p>Jam: {{ $gempa->time }}</p>
+                                <p>Potensi: <b>{{ $gempa->potency }}</b></p>
                                 <input type="text" id="latitude" value="{{ $gempa->latitude }}" hidden>
                                 <input type="text" id="longitude" value="{{ $gempa->longitude }}" hidden>
                             </div>
