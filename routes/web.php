@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DisasterController;
 use App\Http\Controllers\EarthquakeController;
 use App\Http\Controllers\EwsController;
 use App\Http\Controllers\FloodController;
@@ -78,5 +79,11 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('/{id}/edit', 'edit')->name('manajemen-user.edit');
         Route::post('/{id}', 'update')->name('manajemen-user.update');
         Route::get('/download-data/{id}', 'downloadData')->name('manajemen-user.download');
+    });
+
+    Route::controller(DisasterController::class)->prefix('bencana')->group(function () {
+        Route::get('/', 'index')->name('disaster.index');
+        Route::get('/{id}/edit', 'edit')->name('disaster.edit');
+        Route::post('/{id}', 'update')->name('disaster.update');
     });
 });

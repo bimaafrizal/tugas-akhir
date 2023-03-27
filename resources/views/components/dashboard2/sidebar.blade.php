@@ -68,6 +68,11 @@
                         <i class="ri-team-line"></i> <span data-key="t-widgets">Manajemen User</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('disaster')" href="{{ route('disaster.index') }}">
+                        <i class="ri-meteor-line"></i> <span data-key="t-widgets">Setting Bencana</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
