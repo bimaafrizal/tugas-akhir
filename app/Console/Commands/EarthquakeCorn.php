@@ -35,7 +35,7 @@ class EarthquakeCorn extends Command
         $data = json_decode($response->getBody()->getContents());
         $detailData = $data->Infogempa->gempa;
 
-        $earthquake = Earthquake::orderBy('created_at', 'desc')->first();
+        $earthquake = Earthquake::orderBy('id', 'desc')->first();
 
         $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
         $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
@@ -59,7 +59,7 @@ class EarthquakeCorn extends Command
                 'inserted_at' => Carbon::now()
             ]);
         } else {
-            if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->tanggal != $detailData->Tanggal || $earthquake->jam  != $detailData->Jam) {
+            if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->date != $tanggal || $earthquake->time  != $jam) {
                 Earthquake::insert([
                     'longitude' => $longitude,
                     'latitude' => $latitude,

@@ -46,7 +46,7 @@ class EarthquakeController extends Controller
         $data = json_decode($response->getBody()->getContents());
         $detailData = $data->Infogempa->gempa;
 
-        $earthquake = Earthquake::orderBy('created_at', 'desc')->first();
+        $earthquake = Earthquake::orderBy('id', 'desc')->first();
 
         $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
         $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
@@ -55,6 +55,7 @@ class EarthquakeController extends Controller
         $tanggal = $detailData->Tanggal;
         $jam = $detailData->Jam;
         $createdAt = $detailData->DateTime;
+        $potensi = $detailData->Potensi;
 
         if ($earthquake  == null) {
             Earthquake::insert([
@@ -62,23 +63,28 @@ class EarthquakeController extends Controller
                 'latitude' => $latitude,
                 'strength' => $strength,
                 'depth' => $depth,
-                'tanggal' => $tanggal,
-                'jam' => $jam,
-                'created_at' => $createdAt
+                'date' => $tanggal,
+                'time' => $jam,
+                'created_at' => $createdAt,
+                'potency' => $potensi,
+                'inserted_at' => Carbon::now()
             ]);
         } else {
-            if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->tanggal != $detailData->Tanggal || $earthquake->jam  != $detailData->Jam) {
+            if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->date != $tanggal || $earthquake->time  != $jam) {
                 Earthquake::insert([
                     'longitude' => $longitude,
                     'latitude' => $latitude,
                     'strength' => $strength,
                     'depth' => $depth,
-                    'tanggal' => $tanggal,
-                    'jam' => $jam,
-                    'created_at' => $createdAt
+                    'date' => $tanggal,
+                    'time' => $jam,
+                    'created_at' => $createdAt,
+                    'potency' => $potensi,
+                    'inserted_at' => Carbon::now()
                 ]);
             }
         }
+        // dd($earthquake->latitude != $latitude);
     }
 
     /**
