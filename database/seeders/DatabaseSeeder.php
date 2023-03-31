@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(KategoryArticleSeeder::class);
         $this->call(DisasterSeeder::class);
+        $this->call(LandingPageSeeder::class);
     }
 }

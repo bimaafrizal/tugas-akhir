@@ -10,6 +10,7 @@ use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingLandingPage;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -85,5 +86,26 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('/', 'index')->name('disaster.index');
         Route::get('/{id}/edit', 'edit')->name('disaster.edit');
         Route::post('/{id}', 'update')->name('disaster.update');
+    });
+
+    Route::controller(SettingLandingPage::class)->prefix('/landing-pages')->group(function () {
+        Route::get('/', 'index')->name('landing-page.index');
+        Route::post('/home-edit', 'homeEdit')->name('landing-page.home-edit');
+        Route::post('/about-edit', 'aboutEdit')->name('landing-page.about-edit');
+        Route::post('/footer-edit', 'footerEdit')->name('landing-page.footer-edit');
+
+        //fitur
+        Route::get('create-fitur', 'createFitur')->name('landing-page.create-fitur');
+        Route::post('store-fitur', 'storeFitur')->name('landing-page.store-fitur');
+        Route::get('{id}/edit-fitur', 'editFitur')->name('landing-page.edit-fitur');
+        Route::post('update-fitur/{id}', 'updateFitur')->name('landing-page.update-fitur');
+        Route::post('delete-fitur/{id}', 'deleteFitur')->name('landing-page.delete-fitur');
+        
+        //collaborations
+        Route::get('create-instansi', 'createInstansi')->name('landing-page.create-instansi');
+        Route::post('store-instansi', 'storeInstansi')->name('landing-page.store-instansi');
+        Route::get('{id}/edit-instansi', 'editInstansi')->name('landing-page.edit-instansi');
+        Route::post('update-instansi/{id}', 'updateInstansi')->name('landing-page.update-instansi');
+        Route::post('delete-instansi/{id}', 'deleteInstansi')->name('landing-page.delete-instansi');
     });
 });

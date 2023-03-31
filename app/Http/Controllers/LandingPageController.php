@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collaboration;
+use App\Models\Feature;
+use App\Models\LandingPage;
 use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
 {
     public function index()
     {
-        return view('pages.landing-page.home');
+        $page = LandingPage::where('id', 1)->first();
+        $collabs = Collaboration::all();
+        $fiturs = Feature::all();
+        return view('pages.landing-page.home', compact('page', 'collabs', 'fiturs'));
     }
 
     public function blog()

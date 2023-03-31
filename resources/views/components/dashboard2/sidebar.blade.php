@@ -3,7 +3,7 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="index.html" class="logo logo-dark">
+        <a href="/dashboard" class="logo logo-dark">
             <span class="logo-sm">
                 <img src="{{ asset('auth/assets/images/logo-sm.png') }}" alt="" height="22">
             </span>
@@ -12,7 +12,7 @@
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="index.html" class="logo logo-light">
+        <a href="/dashboard" class="logo logo-light">
             <span class="logo-sm">
                 <img src="{{ asset('auth/assets/images/logo-sm.png') }}" alt="" height="22">
             </span>
@@ -71,6 +71,11 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link  @yield('disaster')" href="{{ route('disaster.index') }}">
                         <i class="ri-meteor-line"></i> <span data-key="t-widgets">Setting Bencana</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('landing-page')" href="{{ route('landing-page.index') }}">
+                        <i class=" ri-pages-line"></i> <span data-key="t-widgets">Setting Landing Page</span>
                     </a>
                 </li>
             </ul>

@@ -3,14 +3,13 @@
     <div class="container">
       <div class="row">
         <div class="col-md-4 mb-4 mb-md-0">
-          <h3>About SoftLand</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius ea delectus pariatur, numquam aperiam
-            dolore nam optio dolorem facilis itaque voluptatum recusandae deleniti minus animi.</p>
+          <h3>Tentang Awas Bencana</h3>
+          <p>{{ $page->footer }}</p>
           <p class="social">
-            <a href="#"><span class="bi bi-twitter"></span></a>
-            <a href="#"><span class="bi bi-facebook"></span></a>
-            <a href="#"><span class="bi bi-instagram"></span></a>
-            <a href="#"><span class="bi bi-linkedin"></span></a>
+            <a href="{{ $page->twitter != null ? $page->twitter : '#' }}"><span class="bi bi-twitter"></span></a>
+            <a href="{{ $page->facebook != null ? $page->facebook : '#' }}"><span class="bi bi-facebook"></span></a>
+            <a href="{{ $page->instagram  != null ? $page->instagram : '#' }}"><span class="bi bi-instagram"></span></a>
+            <a href="{{ $page->linkedin != null ? $page->linkedin : '#' }}"><span class="bi bi-linkedin"></span></a>
           </p>
         </div>
         <div class="col-md-7 ms-auto">
