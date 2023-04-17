@@ -100,7 +100,7 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('{id}/edit-fitur', 'editFitur')->name('landing-page.edit-fitur');
         Route::post('update-fitur/{id}', 'updateFitur')->name('landing-page.update-fitur');
         Route::post('delete-fitur/{id}', 'deleteFitur')->name('landing-page.delete-fitur');
-        
+
         //collaborations
         Route::get('create-instansi', 'createInstansi')->name('landing-page.create-instansi');
         Route::post('store-instansi', 'storeInstansi')->name('landing-page.store-instansi');
@@ -109,3 +109,5 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::post('delete-instansi/{id}', 'deleteInstansi')->name('landing-page.delete-instansi');
     });
 });
+
+Route::get('test-ews', [FloodController::class, 'store']);
