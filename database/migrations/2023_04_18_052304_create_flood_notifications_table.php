@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('flood_notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('flood_id');
+            $table->foreignId('user_id');
+            $table->integer('status_whatsapp')->nullable();
+            $table->integer('status_email')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('flood_notifications');
     }
 };

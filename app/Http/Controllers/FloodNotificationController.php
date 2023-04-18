@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Notification;
-use App\Http\Requests\StoreNotificationRequest;
-use App\Http\Requests\UpdateNotificationRequest;
+use App\Models\FloodNotification;
+use App\Http\Requests\StoreFloodNotificationRequest;
+use App\Http\Requests\UpdateFloodNotificationRequest;
 
-class NotificationController extends Controller
+class FloodNotificationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class NotificationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreNotificationRequest  $request
+     * @param  \App\Http\Requests\StoreFloodNotificationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreNotificationRequest $request)
+    public function store(StoreFloodNotificationRequest $request)
     {
         //
     }
@@ -42,10 +42,10 @@ class NotificationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Notification  $notification
+     * @param  \App\Models\FloodNotification  $floodNotification
      * @return \Illuminate\Http\Response
      */
-    public function show(Notification $notification)
+    public function show(FloodNotification $floodNotification)
     {
         //
     }
@@ -53,10 +53,10 @@ class NotificationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Notification  $notification
+     * @param  \App\Models\FloodNotification  $floodNotification
      * @return \Illuminate\Http\Response
      */
-    public function edit(Notification $notification)
+    public function edit(FloodNotification $floodNotification)
     {
         //
     }
@@ -64,11 +64,11 @@ class NotificationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateNotificationRequest  $request
-     * @param  \App\Models\Notification  $notification
+     * @param  \App\Http\Requests\UpdateFloodNotificationRequest  $request
+     * @param  \App\Models\FloodNotification  $floodNotification
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateNotificationRequest $request, Notification $notification)
+    public function update(UpdateFloodNotificationRequest $request, FloodNotification $floodNotification)
     {
         //
     }
@@ -76,10 +76,10 @@ class NotificationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Notification  $notification
+     * @param  \App\Models\FloodNotification  $floodNotification
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Notification $notification)
+    public function destroy(FloodNotification $floodNotification)
     {
         //
     }

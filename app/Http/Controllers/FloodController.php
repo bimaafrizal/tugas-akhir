@@ -67,7 +67,7 @@ class FloodController extends Controller
         $results = Utils::all($promises)->wait();
         $dataEWS = $getDataEws->getResult();
         $lastDataEws = $getLastdata->getResult();
-        
+
         $arrIdEwsLast = [];
         foreach ($lastDataEws as $data) {
             if ($data != null) {
@@ -79,7 +79,7 @@ class FloodController extends Controller
         //check if any new data 
         foreach ($lastDataEws as $last) {
             if ($last != null) {
-                if ($dataEWS[$last->ews_id] != date("Y-m-d\TH:i:s\Z", strtotime($last->created_at))) {
+                if ($dataEWS[$last->ews_id]->created_at != date("Y-m-d\TH:i:s\Z", strtotime($last->created_at))) {
                     $results2[$last->ews_id] = $dataEWS[$last->ews_id];
                 }
             }
@@ -125,9 +125,12 @@ class FloodController extends Controller
             }
         }
 
+        // dd($convertLevel[0]);
         $promise3 =  new Promise();
         $insertFlood = new InsertFlood($convertLevel, $promise3);
         dispatch($insertFlood);
+        $floodData = $insertFlood->getResult();
+        // dd( $insertFlood->getResult());
 
         $result3 = [];
         $result3 = $convertLevel; //delete in production
@@ -144,7 +147,7 @@ class FloodController extends Controller
         //     }
         // }
 
-        //get users where longitude && latitude not null
+        //get users where longitude & latitude not null
         $users = User::Where(
             [
                 ['status', '=', 1],
@@ -179,27 +182,40 @@ class FloodController extends Controller
         }
 
         $checkDistance = [];
-        $i = 0;
 
         $disaster = Disaster::where('id', 1)->first();
 
         //check distance
+        //data for send notification to email & whatsapp
         for ($i = 0; $i < count($longLat); $i++) {
             for ($j = 0; $j < count($users); $j++) {
                 $distance = $this->calculateDistance($users[$j]->latitude, $users[$j]->longitude, $longLat[$i]['lat'], $longLat[$i]['long']);
+                array_push($checkDistance, [
+                    'ews_id' => $longLat[$i]['ews_id'],
+                    'level' => $longLat[$i]['level'],
+                    'distance' => $distance,
+                    'disaster_id' => 1,
+                    'user_id' => $users[$j]->id
+                ]);
                 if ($distance <= $disaster->distance) {
-                    array_push($checkDistance, [
-                        'ews_id' => $longLat[$i]['ews_id'],
-                        'level' => $longLat[$i]['level'],
-                        'distance' => $distance,
-                        'disaster_id' => 1,
-                        'user_id' => $users[$j]->id
+                }
+            }
+        }
+
+        //data for insert to notification table
+        $dataNotif = [];
+        for ($i = 0; $i < count($checkDistance); $i++) {
+            for ($j = 0; $j < count($floodData); $j++) {
+                if ($checkDistance[$i]['ews_id'] == $floodData[$j]['ews_id']) {
+                    array_push($dataNotif, [
+                        'flood_id' => $floodData[$j]['flood_id'],
+                        'user_id' => $checkDistance[$i]['user_id']
                     ]);
                 }
             }
         }
 
-        dd($checkDistance);
+        dd($dataNotif); 
     }
 
     function calculateDistance($lat1, $lon1, $lat2, $lon2)
