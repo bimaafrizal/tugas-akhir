@@ -6,6 +6,7 @@ use App\Models\Flood;
 use App\Http\Requests\StoreFloodRequest;
 use App\Http\Requests\UpdateFloodRequest;
 use App\Jobs\CheckLastData;
+use App\Jobs\EmailSendNotification;
 use App\Jobs\GetDataEws;
 use App\Jobs\InsertFlood;
 use App\Models\Disaster;
@@ -92,8 +93,8 @@ class FloodController extends Controller
             }
         }
 
-        $convertLevel = [];
         //convert to level
+        $convertLevel = [];
         foreach ($results2 as $key => $data) {
             $arrTemp = [];
             if (property_exists($data, 'field2') == false) {
@@ -125,7 +126,7 @@ class FloodController extends Controller
             }
         }
 
-        // dd($convertLevel[0]);
+        //insert to flood table
         $promise3 =  new Promise();
         $insertFlood = new InsertFlood($convertLevel, $promise3);
         dispatch($insertFlood);
@@ -169,6 +170,7 @@ class FloodController extends Controller
 
         $client = new Client();
         $longLat = [];
+        //get long lat
         foreach ($dataEWS as $ews) {
             $responseLongLat = $client->request('GET', $ews['ews']->api_url);
             $data = json_decode($responseLongLat->getBody()->getContents());
@@ -186,23 +188,25 @@ class FloodController extends Controller
         $disaster = Disaster::where('id', 1)->first();
 
         //check distance
-        //data for send notification to email & whatsapp
+        //return data for send notification to email & whatsapp
         for ($i = 0; $i < count($longLat); $i++) {
             for ($j = 0; $j < count($users); $j++) {
                 $distance = $this->calculateDistance($users[$j]->latitude, $users[$j]->longitude, $longLat[$i]['lat'], $longLat[$i]['long']);
+                //under if on production
                 array_push($checkDistance, [
                     'ews_id' => $longLat[$i]['ews_id'],
                     'level' => $longLat[$i]['level'],
                     'distance' => $distance,
                     'disaster_id' => 1,
-                    'user_id' => $users[$j]->id
+                    'user_id' => $users[$j]->id,
+                    'email_user' => $users[$j]->email
                 ]);
                 if ($distance <= $disaster->distance) {
                 }
             }
         }
 
-        //data for insert to notification table
+        //return data for insert to notification table
         $dataNotif = [];
         for ($i = 0; $i < count($checkDistance); $i++) {
             for ($j = 0; $j < count($floodData); $j++) {
@@ -215,7 +219,12 @@ class FloodController extends Controller
             }
         }
 
-        dd($dataNotif); 
+        $promise4 = new Promise();
+        $sendEmail = new EmailSendNotification($checkDistance, $promise4);
+        dispatch($sendEmail);
+
+        dd($checkDistance);
+        dd($dataNotif);
     }
 
     function calculateDistance($lat1, $lon1, $lat2, $lon2)

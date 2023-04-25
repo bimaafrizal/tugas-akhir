@@ -2,21 +2,26 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
 
 class EmailSendNotification
 {
     use Dispatchable;
+    protected $datas;
+    protected $promise;
+    protected $result = [];
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($arr, Promise $promise)
     {
-        //
+        $this->datas = $arr;
+        $this->promise = $promise;
     }
 
     /**
@@ -26,10 +31,32 @@ class EmailSendNotification
      */
     public function handle()
     {
-        //
+        $datas = $this->datas;
+
+        $subject = "Flood Notification";
+        foreach ($datas as $data) {
+            $level = "normal";
+            if ($data['level'] ==  1) {
+                $level = "Siaga";
+            } else if ($data['level'] ==  2) {
+                $level = "Waspada";
+            } else if ($data['level'] ==  3) {
+                $level = "Awas";
+            }
+            $body = "PPPPP banjir woi!!<br> ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km";
+
+            $this->sendEmail($data['email_user'], $subject, $body);
+
+            array_push($this->result, [
+                'user_id' => $data['user_id'],
+            ]);
+        }
+
+
+        $this->promise->resolve($this->result);
     }
 
-    public function sendEmailOtp($receiver, $subject, $otp)
+    public function sendEmail($receiver, $subject, $body)
     {
         if ($this->isOnline()) {
             $email = [
@@ -37,10 +64,10 @@ class EmailSendNotification
                 'fromEmail' => 'admin@awasbencana.com',
                 'fromName' => 'Awas Bencana',
                 'subject' => $subject,
-                'otp' => $otp
+                'body' => $body,
             ];
 
-            Mail::send('pages.auth.otp_verification', $email, function ($message) use ($email) {
+            Mail::send('pages.email-template', $email, function ($message) use ($email) {
                 $message->from($email['fromEmail'], $email['fromName']);
                 $message->to($email['recepient']);
                 $message->subject($email['subject']);

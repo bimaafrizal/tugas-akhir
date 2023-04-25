@@ -2,16 +2,15 @@
 
 namespace App\Jobs;
 
-use App\Models\Flood;
+use App\Models\FloodNotification;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class InsertFlood
+class InsertNotification
 {
     use Dispatchable;
     protected $datas;
     protected $promise;
-    protected $result = [];
     /**
      * Create a new job instance.
      *
@@ -31,19 +30,17 @@ class InsertFlood
     public function handle()
     {
         $datas = $this->datas;
-        $insertData = Flood::insert($datas);
-
+        $insertData = FloodNotification::insert($datas);
         $dataId = [];
         if ($insertData) {
             foreach ($datas as $data) {
-                $flood = Flood::where([
-                    ['created_at', '=', $data['created_at']],
-                    ['ews_id', '=', $data['ews_id']],
-                    ['level', '=', $data['level']]
-                ])->first();
+                $notif = FloodNotification::where([
+                    ['user_id', '=', $data->user_id],
+                    ['flood_id', '=', $data->flood_id]
+                ])->orderBy('id', 'desc')->first();
                 array_push($dataId, [
-                    'ews_id' => $data['ews_id'],
-                    'flood_id' => $flood->id
+                    'flood_notification_id' => $notif->id,
+                    'user_id' => $notif->user_id
                 ]);
             }
         }
