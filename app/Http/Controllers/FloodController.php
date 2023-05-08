@@ -9,10 +9,13 @@ use App\Jobs\CheckLastData;
 use App\Jobs\EmailSendNotification;
 use App\Jobs\GetDataEws;
 use App\Jobs\InsertFlood;
+use App\Jobs\InsertFloodNotification;
 use App\Models\Disaster;
 use App\Models\Ews;
+use App\Models\FloodNotification;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Coroutine;
 use GuzzleHttp\Promise\Promise;
@@ -24,6 +27,9 @@ use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Crypt;
+use SendinBlue\Client\Configuration;
+// use SendinBlue\Client\Api\SMTPApi;
+use SendinBlue\Client\Api\TransactionalEmailsApi;
 
 class FloodController extends Controller
 {
@@ -221,9 +227,11 @@ class FloodController extends Controller
 
         $promise4 = new Promise();
         $sendEmail = new EmailSendNotification($checkDistance, $promise4);
+
+        InsertFloodNotification::dispatch($dataNotif);
         dispatch($sendEmail);
 
-        dd($checkDistance);
+
         dd($dataNotif);
     }
 
@@ -238,134 +246,6 @@ class FloodController extends Controller
         $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
 
         return $distance;
-    }
-
-    public function checkDistance($lat, $long, $apiLat, $apiLong)
-    {
-        //convert to radians
-        $convertLat = deg2rad(floatval($lat));
-        $convertLong = deg2rad(floatval($long));
-        $convertApiLat = deg2rad(floatval($apiLat));
-        $convertApiLong = deg2rad(floatval($apiLong));
-
-        if ($convertLat == $convertApiLat && $convertLong == $convertApiLong) {
-            return 0;
-        } else if (abs($convertLat) == M_PI / 2 || abs($convertApiLat)) {
-            return 0;
-        }
-
-        $earth_radius = 6371; //in km
-
-        //calculation
-        $dLat = $convertApiLat - $convertLat;
-        $dLon = $convertApiLong - $convertLong;
-        $a = sin($dLat / 2) * sin($dLat / 2) + cos($convertLat) * cos($convertApiLat) * sin($dLon / 2) * sin($dLon / 2);
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        $distance = $earth_radius * $c;
-
-        return round($distance);
-    }
-
-    public function insetFlood($data)
-    {
-        // if ($flood == null) {
-        //     if (property_exists($detailData, 'field2') == false) {
-        //         $arrayTemp['ews_id'] = $item->id;
-        //         if ($detailData->field1 <= 1024) {
-        //             $arrayTemp['level'] = 0;
-        //         } else if ($detailData->field1 > 1024 && $detailData->field1 <= 2048) {
-        //             $arrayTemp['level'] = 1;
-        //         } else if ($detailData->field1 > 2048 && $detailData->field1 <= 3072) {
-        //             $arrayTemp['level'] = 2;
-        //         } else if ($detailData->field3 > 3072) {
-        //             $arrayTemp['level'] = 3;
-        //         }
-        //         $arrayTemp['created_at'] = $detailData->created_at;
-        //         array_push($array, $arrayTemp);
-        //     } else {
-        //         $arrayTemp['ews_id'] = $item->id;
-        //         if ($detailData->field1 == 1) {
-        //             $arrayTemp['level'] = 0;
-        //         } else if ($detailData->field1 == 0) {
-        //             $arrayTemp['level'] = 1;
-        //         } else if ($detailData->field2 == 0) {
-        //             $arrayTemp['level'] = 2;
-        //         } else if ($detailData->field3 == 0) {
-        //             $arrayTemp['level'] = 3;
-        //         }
-        //         $arrayTemp['created_at'] = $detailData->created_at;
-        //         array_push($array, $arrayTemp);
-        //     }
-        // } else {
-        //     if (property_exists($detailData, 'field2') == false) {
-        //         if ($detailData->created_at != date("Y-m-d\TH:i:s\Z", strtotime($flood->created_at))) {
-        //             $arrayTemp['ews_id'] = $item->id;
-        //             if ($detailData->field1 <= 1024) {
-        //                 $arrayTemp['level'] = 0;
-        //             } else if ($detailData->field1 > 1024 && $detailData->field1 <= 2048) {
-        //                 $arrayTemp['level'] = 1;
-        //             } else if ($detailData->field1 > 2048 && $detailData->field1 <= 3072) {
-        //                 $arrayTemp['level'] = 2;
-        //             } else if ($detailData->field3 > 3072) {
-        //                 $arrayTemp['level'] = 3;
-        //             }
-        //             $arrayTemp['created_at'] = $detailData->created_at;
-        //             array_push($array, $arrayTemp);
-        //         }
-        //         // dd('Data sudah ada');
-        //     } else {
-        //         if ($detailData->created_at != date("Y-m-d\TH:i:s\Z", strtotime($flood->created_at))) {
-        //             $arrayTemp['ews_id'] = $item->id;
-        //             if ($detailData->field1 == 1) {
-        //                 $arrayTemp['level'] = 0;
-        //             } else if ($detailData->field1 == 0) {
-        //                 $arrayTemp['level'] = 1;
-        //             } else if ($detailData->field2 == 0) {
-        //                 $arrayTemp['level'] = 2;
-        //             } else if ($detailData->field3 == 0) {
-        //                 $arrayTemp['level'] = 3;
-        //             }
-        //             $arrayTemp['created_at'] = $detailData->created_at;
-        //             array_push($array, $arrayTemp);
-        //         }
-        //         // dd('Data sudah ada');
-        //     }
-        // }
-        Flood::insert($data);
-    }
-
-    public function insertNotif()
-    {
-    }
-
-
-    public function notifEmail()
-    {
-    }
-    public function checkLastData()
-    {
-        $dataTerakhir = [];
-        $ews = EWS::all();
-        foreach ($ews as $item) {
-            array_push($dataTerakhir, Flood::where('ews_id', $item->id)->orderBy('created_at', 'desc')->first());
-        }
-
-        return $dataTerakhir;
-    }
-
-    public function dataEws($ews)
-    {
-        $response = Http::pool(function (Pool $pool) use ($ews) {
-            foreach ($ews as $url) {
-                $pool->get($url->api_url);
-            }
-        });
-
-        $data = (object) $response[0]->json();
-        return $data;
-        // dd($data->feeds[0]['created_at']);
-        // dd($response[0]->json());
     }
 
     /**
