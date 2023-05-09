@@ -6,7 +6,9 @@ use App\Models\Earthquake;
 use App\Http\Requests\StoreEarthquakeRequest;
 use App\Http\Requests\UpdateEarthquakeRequest;
 use App\Jobs\CheckDistanceUserEarthquake;
+use App\Jobs\EarthquakeEmailNotification;
 use App\Jobs\InsertEarthquake;
+use App\Jobs\InsertEarthquakeNotification;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
@@ -127,14 +129,16 @@ class EarthquakeController extends Controller
                     'earthquake_id' => $earthquakeId
                 ]);
             }
-            dd($dataNotif);
         }
-        dd($earthquakeId == 0);
-
-        //check distance
 
         //insert to notification tabele
+        $insertNotification = new InsertEarthquakeNotification($dataNotif);
         //send notification
+        $promise3 = new Promise();
+        $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+        dispatch($sendEmail);
+        dispatch($insertNotification);
+        dd($dataNotif);
     }
 
     /**

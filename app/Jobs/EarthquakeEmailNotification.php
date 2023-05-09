@@ -2,21 +2,27 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
 
 class EarthquakeEmailNotification
 {
     use Dispatchable;
+    protected $users;
+    protected $earthquake;
+    protected $promise;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($users, $earthquake, Promise $promise)
     {
-        //
+        $this->users = $users;
+        $this->earthquake = $earthquake;
+        $this->promise = $promise;
     }
 
     /**
@@ -26,7 +32,15 @@ class EarthquakeEmailNotification
      */
     public function handle()
     {
-        //
+        $users = $this->users;
+        $earthquakeData = $this->earthquake;
+
+        $subject = "Earthquake Notification";
+        foreach ($users as $user) {
+            $body = "Gempa pada koordinat " . $earthquakeData['longitude'] . "," . $earthquakeData['latitude'] . " pada kedalaman " . $earthquakeData['depth'] . " km " . " kekuatan sebesar " . $earthquakeData['strength'] . " SR. Jarak anda dengan lokasi gempa adalah " . $user['distance'] . " km.";
+
+            $this->sendEmail($user['email_user'], $subject, $body);
+        }
     }
 
     public function sendEmail($receiver, $subject, $body)

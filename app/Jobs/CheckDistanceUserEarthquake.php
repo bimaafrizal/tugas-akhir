@@ -49,7 +49,7 @@ class CheckDistanceUserEarthquake
             $distance = $this->calculateDistance($user->lat, $user->long, $earthquakeLat, $earthquakeLong);
             //under if on production
             array_push($arrayUser, [
-                'jarak' => $distance,
+                'distance' => $distance,
                 'user_id' => $user->id,
                 'email_user' => $user->email,
                 'phone_number' => $user->phone_num
