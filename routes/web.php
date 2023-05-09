@@ -111,3 +111,4 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 });
 
 Route::get('test-ews', [FloodController::class, 'store']);
+Route::get('test-gempa', [EarthquakeController::class, 'store']);

@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Earthquake;
 use App\Http\Requests\StoreEarthquakeRequest;
 use App\Http\Requests\UpdateEarthquakeRequest;
+use App\Jobs\CheckDistanceUserEarthquake;
+use App\Jobs\InsertEarthquake;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\Utils;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
@@ -41,12 +45,24 @@ class EarthquakeController extends Controller
      */
     public function store()
     {
+        //get data
         $client = new Client();
         $response = $client->request('GET', 'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
         $data = json_decode($response->getBody()->getContents());
         $detailData = $data->Infogempa->gempa;
 
-        $earthquake = Earthquake::orderBy('id', 'desc')->first();
+        $earthquakeData = [
+            'latitude' => substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1),
+            'longitude' => substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ',')),
+            'strength' => $detailData->Magnitude,
+            'depth' => $detailData->Kedalaman,
+            'tanggal' => $detailData->Tanggal,
+            'jam' => $detailData->Jam,
+            'createdAt' => $detailData->DateTime,
+            'potensi' => $detailData->Potensi
+        ];
+
+        // dd($earthquakeData);
 
         $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
         $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
@@ -57,34 +73,68 @@ class EarthquakeController extends Controller
         $createdAt = $detailData->DateTime;
         $potensi = $detailData->Potensi;
 
-        if ($earthquake  == null) {
-            Earthquake::insert([
-                'longitude' => $longitude,
-                'latitude' => $latitude,
-                'strength' => $strength,
-                'depth' => $depth,
-                'date' => $tanggal,
-                'time' => $jam,
-                'created_at' => $createdAt,
-                'potency' => $potensi,
-                'inserted_at' => Carbon::now()
-            ]);
-        } else {
-            if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->date != $tanggal || $earthquake->time  != $jam) {
-                Earthquake::insert([
-                    'longitude' => $longitude,
-                    'latitude' => $latitude,
-                    'strength' => $strength,
-                    'depth' => $depth,
-                    'date' => $tanggal,
-                    'time' => $jam,
-                    'created_at' => $createdAt,
-                    'potency' => $potensi,
-                    'inserted_at' => Carbon::now()
+        //get last data
+        $earthquake = Earthquake::orderBy('id', 'desc')->first();
+        $data = [];
+
+        //insert to earthquake 
+        // if ($earthquake  == null) {
+        //     Earthquake::insert([
+        //         'longitude' => $longitude,
+        //         'latitude' => $latitude,
+        //         'strength' => $strength,
+        //         'depth' => $depth,
+        //         'date' => $tanggal,
+        //         'time' => $jam,
+        //         'created_at' => $createdAt,
+        //         'potency' => $potensi,
+        //         'inserted_at' => Carbon::now()
+        //     ]);
+        // } else {
+        //     if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->date != $tanggal || $earthquake->time  != $jam) {
+        //         Earthquake::insert([
+        //             'longitude' => $longitude,
+        //             'latitude' => $latitude,
+        //             'strength' => $strength,
+        //             'depth' => $depth,
+        //             'date' => $tanggal,
+        //             'time' => $jam,
+        //             'created_at' => $createdAt,
+        //             'potency' => $potensi,
+        //             'inserted_at' => Carbon::now()
+        //         ]);
+        //     }
+        // }
+        $promise1 = new Promise();
+        $promise2 = new Promise();
+        $insertEearthquake = new InsertEarthquake($earthquake, $earthquakeData, $promise1);
+        $checkDistance = new CheckDistanceUserEarthquake($earthquake['latitude'], $earthquake['longitude'], $promise2);
+        dispatch($insertEearthquake);
+        dispatch($checkDistance);
+        $promise[] = $promise1;
+        $promise[] = $promise2;
+        Utils::all($promise)->wait();
+
+        $earthquakeId = $insertEearthquake->getResult();
+        $distanceOfUser = $checkDistance->getResult();
+
+        $dataNotif = [];
+
+        if ($earthquakeId != 0) {
+            foreach ($distanceOfUser as $distance) {
+                array_push($dataNotif, [
+                    'user_id' => $distance['user_id'],
+                    'earthquake_id' => $earthquakeId
                 ]);
             }
+            dd($dataNotif);
         }
-        // dd($earthquake->latitude != $latitude);
+        dd($earthquakeId == 0);
+
+        //check distance
+
+        //insert to notification tabele
+        //send notification
     }
 
     /**
