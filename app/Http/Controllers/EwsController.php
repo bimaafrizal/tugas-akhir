@@ -23,8 +23,13 @@ class EwsController extends Controller
      */
     public function index()
     {
-        $datas = $this->service->all();
-        return view('pages.dashboard2.ews.index', compact('datas'));
+        $allDatas = $this->service->all();
+        $datas = Ews::orderBy('updated_at', 'desc')->paginate(8);
+
+        if (request('search')) {
+            $datas = EWS::where('name', 'like', '%' . request('search') . '%')->orWhere('location', 'like', '%' . request('search') . '%')->orderBy('updated_at', 'desc')->paginate(8);
+        }
+        return view('pages.dashboard2.ews.index', compact('datas', 'allDatas'));
     }
 
     /**

@@ -6,6 +6,15 @@ EWS
 
 @section('ews', 'active')
 
+@section('css')
+<!-- plugin css -->
+<link href="{{ asset('/auth/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
+
+{{-- leafet --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+@endsection
+
 @section('content')
 <!-- start page title -->
 <div class="row">
@@ -24,8 +33,47 @@ EWS
     </div>
 </div>
 <!-- end page title -->
+<div class="row h-100">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="row">
+
+                    <div class="col-8 m-3">
+                        <h3>EWS(Early Warning System)</h3>
+                        <p fs-1>Early warning system adalah sebuah alat produksi prodi D3 Teknik Informatika Universitas Sebelas Maret untuk mendeteksi banjir.</p>
+                    </div>
+                    <div class="col-3 my-2">
+                        <img src="{{ asset('auth/assets/images/ews.jpeg') }}" class="img-fluid" alt=""
+                            style="height: auto; max-height: 400px; width:100%">
+                    </div>
+                </div>
+            </div> <!-- end card-body-->
+        </div>
+    </div> <!-- end col-->
+    <div class="col-12 mt-3">
+        <div class="card">
+            <div class="card-body p-0">
+                <div id="map" style="height: 400px; width:100%; position: relative;"></div>
+            </div> <!-- end card-body-->
+        </div>
+    </div> <!-- end col-->
+</div> <!-- end row-->
 
 <div class="row">
+    <div class="col-12 mb-2">
+        <div class="card">
+            <div class="card-body">
+                <form action="" method="GET">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" value="{{ request('search') }}">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <div class="d-flex justify-content-start mb-2">
         <div class="mx-1">
             <a href="{{ route('ews.create') }}" class="btn btn-primary">Tambah EWS</a>
@@ -77,6 +125,10 @@ EWS
         </div>
     </div>
     @endforeach
+    <div class="d-flex justify-content-center">
+        {{ $datas->onEachSide(5)->links() }}
+    </div>
+    <input type="text" value="{{ $allDatas }}" id="data" hidden>
 </div>
 @endsection
 
@@ -86,4 +138,19 @@ EWS
 <script src="{{ asset('/auth/assets/libs/prismjs/prismjs.min.js') }}"></script>
 
 <script src="{{ asset('/auth//assets/js/app.js') }}"></script>
+
+<script>
+     let map = L.map('map').setView([-7.50000, 111.000], 8);
+     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+    let data = document.getElementById("data").value;
+    let convertObj = JSON.parse(data);
+    convertObj.forEach(element => {
+        let marker = L.marker([element.latitude, element.longitude]).addTo(map).bindPopup(element.name);;
+    });
+    
+</script>
 @endsection

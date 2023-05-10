@@ -6,6 +6,7 @@ use App\Repositories\KategoryArticle\KategoryArticleRepository;
 use App\Repositories\KategoryArticle\KategoryArticleRepositoryImplement;
 use App\Services\KategoryArticle\KategoryArticleService;
 use App\Services\KategoryArticle\KategoryArticleServiceImplement;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Paginator::useBootstrap();
     }
 }

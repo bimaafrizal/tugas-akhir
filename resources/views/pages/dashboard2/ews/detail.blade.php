@@ -13,6 +13,13 @@ EWS
 <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
     type="text/css" />
 <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+<!-- plugin css -->
+<link href="{{ asset('/auth/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
+
+{{-- leafet --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
 @endsection
 
 @section('content')
@@ -39,7 +46,6 @@ EWS
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Tambah EWS</h5>
                 <div class="card-body">
                     <h5>Level Ketinggian Air:
                         <?php if($flood[0]->level == 0) { ?>
@@ -57,10 +63,17 @@ EWS
                         <h1>{{ $ews->name }}</h1>
                         <p>{{ $ews->location }}</p>
                         <p>Status : {{ $ews->status == 1 ? 'Active' : 'Non Active' }}</p>
-                        @if ($ews->gmaps_link != null)
+                        @if ($ews->gmaps_link != null && $ews->longitude == null && $ews->latitude == null)
                         <div class="container text-center my-5 ratio ratio-16x9">
                             {{ $ews->gmaps_link }}
                         </div>
+                        @endif
+                        @if ($ews->longitude != null && $ews->latitude != null)
+                            <input type="text" id="longitude" value="{{ $ews->longitude }}" hidden>
+                            <input type="text" id="latitude" value="{{ $ews->latitude }}" hidden>
+                            <div class="mx-2">
+                                <div id="map" style="height: 400px; width:100%; position: relative;"></div>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -188,6 +201,18 @@ EWS
     setInterval(() => {
         updateChart();
     }, 100);
+</script>
+
+<script>
+    let longitude = document.getElementById('longitude').value;
+    let latitude = document.getElementById('latitude').value;
+
+    let map = L.map('map').setView([latitude, longitude], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+         maxZoom: 18,
+    }).addTo(map);
+        let marker = L.marker([latitude, longitude]).addTo(map);
 </script>
 
 @endsection
