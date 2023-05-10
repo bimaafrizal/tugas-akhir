@@ -2,8 +2,10 @@
 
 namespace App\Services\Ews;
 
+use App\Models\Ews;
 use LaravelEasyRepository\Service;
 use App\Repositories\Ews\EwsRepository;
+use GuzzleHttp\Client;
 
 class EwsServiceImplement extends Service implements EwsService
 {
@@ -27,6 +29,17 @@ class EwsServiceImplement extends Service implements EwsService
 
   public function create($data)
   {
+    if ($data['longitude'] == null && $data['latitude'] == null) {
+      $client = new Client();
+      $response = $client->request('GET', $data['api_url']);
+      $data2 = json_decode($response->getBody()->getContents());
+      $latitude = $data2->channel->latitude;
+      $longitude = $data2->channel->longitude;
+
+      $data['longitude'] = $longitude;
+      $data['latitude'] = $latitude;
+    }
+
     return $this->mainRepository->store($data);
   }
 

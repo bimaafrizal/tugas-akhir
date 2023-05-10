@@ -37,7 +37,7 @@ class EarthquakeEmailNotification
 
         $subject = "Earthquake Notification";
         foreach ($users as $user) {
-            $body = "Gempa pada koordinat " . $earthquakeData['longitude'] . "," . $earthquakeData['latitude'] . " pada kedalaman " . $earthquakeData['depth'] . " km " . " kekuatan sebesar " . $earthquakeData['strength'] . " SR. Jarak anda dengan lokasi gempa adalah " . $user['distance'] . " km.";
+            $body = "Gempa pada koordinat " . $earthquakeData['longitude'] . "," . $earthquakeData['latitude'] . " pada kedalaman " . $earthquakeData['depth'] .  " kekuatan sebesar " . $earthquakeData['strength'] . " SR. Jarak anda dengan lokasi gempa adalah " . $user['distance'] . " km.";
 
             $this->sendEmail($user['email_user'], $subject, $body);
         }
