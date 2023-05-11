@@ -11,6 +11,13 @@ Gempa
 {{-- leafet --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
+    type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('earthquake', 'active')
@@ -46,7 +53,7 @@ Gempa
                             </div>
                             <div class="text-center mt-3">
                                 <h1>Gempa Terbaru</h1>
-                                <p>Kekuatan Gempa: {{ $gempa->strength }} M </p>
+                                <p>Kekuatan Gempa: {{ $gempa->strength }} SR </p>
                                 <p>Kedalaman: {{ $gempa->depth }} </p>
                                 <p>Tanggal: {{ $gempa->date }} </p>
                                 <p>Jam: {{ $gempa->time }}</p>
@@ -61,6 +68,40 @@ Gempa
                         </div> <!-- end card-body-->
                     </div>
                 </div> <!-- end col-->
+                <div class="col-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="myTable"
+                                class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                                style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th data-ordering="false">No.</th>
+                                        <th data-ordering="false">Tanggal</th>
+                                        <th data-ordering="false">Jam</th>
+                                        <th>Kekuatan</th>
+                                        <th>Kedalaman</th>
+                                        <th>Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($gempas as $data)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $data->date }}</td>
+                                        <td>{{ $data->time }}</td>
+                                        <td>{{ $data->strength }}</td>
+                                        <td>{{ $data->depth }}</td>
+                                        <td>
+                                            <a href="{{ route('earthquake.show', ['id' => Crypt::encrypt($data->id)]) }}" class="btn btn-secondary">Detail</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div> <!-- end row-->
 
         </div>
@@ -83,6 +124,17 @@ Gempa
 <!-- App js -->
 <script src="{{ asset('/auth/assets/js/app.js') }} "></script>
 
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{{ asset('auth/assets/js/pages/datatables.init.js') }}"></script>
 <script>
     let map = L.map('map').setView([$('#longitude').val(), $('#latitude').val()], 7);
     let marker = L.marker([$('#longitude').val(), $('#latitude').val()]).addTo(map);
@@ -91,6 +143,13 @@ Gempa
         maxZoom: 18,
     }).addTo(map);
 
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
 
 </script>
+
 @endsection

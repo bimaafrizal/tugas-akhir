@@ -65,6 +65,7 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
     Route::controller(EarthquakeController::class)->prefix('gempa')->group(function () {
         Route::get('/', 'index')->name('earthquake.index');
+        Route::get('/detail/{id}', 'show')->name('earthquake.show');
         Route::get('/download-data', 'downloadData')->name('earthquake.download');
     });
 

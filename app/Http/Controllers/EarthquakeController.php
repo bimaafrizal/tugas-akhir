@@ -27,7 +27,8 @@ class EarthquakeController extends Controller
     public function index()
     {
         $gempa = Earthquake::orderBy('id', 'desc')->first();
-        return view('pages.dashboard2.earthquake.index', compact('gempa'));
+        $gempas = Earthquake::orderBy('id', 'desc')->get();
+        return view('pages.dashboard2.earthquake.index', compact('gempa', 'gempas'));
     }
 
     /**
@@ -147,9 +148,11 @@ class EarthquakeController extends Controller
      * @param  \App\Models\Earthquake  $earthquake
      * @return \Illuminate\Http\Response
      */
-    public function show(Earthquake $earthquake)
+    public function show($id)
     {
-        //
+        $idDecrypt = decrypt($id);
+        $gempa = Earthquake::where('id', $idDecrypt)->first();
+        return view('pages.dashboard2.earthquake.detail', compact('gempa'));
     }
 
     /**

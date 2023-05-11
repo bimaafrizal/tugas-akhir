@@ -149,7 +149,7 @@ EWS
     let data = document.getElementById("data").value;
     let convertObj = JSON.parse(data);
     convertObj.forEach(element => {
-        let marker = L.marker([element.latitude, element.longitude]).addTo(map).bindPopup(element.name);;
+        let marker = L.marker([element.latitude, element.longitude]).addTo(map).bindPopup(element.name);
     });
     
 </script>
