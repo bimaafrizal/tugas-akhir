@@ -65,49 +65,10 @@ class EarthquakeController extends Controller
             'potensi' => $detailData->Potensi
         ];
 
-        // dd($earthquakeData);
-
-        $latitude = substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1);
-        $longitude = substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ','));
-        $strength = $detailData->Magnitude;
-        $depth = $detailData->Kedalaman;
-        $tanggal = $detailData->Tanggal;
-        $jam = $detailData->Jam;
-        $createdAt = $detailData->DateTime;
-        $potensi = $detailData->Potensi;
-
         //get last data
         $earthquake = Earthquake::orderBy('id', 'desc')->first();
         $data = [];
 
-        //insert to earthquake 
-        // if ($earthquake  == null) {
-        //     Earthquake::insert([
-        //         'longitude' => $longitude,
-        //         'latitude' => $latitude,
-        //         'strength' => $strength,
-        //         'depth' => $depth,
-        //         'date' => $tanggal,
-        //         'time' => $jam,
-        //         'created_at' => $createdAt,
-        //         'potency' => $potensi,
-        //         'inserted_at' => Carbon::now()
-        //     ]);
-        // } else {
-        //     if ($earthquake->longitude != $longitude || $earthquake->latitude != $latitude || $earthquake->date != $tanggal || $earthquake->time  != $jam) {
-        //         Earthquake::insert([
-        //             'longitude' => $longitude,
-        //             'latitude' => $latitude,
-        //             'strength' => $strength,
-        //             'depth' => $depth,
-        //             'date' => $tanggal,
-        //             'time' => $jam,
-        //             'created_at' => $createdAt,
-        //             'potency' => $potensi,
-        //             'inserted_at' => Carbon::now()
-        //         ]);
-        //     }
-        // }
         $promise1 = new Promise();
         $promise2 = new Promise();
         $insertEearthquake = new InsertEarthquake($earthquake, $earthquakeData, $promise1);

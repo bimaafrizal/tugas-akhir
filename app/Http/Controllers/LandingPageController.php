@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Collaboration;
 use App\Models\Feature;
 use App\Models\LandingPage;
@@ -19,11 +20,14 @@ class LandingPageController extends Controller
 
     public function blog()
     {
-        return view('pages.landing-page.blog');
+        $page = LandingPage::where('id', 1)->first();
+        $articles = Article::where('is_active', 1)->get();
+        return view('pages.landing-page.blog', compact('page', 'articles'));
     }
 
     public function blogSingle()
     {
-        return view('pages.landing-page.blog-single');
+        $page = LandingPage::where('id', 1)->first();
+        return view('pages.landing-page.blog-single', compact('page'));
     }
 }

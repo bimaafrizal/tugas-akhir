@@ -7,8 +7,8 @@ Article
 @section('article', 'active')
 
 @section('css')
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 @endsection
 
 @section('content')
@@ -78,9 +78,7 @@ Article
                         <div class="mb-3">
                             <label for="body" class="form-label">Body*</label>
                             <textarea type="text" name="body" class="form-control @error('body') is-invalid
-                                    @enderror" id="body-content">
-                                    {{ old('body', $article->body) }}
-                                </textarea>
+                                    @enderror" id="body-content">{!! old('body', $article->body) !!}</textarea>
                             @error('body')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -101,7 +99,7 @@ Article
 
 @section('script')
 <script>
-        const title = document.querySelector('#title');
+    const title = document.querySelector('#title');
     const slug = document.querySelector('#slug');
     title.addEventListener('change', function () {
         fetch('/check-slug?title=' + title.value)
@@ -109,21 +107,12 @@ Article
         .then(data => slug.value = data.slug)
         console.log(slug.value);
     });
-
-    ClassicEditor
-        .create(document.querySelector('#body-content'), {
-            ckfinder: {
-                uploadUrl: "{{route('images-upload').' ? _token = '.csrf_token()}}",
-            }
-        })
-        .then(editor => {
-            console.log(editor);
-        })
-        .catch(error => {
-            console.error(error);
-        });
 </script>
-
+<script>
+    $(document).ready(function () {
+        $('#body-content').summernote();
+    });
+</script>
 <script src="{{ asset('/auth/assets/libs/prismjs/prismjs.min.js') }}"></script>
 
 <script src="{{ asset('/auth//assets/js/app.js') }}"></script>

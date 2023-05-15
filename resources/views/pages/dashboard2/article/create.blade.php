@@ -7,8 +7,8 @@ Article
 @section('article', 'active')
 
 @section('css')
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 @endsection
 
 @section('content')
@@ -48,8 +48,8 @@ Article
                                 {{ $message }}
                             </div>
                             @enderror
-                            <input type="text" class="form-control" id="slug" name="slug" required 
-                            value="{{ old('slug') }}" hidden>
+                            <input type="text" class="form-control" id="slug" name="slug" required
+                                value="{{ old('slug') }}" hidden>
                         </div>
                         <div class="mb-3">
                             <label for="cover" class="form-label">Cover*</label>
@@ -99,27 +99,37 @@ Article
 
 @section('script')
 <script>
-        const title = document.querySelector('#title');
+    $(document).ready(function () {
+        $('#body-content').summernote();
+    });
+
+</script>
+
+<script>
+    const title = document.querySelector('#title');
     const slug = document.querySelector('#slug');
     title.addEventListener('change', function () {
         fetch('/check-slug?title=' + title.value)
-        .then(response => response.json())
-        .then(data => slug.value = data.slug)
+            .then(response => response.json())
+            .then(data => slug.value = data.slug)
         console.log(slug.value);
     });
 
-    ClassicEditor
-        .create(document.querySelector('#body-content'), {
-            ckfinder: {
-                uploadUrl: "{{route('images-upload').' ? _token = '.csrf_token()}}",
-            }
-        })
-        .then(editor => {
-            console.log(editor);
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    // CKEDITOR.replace('body-conten');
+    // ClassicEditor
+    //     .create(document.querySelector('#body-content'), {
+    //         ckfinder: {
+    //             uploadUrl: "{{route('images-upload').' ? _token = '.csrf_token()}}",
+    //             openerMethod: 'popup'
+    //         }
+    //     })
+    //     .then(editor => {
+    //         console.log(editor);
+    //     })
+    //     .catch(error => {
+    //         console.error(error);
+    //     });
+
 </script>
 
 <script src="{{ asset('/auth/assets/libs/prismjs/prismjs.min.js') }}"></script>

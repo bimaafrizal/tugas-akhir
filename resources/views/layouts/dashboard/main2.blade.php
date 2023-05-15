@@ -13,8 +13,7 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
-    @yield('css')
-
+    
     <!-- Layout config Js -->
     <script src="{{ asset('/auth/assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
@@ -25,15 +24,16 @@
     <link href="{{ asset('/auth/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('/auth/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-
+    
     {{-- fontawesome --}}
     <script src="https://kit.fontawesome.com/52cf1628fd.js" crossorigin="anonymous"></script>
-
-
+    
+    
     {{-- jquery --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
     integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @yield('css')
 
     @stack('styles')
 </head>

@@ -43,7 +43,7 @@ Gempa
                     <div class="card">
                         <div class="card-body p-0">
                             <div class="text-center mt-3">
-                                <h1>Gempa Terbaru</h1>
+                                <h1>Detail Gempa</h1>
                                 <p>Kekuatan Gempa: {{ $gempa->strength }} SR </p>
                                 <p>Kedalaman: {{ $gempa->depth }} </p>
                                 <p>Tanggal: {{ $gempa->date }} </p>

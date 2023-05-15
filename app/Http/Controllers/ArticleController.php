@@ -50,6 +50,7 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $userId = Auth::user()->id;
+
         $this->service->storeArticle($request->all(), $request, $userId);
         return redirect(route('article.index'))->with('success', 'Berhasil menambahkan article');
     }
@@ -90,7 +91,7 @@ class ArticleController extends Controller
     public function update(UpdateArticleRequest $request, Article $slug)
     {
         $this->service->updateArticle($request->all(), $request, $slug);
-        return redirect(route('article.index'));
+        return redirect(route('article.index'))->with('success', 'Berhasil merubah article');
     }
 
     /**
@@ -114,63 +115,5 @@ class ArticleController extends Controller
     {
         $slug = SlugService::createSlug(Article::class, 'slug', $request->title);
         return response()->json(['slug' => $slug]);
-    }
-
-    public function uploadImage(Request $request)
-    {
-        $image = $request->file('upload');
-
-        $imageName = time() . '.' . $image->extension();
-        $path = $request->file('upload')->storeAs('public/berita', $imageName);
-        $url = Storage::url($path);
-
-        return response()->json([
-            'url' => $url
-        ]);
-        // if ($request->hasFile('upload')) {
-        //     $mimeType = $request->file('upload')->getMimeType();
-        //     $allowedMimeTypes = ['image/jpeg', 'image/png'];
-        //     if (!in_array($mimeType, $allowedMimeTypes)) {
-        //         return response()->json(['uploaded' => 0, 'error' => 'File yang diupload harus berupa gambar dengan format JPEG atau PNG.']);
-        //     }
-        //     $size = $request->file('upload')->getSize();
-        //     $maxSize = 5242880; // 5 MB
-        //     if ($size > $maxSize) {
-        //         return response()->json(['uploaded' => 0, 'error' => 'Ukuran file yang diupload tidak boleh lebih dari 5 MB.']);
-        //     }
-        //     $originName = $request->file('upload')->getClientOriginalName();
-        //     $fileName = pathinfo($originName, PATHINFO_FILENAME);
-        //     $extension = $request->file('upload')->getClientOriginalExtension();
-        //     $fileName = $fileName . '_' . time() . '.' . $extension;
-
-        //     $request->file('upload')->move(public_path('berita'), $fileName);
-
-        //     $url = asset('berita/' . $fileName);
-        //     return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
-        // }
-        // return response()->json(['uploaded' => 0, 'error' => 'Tidak ada file yang diupload.']);
-
-        // if ($request->hasFile('file')) {
-        //     //get filename with extension
-        //     $filenamewithextension = $request->file('file')->getClientOriginalName();
-
-        //     //get filename without extension
-        //     $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
-
-        //     //get file extension
-        //     $extension = $request->file('file')->getClientOriginalExtension();
-
-        //     //filename to store
-        //     $filenametostore = $filename . '_' . time() . '.' . $extension;
-
-        //     //Upload File
-        //     $request->file('file')->move(public_path('public/article'), $filenametostore);
-
-        //     // you can save image path below in database
-        //     $path = asset('public/article/' . $filenametostore);
-
-        //     echo $path;
-        //     exit;
-        // }
     }
 }
