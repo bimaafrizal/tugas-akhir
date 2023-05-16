@@ -28,7 +28,11 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 Route::controller(LandingPageController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('blog', 'blog');
-    Route::get('blog-single', 'blogSingle');
+    Route::get('blog/{slug}', 'blogSingle')->name('blog-slug');
+    Route::middleware(['auth', 'verified', 'otp'])->group(function () {
+        Route::post('comment/{slug}', 'comenntStore')->name('comment-store');
+        Route::post('comment/{slug}/{id}', 'comenntNastedStore')->name('nasted-comment-store');
+    });
 });
 
 Route::middleware(['auth', 'verified', 'otp'])->group(function () {

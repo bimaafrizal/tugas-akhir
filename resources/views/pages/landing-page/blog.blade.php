@@ -30,8 +30,8 @@ Blog
                     <div class="row justify-content-center">
                         <div class="col-md-7 text-center hero-text">
                             <h1 data-aos="fade-up" data-aos-delay="">Blog Posts</h1>
-                            <p class="mb-5" data-aos="fade-up" data-aos-delay="100">Lorem ipsum dolor sit amet,
-                                consectetur adipisicing elit.</p>
+                            {{-- <p class="mb-5" data-aos="fade-up" data-aos-delay="100">Lorem ipsum dolor sit amet,
+                                consectetur adipisicing elit.</p> --}}
                         </div>
                     </div>
                 </div>
@@ -43,16 +43,28 @@ Blog
     <section class="section">
         <div class="container">
             <div class="row mb-5">
+                <div class="col-12 mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="" method="GET">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" value="{{ request('search') }}">
+                                    <button class="btn btn-primary" type="submit">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 @foreach ($articles as $article)
-                <div class="col-md-4">
+                <div class="col-md-4 col-sm-6 col-lg-2">
                     <div class="post-entry">
-                        <a href="/blog-single" class="d-block mb-4">
+                        <a href="{{ route('blog-slug', ['slug' => $article->slug]) }}" class="d-block mb-4">
                             <img src="{{ asset($article->cover) }}" alt="Image" class="img-fluid" style="height: 150px; background-size: cover">
                         </a>
                         <div class="post-text">
                             <span class="post-meta">{{ $article->created_at }} &bullet; By <a href="#">{{ $article->user->name  }}</a></span>
                             <h3><a href="#">{{ $article->title }}</a></h3>
-                            <p><a href="/blog-single" class="readmore">Read more</a></p>
+                            <p><a href="{{ route('blog-slug', ['slug' => $article->slug]) }}" class="readmore">Read more</a></p>
                         </div>
                     </div>
                 </div>
@@ -60,11 +72,8 @@ Blog
             </div>
 
             <div class="row">
-                <div class="col-12 text-center">
-                    <span class="p-3 active text-primary">1</span>
-                    <a href="#" class="p-3">2</a>
-                    <a href="#" class="p-3">3</a>
-                    <a href="#" class="p-3">4</a>
+                <div class="col-12 d-flex justify-content-center">
+                    {{ $articles->links() }}
                 </div>
             </div>
         </div>

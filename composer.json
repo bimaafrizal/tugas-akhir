@@ -9,15 +9,16 @@
         "cviebrock/eloquent-sluggable": "^9.0",
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/auth": "*",
+        "intervention/image": "dev-master",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.11",
+        "realrashid/sweet-alert": "^7.0",
         "sendinblue/api-v3-sdk": "^8.4",
         "swooletw/laravel-swoole": "^2.12",
         "vxm/laravel-async": "^3.0",
-        "yaza/laravel-repository-service": "^3.2",
-        "intervention/image": "dev-master"
+        "yaza/laravel-repository-service": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",
