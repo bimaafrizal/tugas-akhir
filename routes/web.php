@@ -9,6 +9,7 @@ use App\Http\Controllers\FloodController;
 use App\Http\Controllers\KategoryArticleController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingLandingPage;
 use Illuminate\Support\Facades\Route;
@@ -112,6 +113,12 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('{id}/edit-instansi', 'editInstansi')->name('landing-page.edit-instansi');
         Route::post('update-instansi/{id}', 'updateInstansi')->name('landing-page.update-instansi');
         Route::post('delete-instansi/{id}', 'deleteInstansi')->name('landing-page.delete-instansi');
+    });
+
+    Route::controller(NotificationController::class)->prefix('notification')->group(function () {
+        Route::get('/', 'index')->name('notif.index');
+        Route::get('/gempa/{id}', 'earthquakeDetail')->name('detail-notif-gempa');
+        Route::get('/banjir/{id}', 'floodfDetail')->name('detail-notif-banjir');
     });
 });
 

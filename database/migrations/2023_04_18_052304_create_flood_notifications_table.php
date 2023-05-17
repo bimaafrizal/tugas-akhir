@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('flood_id');
             $table->foreignId('user_id');
+            $table->integer('distance');
             $table->integer('status_whatsapp')->nullable();
             $table->integer('status_email')->nullable();
             $table->timestamps();

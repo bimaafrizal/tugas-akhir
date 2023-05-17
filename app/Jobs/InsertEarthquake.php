@@ -73,8 +73,8 @@ class InsertEarthquake
         $lengthOfString = strlen($newData['depth']);
         $convertDepth = (int) substr($newData['depth'], '0', $lengthOfString - strpos($newData['depth'], 'km'));
 
-        if ($newData['strength'] >= $disaster->strength && $convertDepth >= $disaster->depth) {
-            if ($insert) {
+        if ($insert) {
+            if ($newData['strength'] >= $disaster->strength && $convertDepth >= $disaster->depth) {
                 //get id
                 $earthquake = Earthquake::where([
                     ['longitude', '=', $newData['longitude']],

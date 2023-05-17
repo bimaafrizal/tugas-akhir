@@ -219,7 +219,9 @@ class FloodController extends Controller
                 if ($checkDistance[$i]['ews_id'] == $floodData[$j]['ews_id']) {
                     array_push($dataNotif, [
                         'flood_id' => $floodData[$j]['flood_id'],
-                        'user_id' => $checkDistance[$i]['user_id']
+                        'user_id' => $checkDistance[$i]['user_id'],
+                        'distance' => $checkDistance[$i]['distance'],
+                        'created_at' => Carbon::now()
                     ]);
                 }
             }

@@ -78,6 +78,11 @@
                         <i class=" ri-pages-line"></i> <span data-key="t-widgets">Setting Landing Page</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('notification')" href="{{ route('notif.index') }}">
+                        <i class="ri-chat-history-line"></i> <span data-key="t-widgets">Notification</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

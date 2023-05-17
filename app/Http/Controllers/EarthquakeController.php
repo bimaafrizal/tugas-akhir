@@ -9,6 +9,7 @@ use App\Jobs\CheckDistanceUserEarthquake;
 use App\Jobs\EarthquakeEmailNotification;
 use App\Jobs\InsertEarthquake;
 use App\Jobs\InsertEarthquakeNotification;
+use App\Models\Disaster;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
@@ -53,6 +54,7 @@ class EarthquakeController extends Controller
         $response = $client->request('GET', 'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
         $data = json_decode($response->getBody()->getContents());
         $detailData = $data->Infogempa->gempa;
+        $insert = false;
 
         $earthquakeData = [
             'latitude' => substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1),
@@ -67,28 +69,71 @@ class EarthquakeController extends Controller
 
         //get last data
         $earthquake = Earthquake::orderBy('id', 'desc')->first();
-        $data = [];
+        if ($earthquake  == null) {
+            $insert = Earthquake::insert([
+                'longitude' => $earthquakeData['longitude'],
+                'latitude' => $earthquakeData['latitude'],
+                'strength' => $earthquakeData['strength'],
+                'depth' => $earthquakeData['depth'],
+                'date' => $earthquakeData['tanggal'],
+                'time' => $earthquakeData['jam'],
+                'created_at' => $earthquakeData['createdAt'],
+                'potency' => $earthquakeData['potensi'],
+                'inserted_at' => Carbon::now()
+            ]);
+        } else {
+            if ($earthquake->longitude != $earthquakeData['longitude'] || $earthquake->latitude != $earthquakeData['latitude'] || $earthquake->date != $earthquakeData['tanggal'] || $earthquake->time  != $earthquakeData['jam']) {
+                $insert = Earthquake::insert([
+                    'longitude' => $earthquakeData['longitude'],
+                    'latitude' => $earthquakeData['latitude'],
+                    'strength' => $earthquakeData['strength'],
+                    'depth' => $earthquakeData['depth'],
+                    'date' => $earthquakeData['tanggal'],
+                    'time' => $earthquakeData['jam'],
+                    'created_at' => $earthquakeData['createdAt'],
+                    'potency' => $earthquakeData['potensi'],
+                    'inserted_at' => Carbon::now()
+                ]);
+            }
+        }
 
-        $promise1 = new Promise();
+        $idEarthquake = 0;
+        //check strength and depth data
+        $disaster = Disaster::where('id', 2)->first();
+        $lengthOfString = strlen($earthquakeData['depth']);
+        $convertDepth = (int) substr($earthquakeData['depth'], '0', $lengthOfString - strpos($earthquakeData['depth'], 'km'));
+
+        if ($insert) {
+            if ($earthquakeData['strength'] >= $disaster->strength && $convertDepth >= $disaster->depth) {
+                //get id
+                $earthquake = Earthquake::where([
+                    ['longitude', '=', $earthquakeData['longitude']],
+                    ['latitude', '=', $earthquakeData['latitude']],
+                    ['strength', '=', $earthquakeData['strength']],
+                    ['depth', '=', $earthquakeData['depth']],
+                    ['time', '=', $earthquakeData['jam']],
+                    ['created_at', '=', $earthquakeData['createdAt']],
+                    ['potency', '=', $earthquakeData['potensi']]
+                ])->first();
+                $idEarthquake = $earthquake->id;
+            }
+        }
+
         $promise2 = new Promise();
-        $insertEearthquake = new InsertEarthquake($earthquake, $earthquakeData, $promise1);
         $checkDistance = new CheckDistanceUserEarthquake($earthquake['latitude'], $earthquake['longitude'], $promise2);
-        dispatch($insertEearthquake);
         dispatch($checkDistance);
-        $promise[] = $promise1;
-        $promise[] = $promise2;
-        Utils::all($promise)->wait();
 
-        $earthquakeId = $insertEearthquake->getResult();
+
         $distanceOfUser = $checkDistance->getResult();
 
         $dataNotif = [];
-
-        if ($earthquakeId != 0) {
+        if ($idEarthquake != 0) {
             foreach ($distanceOfUser as $distance) {
                 array_push($dataNotif, [
                     'user_id' => $distance['user_id'],
-                    'earthquake_id' => $earthquakeId
+                    'earthquake_id' => $idEarthquake,
+                    'distance' => $distance['distance'],
+                    'created_at' => Carbon::now()
                 ]);
             }
         }
