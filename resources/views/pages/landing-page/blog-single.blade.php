@@ -29,7 +29,7 @@
                     <div class="row justify-content-center">
                         <div class="col-md-10 text-center hero-text">
                             <h1 data-aos="fade-up" data-aos-delay="">{{ $article->title }}</h1>
-                            <p class="mb-5" data-aos="fade-up" data-aos-delay="100">{{ $article->created_at }} &bullet;
+                            <p class="mb-5" data-aos="fade-up" data-aos-delay="100">{{ $article->created_at->diffForHumans() }} &bullet;
                                 By <a href="#" class="text-white">{{ $article->user->name }}</a></p>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                                 <div class="form-group">
                                     <label for="message">Message</label>
                                     <textarea name="body" id="message" cols="30" rows="10"
-                                        class="form-control @error('body') is-invalid @enderror">{{ old('body') }}</textarea>
+                                        class="form-control @error('body') is-invalid @enderror" required>{{ old('body') }}</textarea>
                                     @error('body')
                                     <div class="invalid-feedback">
                                         {{ $message }}

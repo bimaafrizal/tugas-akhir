@@ -12,7 +12,7 @@
                     <form action="{{ route('nasted-comment-store', ['slug' => $slug, 'id' => $comment->id]) }}" method="POST">
                         @csrf
                         <textarea class="form-control @error('content') is-invalid @enderror" name="content" id=""
-                            cols="30" rows="2">{{ old('content', $comment->content) }}</textarea>
+                            cols="30" rows="2" required>{{ old('content', $comment->content) }}</textarea>
                         @error('content')
                         <div class="invalid-feedback">
                             {{ $message }}

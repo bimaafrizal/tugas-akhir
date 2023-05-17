@@ -24,11 +24,11 @@ class LandingPageController extends Controller
     public function blog()
     {
         $page = LandingPage::where('id', 1)->first();
-        $articles = Article::with('user', 'kategory')->where('is_active', 1)->get();
-        
-        dd($articles);
+        $articles = Article::with('user', 'kategory')->where('is_active', 1)->paginate(3);
+
         if (request('search')) {
-            $articles = Article::where('is_active', 1)->paginate(2);
+            $articles = Article::with('user', 'kategory')->join('users', 'articles.user_id', '=', 'users.id')->join('kategory_articles', 'articles.user_id', '=', 'kategory_articles.id')->where('is_active', 1)
+                ->where('articles.title', 'like', '%' . request('search') . '%')->orWhere('kategory_articles.name', 'like', '%' . request('search') . '%')->orWhere('users.name', 'like', '%' . request('search') . '%')->paginate(3);
         }
         return view('pages.landing-page.blog', compact('page', 'articles'));
     }
@@ -52,14 +52,12 @@ class LandingPageController extends Controller
         $data['article_id'] = $article->id;
         Comment::create($data);
 
-        // Alert::success('Success Title', 'Success Message');
-        alert()->success('Title', 'Lorem Lorem Lorem');
+        Alert::success('Success Title', 'Success Message');
         return redirect()->back();
     }
 
     public function comenntNastedStore(Request $request, $slug, $id)
     {
-        // dd($id);
         $request->validate(['content' => 'required|min:5']);
         $article = Article::where('slug', $slug)->first();
 

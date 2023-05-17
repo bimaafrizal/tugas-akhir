@@ -62,7 +62,7 @@ Blog
                             <img src="{{ asset($article->cover) }}" alt="Image" class="img-fluid" style="height: 150px; background-size: cover">
                         </a>
                         <div class="post-text">
-                            <span class="post-meta">{{ $article->created_at }} &bullet; By <a href="#">{{ $article->user->name  }}</a></span>
+                            <span class="post-meta">{{ $article->created_at->diffForHumans() }} &bullet; By <a href="#">{{ $article->user->name  }}</a></span>
                             <h3><a href="#">{{ $article->title }}</a></h3>
                             <p><a href="{{ route('blog-slug', ['slug' => $article->slug]) }}" class="readmore">Read more</a></p>
                         </div>
