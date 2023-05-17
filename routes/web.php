@@ -118,7 +118,7 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
     Route::controller(NotificationController::class)->prefix('notification')->group(function () {
         Route::get('/', 'index')->name('notif.index');
         Route::get('/gempa/{id}', 'earthquakeDetail')->name('detail-notif-gempa');
-        Route::get('/banjir/{id}', 'floodfDetail')->name('detail-notif-banjir');
+        Route::get('/banjir/{id}', 'floodDetail')->name('detail-notif-banjir');
     });
 });
 

@@ -68,7 +68,7 @@ Notification
                             <td> - </td>
                             <td> - </td>
                             <td> {{ $item->created_at }} </td>
-                            <td> <a href="" class="btn btn-primary">Detail</a> </td>
+                            <td> <a href="{{ route('detail-notif-gempa', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -108,7 +108,7 @@ Notification
                             <td> - </td>
                             <td> - </td>
                             <td> {{ $item->created_at }} </td>
-                            <td> <a href="" class="btn btn-primary">Detail</a> </td>
+                            <td> <a href="{{ route('detail-notif-banjir', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>
                         @endforeach
                     </tbody>

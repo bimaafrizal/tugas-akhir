@@ -13,4 +13,8 @@ class EarthquakeNotification extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function earthquake()
+    {
+        return $this->belongsTo(Earthquake::class, 'earthquake_id', 'id');
+    }
 }

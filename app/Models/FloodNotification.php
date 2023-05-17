@@ -13,4 +13,8 @@ class FloodNotification extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function flood()
+    {
+        return $this->belongsTo(Flood::class);
+    }
 }
