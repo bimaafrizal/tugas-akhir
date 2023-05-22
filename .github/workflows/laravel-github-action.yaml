@@ -1,40 +1,24 @@
-name: Deploy Aplication
+name: Deploy To Server
 
+# Trigger the workflow on push and
+# pull request events on the production branch
 on:
   push:
     branches:
-      - main
+      - production
 
+# Authenticate to the the server via ssh
+# and run our deployment script
 jobs:
-  web-deploy:
-    name: Deploy
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@v2
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
         with:
-          php-version: 8.0
-          tools: composer:v2
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer update
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: npm install
-        run: npm install
-
-      # - name: npm run production
-      #   run: npm run production
-
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
-        with:
-          server: v3420018.mhs.d3tiuns.com
-          username: ${{ secrets.ftp_username }}
-          password: ${{ secrets.ftp_password }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SERVER_SSHKEY }}
+          script: "cd /var/www/public_html && ./.scripts/deploy.sh"

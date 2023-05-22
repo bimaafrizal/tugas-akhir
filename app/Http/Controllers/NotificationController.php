@@ -29,6 +29,7 @@ class NotificationController extends Controller
         $decryptId = decrypt($id);
         $data = EarthquakeNotification::where('id', $decryptId)->first();
 
+         
         return view('pages.dashboard2.notifikasi.earthquake-detail', compact('data'));
     }
 
