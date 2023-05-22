@@ -9,7 +9,6 @@ on:
 
 # Authenticate to the the server via ssh
 # and run our deployment script
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
