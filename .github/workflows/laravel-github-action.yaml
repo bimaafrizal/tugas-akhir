@@ -21,4 +21,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SERVER_SSHKEY }}
-          script: "cd /var/www/public_html && ./.scripts/deploy.sh"
+          script: "cd /home/awas5984/public_html && ./.scripts/deploy.sh"
