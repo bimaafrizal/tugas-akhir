@@ -32,4 +32,5 @@ return [
     ],
 
     'OPEN_WEATHER_API_KEY' => env('OPEN_WEATHER_API_KEY'),
+    'FONNTE_TOKEN' => env('FONNTE_TOKEN'),
 ];

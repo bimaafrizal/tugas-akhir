@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CobaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisasterController;
 use App\Http\Controllers\EarthquakeController;
