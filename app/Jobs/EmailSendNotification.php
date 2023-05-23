@@ -43,7 +43,7 @@ class EmailSendNotification
             } else if ($data['level'] ==  3) {
                 $level = "Awas";
             }
-            $body = "PPPPP banjir woi!!<br> ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km";
+            $body = "Informasi Banjir!! ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km dari unit " . $data['ews_name'] . " cek web awasbencana.website untuk informasi lebih lanjut.";
 
             $this->sendEmail($data['email_user'], $subject, $body);
 

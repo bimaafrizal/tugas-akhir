@@ -2,20 +2,26 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 class WhatsappSendNotification
 {
     use Dispatchable;
+    protected $datas;
+    protected $promise;
+    protected $result = [];
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($arr, Promise $promise)
     {
-        //
+        $this->datas = $arr;
+        $this->promise = $promise;
     }
 
     /**
@@ -25,6 +31,40 @@ class WhatsappSendNotification
      */
     public function handle()
     {
-        //
+        $datas = $this->datas;
+
+        foreach ($datas as $data) {
+            $level = "normal";
+            if ($data['level'] ==  1) {
+                $level = "Siaga";
+            } else if ($data['level'] ==  2) {
+                $level = "Waspada";
+            } else if ($data['level'] ==  3) {
+                $level = "Awas";
+            }
+            $message = "Informasi Banjir!!<br> ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km dari unit " . $data['ews_name'] . " cek web awasbencana.website untuk informasi lebih lanjut.";
+
+            $this->sendWhatsapp($data['phone_user'], $message);
+        }
+    }
+
+    public function sendWhatsapp($user, $message)
+    {
+        $token = config('services.FONNTE_TOKEN');
+
+        $client = new Client();
+        $response = $client->request('POST', 'https://api.fonnte.com/send', [
+            'headers' => [
+                'Accept' => 'aplication/json',
+                'Authorization' => $token
+            ],
+            'json' => [
+                'target' => $user,
+                'message' => $message,
+                'countryCode' => '62', //optional
+            ]
+        ]);
+        $data = json_decode($response->getBody()->getContents());
+        return $data;
     }
 }
