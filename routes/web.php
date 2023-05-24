@@ -13,6 +13,7 @@ use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingLandingPage;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -125,3 +126,4 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
 Route::get('test-ews', [FloodController::class, 'store']);
 Route::get('test-gempa', [EarthquakeController::class, 'store']);
+Route::get('test-cuaca', [WeatherController::class, 'sendNotif']);
