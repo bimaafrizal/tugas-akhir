@@ -49,7 +49,11 @@ Verify Phone Number
                             </div>
 
                             <div class="p-2 mt-4">
+                                <input type="text" id="expired" value="{{ $expired }}" hidden>
                                 <div class="text-muted text-center mb-4 mx-lg-3">
+                                    <div class="text-center">
+                                        <h4 id="timer"></h4>
+                                    </div>
                                     <h4>Verify Your Phone Number</h4>
                                     <p>Please enter the 4 digit code sent to <span class="fw-semibold">your phone
                                             number</span></p>
@@ -124,14 +128,15 @@ Verify Phone Number
                     <!-- end card -->
 
                     <div class="mt-4 text-center">
-                        <p class="mb-0">Didn't receive a code ? 
+                        <p class="mb-0">Didn't receive a code ?
                             <form action="{{ route('otp.resend') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="fw-semibold text-primary text-decoration-underline">Resend</button>
+                                @csrf
+                                <button type="submit"
+                                    class="fw-semibold text-primary text-decoration-underline">Resend</button>
                             </form>
                             {{-- <a href="{{ route('otp.resend') }}"
-                                class="fw-semibold text-primary text-decoration-underline">Resend</a>  --}}
-                            </p>
+                            class="fw-semibold text-primary text-decoration-underline">Resend</a> --}}
+                        </p>
                     </div>
 
                 </div>
@@ -162,4 +167,22 @@ Verify Phone Number
     <!-- end Footer -->
 </div>
 <!-- end auth-page-wrapper -->
+<script>
+    const endDate = new Date(document.getElementById('expired').value);
+
+    let timer = setInterval(() => {
+        let now = new Date().getTime();
+        let timeRemaining = endDate - now;
+        let minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        document.getElementById("timer").innerHTML = minutes + " : " + seconds;
+        
+        if(timeRemaining < 0) {
+            document.getElementById("timer").innerHTML = "0 : 0";
+        }
+    }, 1000);
+
+</script>
+
 @endsection
