@@ -12,6 +12,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingDisasterController;
 use App\Http\Controllers\SettingLandingPage;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -121,6 +122,10 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('/', 'index')->name('notif.index');
         Route::get('/gempa/{id}', 'earthquakeDetail')->name('detail-notif-gempa');
         Route::get('/banjir/{id}', 'floodDetail')->name('detail-notif-banjir');
+    });
+
+    Route::controller(SettingDisasterController::class)->prefix('setting-disaster')->group(function () {
+        Route::get('update/{id}', 'update')->name('update-setting');
     });
 });
 

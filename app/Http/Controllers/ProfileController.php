@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Disaster;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,9 @@ class ProfileController extends Controller
     {
         $id = Auth::user()->id;
         $user = User::where('id', $id)->first();
+        $disaster = Disaster::all();
 
-        return view('pages.dashboard2.profile.index', compact('user'));
+        return view('pages.dashboard2.profile.index', compact('user', 'disaster'));
     }
 
     public function editData(Request $request)
