@@ -309,11 +309,11 @@ Profile
             </div>
             <div class="card-body">
                 <div class="row">
-                    @foreach ($disaster as $item)
+                    @foreach ($checkeds as $item)
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="form-check form-switch form-switch-lg" dir="ltr">
-                            <input type="checkbox" class="form-check-input disaster" id="{{ $item->id }}" checked="" onchange="getId({{ $item->id }})">
-                            <label class="form-check-label" for="customSwitchsizelg">{{ $item->name }}</label>
+                            <input type="checkbox" class="form-check-input disaster" id="{{ $item['data']->id }}" {{ $item['checked'] == true ? 'checked' : '' }} onchange="getId({{ $item['data']->id }})">
+                            <label class="form-check-label" for="customSwitchsizelg">{{ $item['data']->name }}</label>
                         </div>
                     </div>
                     @endforeach
@@ -323,6 +323,7 @@ Profile
     </div>
 </div>
 <!--end row-->
+
 @endsection
 
 @section('script')
