@@ -20,13 +20,13 @@ class UserSeeder extends Seeder
         $user = [
             [
                 'name' => 'User',
-                'email' => 'afrizalmalna@gmail.com',
+                'email' => 'afrizalmalnabima@gmail.com',
                 'email_verified_at' => Carbon::now(),
                 'phone_num' => '089111000123',
                 'phone_num_verified_at' => Carbon::now(),
                 'role_id' => 1,
                 'status' => 1,
-                'password' => Hash::make('afrizalmalna@gmail.com'),
+                'password' => Hash::make('afrizalmalnabima@gmail.com'),
             ],
             [
                 'name' => 'Admin',

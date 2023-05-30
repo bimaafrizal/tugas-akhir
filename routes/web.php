@@ -14,6 +14,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingDisasterController;
 use App\Http\Controllers\SettingLandingPage;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -126,6 +127,12 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
     Route::controller(SettingDisasterController::class)->prefix('setting-disaster')->group(function () {
         Route::get('update/{id}', 'update')->name('update-setting');
+    });
+
+    Route::controller(TemplateController::class)->prefix('template')->group(function () {
+        Route::get('/', 'index')->name('template.index');
+        Route::get('/{id}/edit', 'edit')->name('template.edit');
+        Route::post('/{id}', 'update')->name('template.update');
     });
 });
 

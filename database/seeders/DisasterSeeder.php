@@ -26,5 +26,9 @@ class DisasterSeeder extends Seeder
             'distance' => 70,
             'depth' => 100
         ]);
+
+        Disaster::create([
+            'name' => 'Cuaca'
+        ]);
     }
 }
