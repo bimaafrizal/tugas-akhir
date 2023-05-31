@@ -83,6 +83,11 @@
                         <i class="ri-chat-history-line"></i> <span data-key="t-widgets">Notification</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link  @yield('template')" href="{{ route('template.index') }}">
+                        <i class="ri-function-fill"></i> <span data-key="t-widgets">Template Notifikasi</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

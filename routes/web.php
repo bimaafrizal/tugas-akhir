@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CobaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisasterController;
 use App\Http\Controllers\EarthquakeController;
@@ -11,7 +12,10 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingDisasterController;
 use App\Http\Controllers\SettingLandingPage;
+use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -120,7 +124,18 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('/gempa/{id}', 'earthquakeDetail')->name('detail-notif-gempa');
         Route::get('/banjir/{id}', 'floodDetail')->name('detail-notif-banjir');
     });
+
+    Route::controller(SettingDisasterController::class)->prefix('setting-disaster')->group(function () {
+        Route::get('update/{id}', 'update')->name('update-setting');
+    });
+
+    Route::controller(TemplateController::class)->prefix('template')->group(function () {
+        Route::get('/', 'index')->name('template.index');
+        Route::get('/{id}/edit', 'edit')->name('template.edit');
+        Route::post('/{id}', 'update')->name('template.update');
+    });
 });
 
 Route::get('test-ews', [FloodController::class, 'store']);
 Route::get('test-gempa', [EarthquakeController::class, 'store']);
+Route::get('test-cuaca', [WeatherController::class, 'sendNotif']);

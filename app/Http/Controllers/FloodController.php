@@ -10,6 +10,7 @@ use App\Jobs\EmailSendNotification;
 use App\Jobs\GetDataEws;
 use App\Jobs\InsertFlood;
 use App\Jobs\InsertFloodNotification;
+use App\Jobs\WhatsappSendNotification;
 use App\Models\Disaster;
 use App\Models\Ews;
 use App\Models\FloodNotification;
@@ -30,6 +31,7 @@ use Illuminate\Support\Facades\Crypt;
 use SendinBlue\Client\Configuration;
 // use SendinBlue\Client\Api\SMTPApi;
 use SendinBlue\Client\Api\TransactionalEmailsApi;
+use SendinBlue\Client\Model\SendWhatsappMessage;
 
 class FloodController extends Controller
 {
@@ -155,57 +157,46 @@ class FloodController extends Controller
         // }
 
         //get users where longitude & latitude not null
-        $users = User::Where(
+        $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
             [
-                ['status', '=', 1],
-                ['role_id', '=', 1],
+                ['users.status', '=', 1],
+                ['users.role_id', '=', 1],
+                ['setting_disasters.disaster_id', '=', 1],
+                ['setting_disasters.status', '=', '1'],
             ],
-        )->whereNotNull('longitude')->whereNotNull('latitude')->get();
+        )->whereNotNull('users.longitude')->whereNotNull('users.latitude')->get();
+
 
         //get longitude latitude of ews
         $dataEWS = [];
         foreach ($result3 as $data) {
+            $ews = Ews::where('id', $data['ews_id'])->first();
             array_push($dataEWS, [
-                'ews' => Ews::where(
-                    'id',
-                    $data['ews_id'],
-                )->first(),
+                'ews_id' => $ews->id,
+                'ews_name' => $ews->name,
+                'long' => $ews->longitude,
+                'lat' => $ews->latitude,
                 'level' => $data['level']
             ]);
         }
 
-        $client = new Client();
-        $longLat = [];
-        //get long lat
-        foreach ($dataEWS as $ews) {
-            $responseLongLat = $client->request('GET', $ews['ews']->api_url);
-            $data = json_decode($responseLongLat->getBody()->getContents());
-
-            array_push($longLat, [
-                'long' => $data->channel->longitude,
-                'lat' => $data->channel->latitude,
-                'level' => $ews['level'],
-                'ews_id' => $ews['ews']->id
-            ]);
-        }
-
         $checkDistance = [];
-
         $disaster = Disaster::where('id', 1)->first();
 
         //check distance
         //return data for send notification to email & whatsapp
-        for ($i = 0; $i < count($longLat); $i++) {
+        for ($i = 0; $i < count($dataEWS); $i++) {
             for ($j = 0; $j < count($users); $j++) {
-                $distance = $this->calculateDistance($users[$j]->latitude, $users[$j]->longitude, $longLat[$i]['lat'], $longLat[$i]['long']);
+                $distance = $this->calculateDistance($users[$j]->latitude, $users[$j]->longitude, $dataEWS[$i]['lat'], $dataEWS[$i]['long']);
                 //under if on production
                 array_push($checkDistance, [
-                    'ews_id' => $longLat[$i]['ews_id'],
-                    'level' => $longLat[$i]['level'],
+                    'ews_id' => $dataEWS[$i]['ews_id'],
+                    'ews_name' => $dataEWS[$i]['ews_name'],
+                    'level' => $dataEWS[$i]['level'],
                     'distance' => $distance,
-                    'disaster_id' => 1,
                     'user_id' => $users[$j]->id,
-                    'email_user' => $users[$j]->email
+                    'email_user' => $users[$j]->email,
+                    'phone_user' => $users[$j]->phone_num
                 ]);
                 if ($distance <= $disaster->distance) {
                 }
@@ -229,9 +220,13 @@ class FloodController extends Controller
 
         $promise4 = new Promise();
         $sendEmail = new EmailSendNotification($checkDistance, $promise4);
+        $promise5 = new Promise();
+        $sendWhatsapp = new WhatsappSendNotification($checkDistance, $promise5);
 
         InsertFloodNotification::dispatch($dataNotif);
+
         dispatch($sendEmail);
+        dispatch($sendWhatsapp);
 
 
         dd($dataNotif);

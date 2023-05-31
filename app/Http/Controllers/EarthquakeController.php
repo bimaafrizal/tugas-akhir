@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEarthquakeRequest;
 use App\Http\Requests\UpdateEarthquakeRequest;
 use App\Jobs\CheckDistanceUserEarthquake;
 use App\Jobs\EarthquakeEmailNotification;
+use App\Jobs\EarthquakeWhatsappNotification;
 use App\Jobs\InsertEarthquake;
 use App\Jobs\InsertEarthquakeNotification;
 use App\Models\Disaster;
@@ -143,7 +144,10 @@ class EarthquakeController extends Controller
         //send notification
         $promise3 = new Promise();
         $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+        $promise4 = new Promise();
+        $sendWa = new EarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
         dispatch($sendEmail);
+        dispatch($sendWa);
         dispatch($insertNotification);
         dd($dataNotif);
     }

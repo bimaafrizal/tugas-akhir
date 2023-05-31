@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Disaster;
+use App\Models\SettingDisaster;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +21,28 @@ class ProfileController extends Controller
     {
         $id = Auth::user()->id;
         $user = User::where('id', $id)->first();
+        $disaster = Disaster::all();
+        $settings = SettingDisaster::where('user_id', $id)->where('status', '1')->get();
+        $cekChecked = [];
+        for ($i = 0; $i < count($disaster); $i++) {
+            for ($j = 0; $j < count($settings); $j++) {
+                if ($disaster[$i]->id == $settings[$j]->disaster_id) {
+                    array_push($cekChecked, $disaster[$i]->id);
+                }
+            }
+        }
+        // dd($cekChecked);
 
-        return view('pages.dashboard2.profile.index', compact('user'));
+        $checkeds = [];
+        for ($i = 0; $i < count($disaster); $i++) {
+            if (in_array($disaster[$i]->id, $cekChecked)) {
+                array_push($checkeds, ['data' => $disaster[$i], 'checked' => true]);
+            } else if (!in_array($disaster[$i]->id, $cekChecked)) {
+                array_push($checkeds, ['data' => $disaster[$i], 'checked' => false]);
+            }
+        }
+
+        return view('pages.dashboard2.profile.index', compact('user', 'checkeds', 'settings'));
     }
 
     public function editData(Request $request)

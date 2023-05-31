@@ -6,21 +6,20 @@ use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
 
-class EmailSendNotification
+class WeatherEmailNotification
 {
     use Dispatchable;
-    protected $datas;
+    protected $data;
     protected $promise;
-    protected $result = [];
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($arr, Promise $promise)
+    public function __construct($data, Promise $promise)
     {
-        $this->datas = $arr;
+        $this->data = $data;
         $this->promise = $promise;
     }
 
@@ -31,29 +30,12 @@ class EmailSendNotification
      */
     public function handle()
     {
-        $datas = $this->datas;
-
-        $subject = "Flood Notification";
+        $datas = $this->data;
+        $subject = "Weather Notification";
         foreach ($datas as $data) {
-            $level = "normal";
-            if ($data['level'] ==  1) {
-                $level = "Siaga";
-            } else if ($data['level'] ==  2) {
-                $level = "Waspada";
-            } else if ($data['level'] ==  3) {
-                $level = "Awas";
-            }
-            $body = "Informasi Banjir!! ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km dari unit " . $data['ews_name'] . " cek web awasbencana.website untuk informasi lebih lanjut.";
-
-            $this->sendEmail($data['email_user'], $subject, $body);
-
-            array_push($this->result, [
-                'user_id' => $data['user_id'],
-            ]);
+            $message = "Cuaca besok di tempat anda adalah " . $data['cuaca']->weather[0]->description . " dengan suhu " . $data['cuaca']->main->temp . "°C terasa seperti " . $data['cuaca']->main->feels_like  . "°C. Pada tanggal " . $data['cuaca']->dt_txt;
+            $this->sendEmail($data['user']->email, $subject, $message);
         }
-
-
-        $this->promise->resolve($this->result);
     }
 
     public function sendEmail($receiver, $subject, $body)

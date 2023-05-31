@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -156,23 +157,29 @@ class AuthController extends Controller
     public function sendOtp()
     {
         $user = Auth::user();
+        $expired = $user->otp_expires_at;
         if ($user->phone_num_verified_at != null) {
             return redirect('/dashboard');
         }
-        $otp = $this->createOtp();
 
-        $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
+        if ($user->otp_expires_at <= Carbon::now()) {
+            $otp = $this->createOtp();
+            $message = "OTP Verification, gunakan OTP " . $otp . " untuk memverifikasi akun aknda. Perhatikan! Jangan memberitahukan OTP ini ke pihak siapa pun.";
+            $this->sendWhatsapp($user->phone_num, $message);
+        }
 
-        return view('pages.auth.new-verify-otp');
+        return view('pages.auth.new-verify-otp', compact('expired'));
     }
 
     public function resendOtp()
     {
         $user = Auth::user();
         $otp = $this->createOtp();
-        $this->sendEmailOtp($user->email, 'OTP Verification', $otp);
 
-        return view('pages.auth.new-verify-otp')->with('success', 'Berhasil mengirim kode otp');
+        $message = "OTP Verification, gunakan OTP " . $otp . " untuk memverifikasi akun aknda. Perhatikan! Jangan memberitahukan OTP ini ke pihak siapa pun.";
+        $this->sendWhatsapp($user->phone_num, $message);
+
+        return redirect()->back()->with('success', 'Berhasil mengirim kode otp');
     }
 
     public function verifyOtp(Request $request)
@@ -196,31 +203,24 @@ class AuthController extends Controller
         return back()->with('error', 'The OTP code is incorrect.');
     }
 
-    public function sendEmailOtp($receiver, $subject, $otp)
-    {
-        if ($this->isOnline()) {
-            $email = [
-                'recepient' => $receiver,
-                'fromEmail' => 'admin@awasbencana.com',
-                'fromName' => 'Awas Bencana',
-                'subject' => $subject,
-                'otp' => $otp
-            ];
 
-            Mail::send('pages.auth.otp_verification', $email, function ($message) use ($email) {
-                $message->from($email['fromEmail'], $email['fromName']);
-                $message->to($email['recepient']);
-                $message->subject($email['subject']);
-            });
-        }
-    }
-
-    public function isOnline($site = "https://www.youtube.com/")
+    public function sendWhatsapp($user, $message)
     {
-        if (@fopen($site, "r")) {
-            return true;
-        } else {
-            return false;
-        }
+        $token = config('services.FONNTE_TOKEN');
+
+        $client = new Client();
+        $response = $client->request('POST', 'https://api.fonnte.com/send', [
+            'headers' => [
+                'Accept' => 'aplication/json',
+                'Authorization' => $token
+            ],
+            'json' => [
+                'target' => $user,
+                'message' => $message,
+                'countryCode' => '62', //optional
+            ]
+        ]);
+        $data = json_decode($response->getBody()->getContents());
+        return $data;
     }
 }

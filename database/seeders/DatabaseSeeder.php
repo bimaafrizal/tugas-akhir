@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(KategoryArticleSeeder::class);
         $this->call(DisasterSeeder::class);
         $this->call(LandingPageSeeder::class);
+        $this->call(TemplateSeeder::class);
     }
 }

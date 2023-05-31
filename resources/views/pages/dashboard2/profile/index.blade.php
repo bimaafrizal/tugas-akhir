@@ -287,7 +287,8 @@ Profile
 
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <a href="{{ route('password.request') }}" class="link-primary text-decoration-underline">Forgot
+                                <a href="{{ route('password.request') }}"
+                                    class="link-primary text-decoration-underline">Forgot
                                     Password?
                                 </a>
                             </div>
@@ -299,14 +300,63 @@ Profile
             </div>
         </div>
     </div>
-</div>
-<!--end col-->
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-start">
+                    <h6>Setting Notifikasi Bencana</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @foreach ($checkeds as $item)
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-check form-switch form-switch-lg" dir="ltr">
+                            <input type="checkbox" class="form-check-input disaster" id="{{ $item['data']->id }}" {{ $item['checked'] == true ? 'checked' : '' }} onchange="getId({{ $item['data']->id }})">
+                            <label class="form-check-label" for="customSwitchsizelg">{{ $item['data']->name }}</label>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!--end row-->
+
 @endsection
 
 @section('script')
 <script src="{{ asset('/auth/assets/js/pages/card.init.js') }}"></script>
 <script src="{{ asset('auth/assets/js/pages/profile-setting.init.js') }}"></script>
 <script src="{{ asset('/auth//assets/js/app.js') }}"></script>
+
+<script>
+    function getId(id) {
+        $(function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $(function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: `setting-disaster/update/${id}`,
+                        data: {},
+                        cache: false,
+
+                        success: function (msg) {
+                            console.log(msg);
+                        },
+                        error: function (data) {
+                            console.log('error: ', data)
+                        }
+                    });
+                })
+            });
+    }
+
+</script>
+
 @endsection
