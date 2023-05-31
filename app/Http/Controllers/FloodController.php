@@ -157,12 +157,15 @@ class FloodController extends Controller
         // }
 
         //get users where longitude & latitude not null
-        $users = User::Where(
+        $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
             [
-                ['status', '=', 1],
-                ['role_id', '=', 1],
+                ['users.status', '=', 1],
+                ['users.role_id', '=', 1],
+                ['setting_disasters.disaster_id', '=', 1],
+                ['setting_disasters.status', '=', '1'],
             ],
-        )->whereNotNull('longitude')->whereNotNull('latitude')->get();
+        )->whereNotNull('users.longitude')->whereNotNull('users.latitude')->get();
+
 
         //get longitude latitude of ews
         $dataEWS = [];

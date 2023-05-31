@@ -14,12 +14,14 @@ class WeatherController extends Controller
 {
     public function sendNotif()
     {
-        $users = User::Where(
+        $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
             [
-                ['status', '=', 1],
-                ['role_id', '=', 1],
+                ['users.status', '=', 1],
+                ['users.role_id', '=', 1],
+                ['setting_disasters.disaster_id', '=', 3],
+                ['setting_disasters.status', '=', '1'],
             ],
-        )->whereNotNull('longitude')->whereNotNull('latitude')->get();
+        )->whereNotNull('users.longitude')->whereNotNull('users.latitude')->get();
 
         $client = new Client();
         $usersWeatherData = [];
