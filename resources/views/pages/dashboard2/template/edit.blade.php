@@ -60,6 +60,10 @@ Template Notifikasi
                                     <button type="button" class="badge text-bg-primary option2">Kekuatan</button>
                                     <button type="button" class="badge text-bg-primary option2">Jarak</button>
                             <?php } else { ?>
+                                    <button type="button" class="badge text-bg-primary option3">Cuaca</button>
+                                    <button type="button" class="badge text-bg-primary option3">Suhu</button>
+                                    <button type="button" class="badge text-bg-primary option3">Suhu Terasa</button>
+                                    <button type="button" class="badge text-bg-primary option3">Tanggal</button>
                             <?php }  ?>
                         </div>
                         <textarea name="body" class="form-control @error('body') is-invalid
@@ -117,6 +121,28 @@ Template Notifikasi
 
                 $('#body').val(updatedValue);
             });
+            
+            $('.option3').click(function() {
+                let body = $('#body');
+                let currentValue = body.val();
+                let option = $(this).text();
+
+                if(option == "Cuaca") {
+                    option = "$data['cuaca']->weather[0]->description"
+                } else if(option == 'Suhu') {
+                    option = " $data['cuaca']->main->temp";
+                } else if(option == 'Suhu Terasa') {
+                    option = "$data['cuaca']->main->feels_like"
+                }  else if(option == 'Tanggal') {
+                    option = "$data['cuaca']->dt_txt";
+                } 
+
+                let selectionStart = body.prop('selectionStart');
+                let selectionEnd = body.prop('selectionEnd');
+                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
+
+                $('#body').val(updatedValue);
+            });
 
             $('.option').click(function() {
                 let body = $('#body');
@@ -139,16 +165,6 @@ Template Notifikasi
             });
         });
 
-        $(document).ready(function () {            
-            
-        });
     </script>
-<?php if($data->disaster_id == 1) { ?>
-<?php } else if($data->disaster_id == 2) { ?>
-    <script>
-        
-    </script>
-<?php } else { ?>
-<?php }  ?>
 
 @endsection
