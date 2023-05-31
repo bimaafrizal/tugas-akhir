@@ -48,6 +48,11 @@ Template Notifikasi
                     <div class="mb-3">
                         <label for="strength" class="form-label">Isi Notifikasi*</label>
                         <br>
+                        <small class="bg-white text-danger">Perthatian!! jangan hapus titik dan petik sembarangan. Jika ingin menghapus, hapus karakter dalam petik</small>
+                        <br>
+                        <small class="bg-white text-danger">Jangan hapus petik pada awal dan akhir kalimat!!</small>
+                        <small class="bg-white text-danger">Input teakhir(tombol biru) tidak boleh diletakan terakhir!!</small>
+                        <br>
                         <div class="my-1">
                             <?php if($data->disaster_id == 1) { ?>
                                 <button type="button" class="badge text-bg-primary option">Level</button>
@@ -97,7 +102,27 @@ Template Notifikasi
 <script src="{{ asset('/auth//assets/js/app.js') }}"></script>
 
     <script>
-        $(document).ready(function () {            
+        $(document).ready(function () { 
+            $('.option').click(function() {
+                let body = $('#body');
+                let currentValue = body.val();
+                let option = $(this).text();
+
+                if(option == "Level") {
+                    option = "$[level]"
+                } else if(option == 'Jarak') {
+                    option = "$data['distance']"
+                } else if(option == 'Unit EWS') {
+                    option = "$data['ews_name']"
+                }
+
+                let selectionStart = body.prop('selectionStart');
+                let selectionEnd = body.prop('selectionEnd');
+                let updatedValue = currentValue.substring(0, selectionStart) + "\". " + option + ".\"" +currentValue.substring(selectionEnd);
+
+                $('#body').val(updatedValue);
+            });
+            
             $('.option2').click(function() {
                 let body = $('#body');
                 let currentValue = body.val();
@@ -117,11 +142,11 @@ Template Notifikasi
 
                 let selectionStart = body.prop('selectionStart');
                 let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
+                let updatedValue = currentValue.substring(0, selectionStart) + "\". " + option + ".\"" +currentValue.substring(selectionEnd);
 
                 $('#body').val(updatedValue);
             });
-            
+
             $('.option3').click(function() {
                 let body = $('#body');
                 let currentValue = body.val();
@@ -139,28 +164,8 @@ Template Notifikasi
 
                 let selectionStart = body.prop('selectionStart');
                 let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
-
-                $('#body').val(updatedValue);
-            });
-
-            $('.option').click(function() {
-                let body = $('#body');
-                let currentValue = body.val();
-                let option = $(this).text();
-
-                if(option == "Level") {
-                    option = "$[level]"
-                } else if(option == 'Jarak') {
-                    option = "$data['distance']"
-                } else if(option == 'Unit EWS') {
-                    option = "$data['ews_id']"
-                }
-
-                let selectionStart = body.prop('selectionStart');
-                let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
-
+                let updatedValue = currentValue.substring(0, selectionStart) + "\". " + option + ".\"" +currentValue.substring(selectionEnd);
+                
                 $('#body').val(updatedValue);
             });
         });
