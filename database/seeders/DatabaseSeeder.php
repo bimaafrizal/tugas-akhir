@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DisasterSeeder::class);
         $this->call(LandingPageSeeder::class);
         $this->call(TemplateSeeder::class);
+        $this->call(IndoRegionSeeder::class);
     }
 }

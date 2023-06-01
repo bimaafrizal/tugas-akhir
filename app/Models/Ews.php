@@ -15,4 +15,12 @@ class Ews extends Model
     {
         return $this->hasMany(Flood::class);
     }
+    public function regency()
+    {
+        return $this->belongsTo(Regency::class);
+    }
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
 }

@@ -94,8 +94,9 @@ EWS
             <div class="card-body">
                 <h5 class="card-title">{{ $data->name }}</h5>
                 <p class="card-text">
-                    {{ $data->location }}
+                    {{ $data->regency->name }}, {{ $data->province->name }}
                     <br>
+                    {{ $data->detail }}
                     Status : {{ $data->status == 1 ? 'Active' : 'Non Active' }}
                 </p>
                 <div class="d-flex justify-content-end">

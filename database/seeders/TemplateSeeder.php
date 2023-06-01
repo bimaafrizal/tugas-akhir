@@ -18,15 +18,15 @@ class TemplateSeeder extends Seeder
         $data = [
             [
                 'disaster_id' => 1,
-                'body' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem iste numquam ad molestias odit iusto vero modi repellendus at culpa.'
+                'body' => 'Informasi Banjir!! ketinggian pada level $level, jarak anda dengan titik alat adalah $distance km dari unit  $ews_name cek web awasbencana.website untuk informasi lebih lanjut'
             ],
             [
                 'disaster_id' => 2,
-                'body' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem iste numquam ad molestias odit iusto vero modi repellendus at culpa.'
+                'body' => 'Gempa pada koordinat $longitude, $latitude pada kedalaman $depth  kekuatan sebesar $strength  SR. Jarak anda dengan lokasi gempa adalah $distance km'
             ],
             [
                 'disaster_id' => 3,
-                'body' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem iste numquam ad molestias odit iusto vero modi repellendus at culpa.'
+                'body' => 'Cuaca di tempat anda adalah $cuaca dengan suhu  $temp °C terasa seperti $feels_like °C pada tanggal $dt_txt'
             ],
         ];
 

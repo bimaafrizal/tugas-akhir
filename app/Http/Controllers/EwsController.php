@@ -6,6 +6,8 @@ use App\Models\Ews;
 use App\Http\Requests\StoreEwsRequest;
 use App\Http\Requests\UpdateEwsRequest;
 use App\Models\Flood;
+use App\Models\Province;
+use App\Models\Regency;
 use App\Services\Ews\EwsService;
 use Illuminate\Http\Request;
 
@@ -39,7 +41,8 @@ class EwsController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard2.ews.create');
+        $provinces = Province::all();
+        return view('pages.dashboard2.ews.create', compact('provinces'));
     }
 
     /**

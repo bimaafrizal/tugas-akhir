@@ -12,6 +12,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegencyController;
 use App\Http\Controllers\SettingDisasterController;
 use App\Http\Controllers\SettingLandingPage;
 use App\Http\Controllers\TemplateController;
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::get('/{id}/edit', 'edit')->name('ews.edit');
         Route::post('/{id}', 'update')->name('ews.update');
     });
+    Route::get('/get-regency', [RegencyController::class, 'getRegency'])->name('get-regency');
 
     Route::controller(FloodController::class)->group(function () {
         Route::get('/get-data', 'getDetailData')->name('ews.get-data');
