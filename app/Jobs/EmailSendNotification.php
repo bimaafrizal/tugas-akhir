@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Template;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
@@ -32,6 +33,8 @@ class EmailSendNotification
     public function handle()
     {
         $datas = $this->datas;
+        $body = Template::where('id', 1)->first();
+        $body = $body->body;
 
         $subject = "Flood Notification";
         foreach ($datas as $data) {
@@ -43,7 +46,11 @@ class EmailSendNotification
             } else if ($data['level'] ==  3) {
                 $level = "Awas";
             }
-            $body = "Informasi Banjir!! ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km dari unit " . $data['ews_name'] . " cek web awasbencana.website untuk informasi lebih lanjut.";
+
+            $distance = $data['distance'];
+            $ews_name = $data['ews_name'];
+
+            eval("\$body = \"$body\";");
 
             $this->sendEmail($data['email_user'], $subject, $body);
 

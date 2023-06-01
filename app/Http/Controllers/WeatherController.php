@@ -26,8 +26,9 @@ class WeatherController extends Controller
         $client = new Client();
         $usersWeatherData = [];
         foreach ($users as $user) {
-            $response = $client->request('GET', 'api.openweathermap.org/data/2.5/forecast?lat=' . $user->latitude . '1&lon=' . $user->longitude . '&appid=' . config('services.OPEN_WEATHER_API_KEY'));
+            $response = $client->request('GET', 'api.openweathermap.org/data/2.5/forecast?lat=' . $user->latitude . '&units=metric&lang=id&lon=' . $user->longitude . '&appid=' . config('services.OPEN_WEATHER_API_KEY'));
             $data = json_decode($response->getBody()->getContents());
+            
             $nextDayData = $data->list[6];
             array_push($usersWeatherData, [
                 'cuaca' => $nextDayData,

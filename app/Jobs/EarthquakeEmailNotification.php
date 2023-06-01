@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Template;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
@@ -34,10 +35,19 @@ class EarthquakeEmailNotification
     {
         $users = $this->users;
         $earthquakeData = $this->earthquake;
+        $longitude = $earthquakeData['longitude'];
+        $latitude = $earthquakeData['latitude'];
+        $depth = $earthquakeData['depth'];
+        $strength = $earthquakeData['strength'];
+
+        $body = Template::where('id', 2)->first();
+        $body = $body->body;
 
         $subject = "Earthquake Notification";
+
         foreach ($users as $user) {
-            $body = "Gempa pada koordinat " . $earthquakeData['longitude'] . "," . $earthquakeData['latitude'] . " pada kedalaman " . $earthquakeData['depth'] .  " kekuatan sebesar " . $earthquakeData['strength'] . " SR. Jarak anda dengan lokasi gempa adalah " . $user['distance'] . " km.";
+            $distance = $user['distance'];
+            eval("\$body = \"$body\";");
 
             $this->sendEmail($user['email_user'], $subject, $body);
         }

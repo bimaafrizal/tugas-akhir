@@ -109,16 +109,16 @@ Template Notifikasi
                 let option = $(this).text();
 
                 if(option == "Level") {
-                    option = "$[level]"
+                    option = "$level"
                 } else if(option == 'Jarak') {
-                    option = "$data['distance']"
+                    option = "$distance"
                 } else if(option == 'Unit EWS') {
-                    option = "$data['ews_name']"
+                    option = "$ews_name"
                 }
 
                 let selectionStart = body.prop('selectionStart');
                 let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + "\". " + option + ".\"" +currentValue.substring(selectionEnd);
+                let updatedValue = currentValue.substring(0, selectionStart) +  option + currentValue.substring(selectionEnd);
 
                 $('#body').val(updatedValue);
             });
@@ -129,20 +129,20 @@ Template Notifikasi
                 let option = $(this).text();
 
                 if(option == "Longitude") {
-                    option = "$earthquakeData['longitude']"
+                    option = "$longitude"
                 } else if(option == 'Latitude') {
-                    option = "$earthquakeData['latitude']";
+                    option = "$latitude";
                 } else if(option == 'Kedalaman') {
-                    option = "$earthquakeData['depth']"
+                    option = "$depth"
                 }  else if(option == 'Kekuatan') {
-                    option = "$earthquakeData['strength']";
+                    option = "$strength";
                 } else if(option == 'Jarak') {
-                    option = "$user['distance']";
+                    option = "$distance";
                 }
 
                 let selectionStart = body.prop('selectionStart');
                 let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + "\". " + option + ".\"" +currentValue.substring(selectionEnd);
+                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
 
                 $('#body').val(updatedValue);
             });
@@ -153,18 +153,18 @@ Template Notifikasi
                 let option = $(this).text();
 
                 if(option == "Cuaca") {
-                    option = "$data['cuaca']->weather[0]->description"
+                    option = "$cuaca"
                 } else if(option == 'Suhu') {
-                    option = " $data['cuaca']->main->temp";
+                    option = " $temp";
                 } else if(option == 'Suhu Terasa') {
-                    option = "$data['cuaca']->main->feels_like"
+                    option = "$feels_like"
                 }  else if(option == 'Tanggal') {
-                    option = "$data['cuaca']->dt_txt";
+                    option = "$dt_txt";
                 } 
 
                 let selectionStart = body.prop('selectionStart');
                 let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + "\". " + option + ".\"" +currentValue.substring(selectionEnd);
+                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
                 
                 $('#body').val(updatedValue);
             });

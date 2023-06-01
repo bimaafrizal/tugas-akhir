@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Template;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,10 +31,18 @@ class WeatherWhatsappNotification
      */
     public function handle()
     {
+        $body = Template::where('id', 3)->first();
+        $body = $body->body;
         $datas = $this->data;
         foreach ($datas as $data) {
-            $message = "Cuaca besok di tempat anda adalah " . $data['cuaca']->weather[0]->description . " dengan suhu " . $data['cuaca']->main->temp . "°C terasa seperti " . $data['cuaca']->main->feels_like . "°C. Pada tanggal " . $data['cuaca']->dt_txt;
-            $this->sendWhatsapp($data['user']->phone_num, $message);
+            $cuaca = $data['cuaca']->weather[0]->description;
+            $temp = $data['cuaca']->main->temp;
+            $feels_like = $data['cuaca']->main->feels_like;
+            $dt_txt = $data['cuaca']->dt_txt;
+
+            eval("\$body = \"$body\";");
+
+            $this->sendWhatsapp($data['user']->phone_num, $body);
         }
     }
 

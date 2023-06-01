@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Template;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
@@ -31,10 +32,18 @@ class WeatherEmailNotification
     public function handle()
     {
         $datas = $this->data;
+        $body = Template::where('id', 3)->first();
+        $body = $body->body;
         $subject = "Weather Notification";
         foreach ($datas as $data) {
-            $message = "Cuaca besok di tempat anda adalah " . $data['cuaca']->weather[0]->description . " dengan suhu " . $data['cuaca']->main->temp . "°C terasa seperti " . $data['cuaca']->main->feels_like  . "°C. Pada tanggal " . $data['cuaca']->dt_txt;
-            $this->sendEmail($data['user']->email, $subject, $message);
+            $cuaca = $data['cuaca']->weather[0]->description;
+            $temp = $data['cuaca']->main->temp;
+            $feels_like = $data['cuaca']->main->feels_like;
+            $dt_txt = $data['cuaca']->dt_txt;
+
+            eval("\$body = \"$body\";");
+            
+            $this->sendEmail($data['user']->email, $subject, $body);
         }
     }
 
