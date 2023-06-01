@@ -48,10 +48,8 @@ Template Notifikasi
                     <div class="mb-3">
                         <label for="strength" class="form-label">Isi Notifikasi*</label>
                         <br>
-                        <small class="bg-white text-danger">Perthatian!! jangan hapus titik dan petik sembarangan. Jika ingin menghapus, hapus karakter dalam petik</small>
-                        <br>
-                        <small class="bg-white text-danger">Jangan hapus petik pada awal dan akhir kalimat!!</small>
-                        <small class="bg-white text-danger">Input teakhir(tombol biru) tidak boleh diletakan terakhir!!</small>
+                        <small class="bg-white text-danger">Perthatian!! jika ingin menghapus inputan pilihan(tombol biru) hapus semua kareakter dari $ sampai akhit karakter inputan pilihan contoh $level maka hapus '$' dan 'level'</small> <br>
+                        <small class="bg-white text-danger">Jangan merubah atau menambah karakter input pilihan(tombol biru), contoh $level jangan dirubah $level1</small>
                         <br>
                         <div class="my-1">
                             <?php if($data->disaster_id == 1) { ?>
