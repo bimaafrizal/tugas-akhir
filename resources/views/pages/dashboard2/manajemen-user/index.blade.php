@@ -91,30 +91,32 @@ Manajemen User
                                         <li><a href="{{ route('manajemen-user.edit', ['id' => encrypt($admin->id)]) }}" class="dropdown-item edit-item-btn"><i
                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
                                         </li>
-                                        @if ($admin->status == 1)
-                                        <form action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}" method="POST" class="d-inline">
-                                            <li>
-                                                <button type="submit" class="dropdown-item remove-item-btn">
-                                                    @csrf
-                                                    <input type="hidden" name="is_active" value="0" id="">
-                                                    <i class="ri-eye-close-fill align-bottom me-2 text-muted">
-                                                        Non Active
-                                                    </i>
-                                                </button>
-                                            </li>
-                                        </form>
-                                        @else
-                                        <form action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}" method="POST" class="d-inline">
-                                            <li>
-                                                <button type="submit" class="dropdown-item remove-item-btn">
-
-                                                    <i class=" ri-eye-fill align-bottom me-2 text-muted">
+                                        @if ($admin->id != 3)
+                                            @if ($admin->status == 1)
+                                            <form action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}" method="POST" class="d-inline">
+                                                <li>
+                                                    <button type="submit" class="dropdown-item remove-item-btn">
                                                         @csrf
-                                                        <input type="hidden" name="is_active" value="1" id="">
-                                                    </i> Active
-                                                </button>
-                                            </li>
-                                        </form>
+                                                        <input type="hidden" name="is_active" value="0" id="">
+                                                        <i class="ri-eye-close-fill align-bottom me-2 text-muted">
+                                                            Non Active
+                                                        </i>
+                                                    </button>
+                                                </li>
+                                            </form>
+                                            @else
+                                            <form action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}" method="POST" class="d-inline">
+                                                <li>
+                                                    <button type="submit" class="dropdown-item remove-item-btn">
+
+                                                        <i class=" ri-eye-fill align-bottom me-2 text-muted">
+                                                            @csrf
+                                                            <input type="hidden" name="is_active" value="1" id="">
+                                                        </i> Active
+                                                    </button>
+                                                </li>
+                                            </form>
+                                            @endif
                                         @endif
                                     </ul>
                                 </div>
