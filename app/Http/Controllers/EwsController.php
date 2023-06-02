@@ -81,7 +81,9 @@ class EwsController extends Controller
     {
         $decryptId = decrypt($id);
         $data = Ews::where('id', $decryptId)->first();
-        return view('pages.dashboard2.ews.edit', compact('data'));
+        $provinces = Province::all();
+        $regencies = Regency::where('province_id', $data->province_id)->get();
+        return view('pages.dashboard2.ews.edit', compact('data', 'provinces', 'regencies'));
     }
 
     /**
@@ -94,7 +96,6 @@ class EwsController extends Controller
     public function update(UpdateEwsRequest $request, $id)
     {
         $decryptId = decrypt($id);
-        // dd($request->all());
         $this->service->update($decryptId, $request->all());
         return redirect(route('ews.index'))->with('success', 'Alat EWS berhasil diedit');
     }
