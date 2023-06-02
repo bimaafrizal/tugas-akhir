@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('ews', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('location')->nullable();
+            $table->foreignId('province_id');
+            $table->foreignId('regency_id');
+            $table->string('detail')->nullable();
             $table->string('api_url');
             $table->string('api_key')->nullable();
             $table->string('longitude')->nullable();

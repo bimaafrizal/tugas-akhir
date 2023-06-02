@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Template;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,6 +33,8 @@ class WhatsappSendNotification
     public function handle()
     {
         $datas = $this->datas;
+        $body = Template::where('id', 1)->first();
+        $body = $body->body;
 
         foreach ($datas as $data) {
             $level = "normal";
@@ -42,9 +45,12 @@ class WhatsappSendNotification
             } else if ($data['level'] ==  3) {
                 $level = "Awas";
             }
-            $message = "Informasi Banjir!!<br> ketinggian pada level " . $level . ", jarak anda dengan titik alat adalah " . $data['distance'] .  " km dari unit " . $data['ews_name'] . " cek web awasbencana.website untuk informasi lebih lanjut.";
+            $distance = $data['distance'];
+            $ews_name = $data['ews_name'];
 
-            $this->sendWhatsapp($data['phone_user'], $message);
+            eval("\$body = \"$body\";");
+
+            $this->sendWhatsapp($data['phone_user'], $body);
         }
     }
 

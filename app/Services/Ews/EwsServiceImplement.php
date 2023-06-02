@@ -47,7 +47,9 @@ class EwsServiceImplement extends Service implements EwsService
   {
     $dataValidate = [
       'name' => $data['name'],
-      'location' => $data['location'],
+      'detail' => $data['detail'],
+      'province_id' => $data['province_id'],
+      'regency_id' => $data['regency_id'],
       'api_url' => $data['api_url'],
       'api_key' => $data['api_key'],
       'longitude' => $data['longitude'],

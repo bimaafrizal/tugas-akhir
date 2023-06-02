@@ -6,6 +6,8 @@ use App\Models\Ews;
 use App\Http\Requests\StoreEwsRequest;
 use App\Http\Requests\UpdateEwsRequest;
 use App\Models\Flood;
+use App\Models\Province;
+use App\Models\Regency;
 use App\Services\Ews\EwsService;
 use Illuminate\Http\Request;
 
@@ -39,7 +41,8 @@ class EwsController extends Controller
      */
     public function create()
     {
-        return view('pages.dashboard2.ews.create');
+        $provinces = Province::all();
+        return view('pages.dashboard2.ews.create', compact('provinces'));
     }
 
     /**
@@ -78,7 +81,9 @@ class EwsController extends Controller
     {
         $decryptId = decrypt($id);
         $data = Ews::where('id', $decryptId)->first();
-        return view('pages.dashboard2.ews.edit', compact('data'));
+        $provinces = Province::all();
+        $regencies = Regency::where('province_id', $data->province_id)->get();
+        return view('pages.dashboard2.ews.edit', compact('data', 'provinces', 'regencies'));
     }
 
     /**
@@ -91,7 +96,6 @@ class EwsController extends Controller
     public function update(UpdateEwsRequest $request, $id)
     {
         $decryptId = decrypt($id);
-        // dd($request->all());
         $this->service->update($decryptId, $request->all());
         return redirect(route('ews.index'))->with('success', 'Alat EWS berhasil diedit');
     }

@@ -61,7 +61,8 @@ EWS
 
                     <div class="text-center">
                         <h1>{{ $ews->name }}</h1>
-                        <p>{{ $ews->location }}</p>
+                        <p>{{ $ews->regency->name }}, {{ $ews->province->name }}</p>
+                        <p>{{ $ews->detail }}</p>
                         <p>Status : {{ $ews->status == 1 ? 'Active' : 'Non Active' }}</p>
                         @if ($ews->gmaps_link != null && $ews->longitude == null && $ews->latitude == null)
                         <div class="container text-center my-5 ratio ratio-16x9">

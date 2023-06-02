@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Template;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,10 +35,19 @@ class EarthquakeWhatsappNotification
     {
         $users = $this->users;
         $earthquakeData = $this->earthquake;
-        
+        $longitude = $earthquakeData['longitude'];
+        $latitude = $earthquakeData['latitude'];
+        $depth = $earthquakeData['depth'];
+        $strength = $earthquakeData['strength'];
+
+        $body = Template::where('id', 2)->first();
+        $body = $body->body;
+
         foreach ($users as $user) {
-            $message = "Gempa pada koordinat " . $earthquakeData['longitude'] . "," . $earthquakeData['latitude'] . " pada kedalaman " . $earthquakeData['depth'] .  " kekuatan sebesar " . $earthquakeData['strength'] . " SR. Jarak anda dengan lokasi gempa adalah " . $user['distance'] . " km.";
-            $this->sendWhatsapp($user['phone_number'], $message);
+            $distance = $user['distance'];
+            eval("\$body = \"$body\";");
+            
+            $this->sendWhatsapp($user['phone_number'], $body);
         }
     }
 

@@ -80,44 +80,7 @@ class TemplateController extends Controller
             'body' => 'required|min:10'
         ]);
         $decryptId = decrypt($id);
-        $positions = [];
-        $offset = 0;
-
-        while (($pos = strpos($validateData['body'], '$', $offset))) {
-            $positions[] = $pos;
-            $offset = $pos + strlen('$');
-        }
-
-        $offset = 0;
-        while (($pos = strpos($validateData['body'], ']', $offset))) {
-            $positions[] = $pos;
-            $offset = $pos + strlen(']');
-        }
-
-        $sortPosition = $this->bubble_sort($positions);
-        // dd($sortPosition);
-
-        $y = 1;
         $data = Template::find($decryptId);
-        // dd($data->updated_at == null);
-        if ($data->updated_at == null) {
-            for ($i = 0; $i < count($sortPosition); $i += 2) {
-                if ($i == 0) {
-                    $replaceStr = substr($validateData['body'], $sortPosition[$i], $sortPosition[$i + 1] - $sortPosition[$i] + 1);
-                    $validateData['body'] = str_replace($replaceStr, '. ' . $replaceStr . '.', $validateData['body']);
-                } else {
-                    $insertIndex = 3 * $y;
-                    $replaceStr = substr($validateData['body'], $sortPosition[$i] + $insertIndex, $sortPosition[$i + 1] - $sortPosition[$i] + 1);
-                    $validateData['body'] = str_replace($replaceStr, '. ' . $replaceStr . '.', $validateData['body']);
-
-                    $y += 1;
-                }
-            }
-        } else {
-            
-        }
-        dd($validateData);
-
         $data->update($validateData);
 
         return redirect(route('template.index'))->with('success', 'Berhasil merubah template notifikasi');

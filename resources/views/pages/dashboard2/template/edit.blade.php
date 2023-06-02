@@ -48,6 +48,9 @@ Template Notifikasi
                     <div class="mb-3">
                         <label for="strength" class="form-label">Isi Notifikasi*</label>
                         <br>
+                        <small class="bg-white text-danger">Perthatian!! jika ingin menghapus inputan pilihan(tombol biru) hapus semua kareakter dari $ sampai akhit karakter inputan pilihan contoh $level maka hapus '$' dan 'level'</small> <br>
+                        <small class="bg-white text-danger">Jangan merubah atau menambah karakter input pilihan(tombol biru), contoh $level jangan dirubah $level1</small>
+                        <br>
                         <div class="my-1">
                             <?php if($data->disaster_id == 1) { ?>
                                 <button type="button" class="badge text-bg-primary option">Level</button>
@@ -60,6 +63,10 @@ Template Notifikasi
                                     <button type="button" class="badge text-bg-primary option2">Kekuatan</button>
                                     <button type="button" class="badge text-bg-primary option2">Jarak</button>
                             <?php } else { ?>
+                                    <button type="button" class="badge text-bg-primary option3">Cuaca</button>
+                                    <button type="button" class="badge text-bg-primary option3">Suhu</button>
+                                    <button type="button" class="badge text-bg-primary option3">Suhu Terasa</button>
+                                    <button type="button" class="badge text-bg-primary option3">Tanggal</button>
                             <?php }  ?>
                         </div>
                         <textarea name="body" class="form-control @error('body') is-invalid
@@ -93,42 +100,42 @@ Template Notifikasi
 <script src="{{ asset('/auth//assets/js/app.js') }}"></script>
 
     <script>
-        $(document).ready(function () {            
-            $('.option2').click(function() {
-                let body = $('#body');
-                let currentValue = body.val();
-                let option = $(this).text();
-
-                if(option == "Longitude") {
-                    option = "$earthquakeData['longitude']"
-                } else if(option == 'Latitude') {
-                    option = "$earthquakeData['latitude']";
-                } else if(option == 'Kedalaman') {
-                    option = "$earthquakeData['depth']"
-                }  else if(option == 'Kekuatan') {
-                    option = "$earthquakeData['strength']";
-                } else if(option == 'Jarak') {
-                    option = "$user['distance']";
-                }
-
-                let selectionStart = body.prop('selectionStart');
-                let selectionEnd = body.prop('selectionEnd');
-                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
-
-                $('#body').val(updatedValue);
-            });
-
+        $(document).ready(function () { 
             $('.option').click(function() {
                 let body = $('#body');
                 let currentValue = body.val();
                 let option = $(this).text();
 
                 if(option == "Level") {
-                    option = "$[level]"
+                    option = "$level"
                 } else if(option == 'Jarak') {
-                    option = "$data['distance']"
+                    option = "$distance"
                 } else if(option == 'Unit EWS') {
-                    option = "$data['ews_id']"
+                    option = "$ews_name"
+                }
+
+                let selectionStart = body.prop('selectionStart');
+                let selectionEnd = body.prop('selectionEnd');
+                let updatedValue = currentValue.substring(0, selectionStart) +  option + currentValue.substring(selectionEnd);
+
+                $('#body').val(updatedValue);
+            });
+            
+            $('.option2').click(function() {
+                let body = $('#body');
+                let currentValue = body.val();
+                let option = $(this).text();
+
+                if(option == "Longitude") {
+                    option = "$longitude"
+                } else if(option == 'Latitude') {
+                    option = "$latitude";
+                } else if(option == 'Kedalaman') {
+                    option = "$depth"
+                }  else if(option == 'Kekuatan') {
+                    option = "$strength";
+                } else if(option == 'Jarak') {
+                    option = "$distance";
                 }
 
                 let selectionStart = body.prop('selectionStart');
@@ -137,18 +144,30 @@ Template Notifikasi
 
                 $('#body').val(updatedValue);
             });
+
+            $('.option3').click(function() {
+                let body = $('#body');
+                let currentValue = body.val();
+                let option = $(this).text();
+
+                if(option == "Cuaca") {
+                    option = "$cuaca"
+                } else if(option == 'Suhu') {
+                    option = " $temp";
+                } else if(option == 'Suhu Terasa') {
+                    option = "$feels_like"
+                }  else if(option == 'Tanggal') {
+                    option = "$dt_txt";
+                } 
+
+                let selectionStart = body.prop('selectionStart');
+                let selectionEnd = body.prop('selectionEnd');
+                let updatedValue = currentValue.substring(0, selectionStart) + option + currentValue.substring(selectionEnd);
+                
+                $('#body').val(updatedValue);
+            });
         });
 
-        $(document).ready(function () {            
-            
-        });
     </script>
-<?php if($data->disaster_id == 1) { ?>
-<?php } else if($data->disaster_id == 2) { ?>
-    <script>
-        
-    </script>
-<?php } else { ?>
-<?php }  ?>
 
 @endsection

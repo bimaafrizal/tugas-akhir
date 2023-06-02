@@ -45,15 +45,50 @@ EWS
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control @error('location') is-invalid
-                            @enderror" id="location" name="location" value="{{ old('location') }}">
-                            @error('location')
+                            <label for="province" class="form-label">Provinsi*</label>
+                            <select class="form-select mb-3 @error('province_id') is-invalid
+                            @enderror" aria-label="Default select example" name="province_id"
+                                id="province">
+                                <option value="">Pilih Provinsi</option>
+                                @foreach ($provinces as $item)
+                                @if (old('province_id') == $item->id)
+                                <option value="{{ $item->id }}" selected>{{ $item->name }}</option> 
+                                @else
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                            @error('province_id')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
+                        <div class="mb-3">
+                            <label for="regency" class="form-label">Kabupaten*</label>
+                            <select class="form-select mb-3 @error('regency_id') is-invalid
+                            @enderror" aria-label="Default select example" name="regency_id"
+                                id="regency" disabled>
+                                <option value="">Pilih Provinsi Terlebih Dahulu</option>
+                                
+                            </select>
+                            @error('regency_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="detail" class="form-label">Detail Lokasi</label>
+                            <input type="text" class="form-control @error('detail') is-invalid
+                            @enderror" id="detail" name="detail" value="{{ old('detail') }}">
+                            @error('detail')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+
                         <div class="mb-3">
                             <label for="api_url" class="form-label">Api URL*</label>
                             <input type="text" class="form-control @error('api_url') is-invalid
@@ -121,4 +156,38 @@ EWS
 <script src="{{ asset('/auth/assets/libs/prismjs/prismjs.min.js') }}"></script>
 
 <script src="{{ asset('/auth//assets/js/app.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#province').click(function () {
+            let provinces_id = $('#province').val();
+            $(function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $(function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('get-regency') }}",
+                        data: {
+                            id: provinces_id,
+                        },
+                        cache: false,
+
+                        success: function (msg) {
+                            $('#regency').removeAttr('disabled');
+                            $('#regency').html(msg);
+                        },
+                        error: function (data) {
+                            console.log('error: ', data)
+                        }
+                    });
+                })
+            });
+        });
+    });
+
+</script>
 @endsection
