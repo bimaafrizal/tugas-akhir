@@ -187,7 +187,7 @@ Dashboard
 
                                 <button class="btn btn-primary" id="button-location" onclick="getLocation()">Get Your
                                     Location</button>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -226,6 +226,7 @@ Dashboard
         }
     }
 
+    let map2;
     function showPosition(position) {
         document.getElementById('latitude').setAttribute('value', position.coords.latitude);
         document.getElementById('longitude').setAttribute('value', position.coords.longitude);
@@ -260,32 +261,35 @@ Dashboard
             })
         });
 
-        // Create a map centered on a specific location
+        if(map2) {
+            map2.setView([latitude, longitude], 13);
+            map2.remove();
+        }
+
         document.getElementById('map2').hidden = false;
-        var map = L.map('map2').setView([latitude, longitude], 13);
-        document.getElementById('map').hidden = true;
+        map2 = L.map('map2').setView([latitude, longitude], 13);
+        document.getElementById('map').hidden = true;        
 
         // Add a tile layer to the map (in this example, we're using the OpenStreetMap tile layer)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
             maxZoom: 18,
-        }).addTo(map);
+        }).addTo(map2);
 
         //set marker
-        // Add a marker to the map
-        let marker = L.marker([latitude, longitude]).addTo(map);
+        // Add a marker to the map2
+        let marker = L.marker([latitude, longitude]).addTo(map2);
 
-        map.on('click', function (e) {
+        map2.on('click', function (e) {
             // Get the latitude and longitude of the clicked location
             if (marker) {
-                map.removeLayer(marker);
+                map2.removeLayer(marker);
             }
-            marker = L.marker(e.latlng).addTo(map);
+            marker = L.marker(e.latlng).addTo(map2);
             var lat = e.latlng.lat.toFixed(4);
             var lng = e.latlng.lng.toFixed(4);
 
             // Log the coordinates to the console
-            console.log('Latitude:', lat, 'Longitude:', lng);
             $("#longitude").attr('value', lng);
             $('#latitude').attr('value', lat);
 
@@ -317,12 +321,10 @@ Dashboard
             });
         });
     }
-
 </script>
 
 {{-- manual --}}
 <script>
-    // console.log($('#latitude').val());
     // Create a map centered on a specific location
     let map = L.map('map').setView([-7.50000, 111.000], 14);
     let marker = null;
