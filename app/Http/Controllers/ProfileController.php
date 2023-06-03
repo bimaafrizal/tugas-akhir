@@ -11,12 +11,6 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public $auth;
-    public function __construct(AuthController $controler)
-    {
-        $this->auth = $controler;
-    }
-
     public function index()
     {
         $id = Auth::user()->id;
@@ -54,6 +48,10 @@ class ProfileController extends Controller
             'phone_num' => 'required|min:9|max:13|unique:users,phone_num,' . $user->id,
         ]);
 
+        //send email verification
+        if ($user->email != $request->email) {
+            $request->user()->sendEmailVerificationNotification();
+        }
         if ($user->email != $request->email) {
             $validateData['email_verified_at'] = null;
         }
@@ -61,17 +59,6 @@ class ProfileController extends Controller
             $validateData['phone_num_verified_at'] = null;
         }
         $user->update($validateData);
-
-        if ($user->email != $request->email) {
-            //send email verification
-            $user->sendEmailVerificationNotification();
-            //redirect new page
-            return redirect('/email/verify')->with('success', 'Confirm your email');
-        }
-
-        if ($user->phone_num != $request->phone_num) {
-            $this->auth->sendOtp();
-        }
 
         return redirect(route('profile.index'))->with('success', 'Berhasil merubah profile');
     }

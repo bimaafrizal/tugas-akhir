@@ -129,7 +129,7 @@ Verify Phone Number
 
                     <div class="mt-4 text-center">
                         <p class="mb-0">Didn't receive a code ?
-                            <form action="{{ route('otp.resend') }}" method="POST" class="d-inline">
+                            <form action="{{ route('otp.resend') }}" method="GET" class="d-inline">
                                 @csrf
                                 <button type="submit"
                                     class="fw-semibold text-primary text-decoration-underline">Resend</button>

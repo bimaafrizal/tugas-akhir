@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,10 @@ class Otp
     {
         if (auth()->user()->phone_num_verified_at === null) {
             // abort(403);
-            return redirect(route('verification.otp'));
+            if (auth()->user()->otp_expires_at >= Carbon::now()) {
+                return redirect(route('verification.otp'));
+            }
+            return redirect(route('otp.resend'));
         }
         return $next($request);
     }
