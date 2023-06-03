@@ -63,12 +63,7 @@
                                 <div class="form-group">
                                     <label for="message">Message</label>
                                     <textarea name="body" id="message" cols="30" rows="10"
-                                        class="form-control @error('body') is-invalid @enderror" required>{{ old('body') }}</textarea>
-                                    @error('body')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
+                                        class="form-control" required>{{ old('body') }}</textarea>
                                 </div>
                                 <div class="form-group mt-3">
                                     <input type="submit" value="Post Comment" class="btn btn-primary">

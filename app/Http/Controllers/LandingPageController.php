@@ -10,6 +10,8 @@ use App\Models\LandingPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Contracts\Support\MessageBag;
+use Illuminate\Support\Facades\Validator;
 
 class LandingPageController extends Controller
 {
@@ -46,19 +48,36 @@ class LandingPageController extends Controller
 
     public function comenntStore(Request $request, $slug)
     {
-        $data = $request->validate(['body' => 'required|min:5']);
+        $checkValidator = Validator::make($request->all(), [
+            'body' => ['required', 'min:5', 'max:255'],
+        ]);
+
+        if ($checkValidator->fails()) {
+            Alert::error('Error', $checkValidator->errors()->getMessageBag()->all()[0]);
+            return back()->withInput();
+        }
+
+        $data = [];
+        $data = $request->body;
         $article = Article::where('slug', $slug)->first();
         $data['user_id'] = Auth::user()->id;
         $data['article_id'] = $article->id;
         Comment::create($data);
 
-        Alert::success('Success Title', 'Success Message');
+        Alert::success('Success', 'Berhasil menambahkan komentar');
         return redirect()->back();
     }
 
     public function comenntNastedStore(Request $request, $slug, $id)
     {
-        $request->validate(['content' => 'required|min:5']);
+        $checkValidator = Validator::make($request->all(), [
+            'content' => ['required', 'min:5', 'max:255'],
+        ]);
+
+        if ($checkValidator->fails()) {
+            Alert::error('Error', $checkValidator->errors()->getMessageBag()->all()[0]);
+            return back();
+        }
         $article = Article::where('slug', $slug)->first();
 
         $data['body'] = $request->content;
@@ -66,6 +85,8 @@ class LandingPageController extends Controller
         $data['article_id'] = $article->id;
         $data['comment_article_id'] = $id;
         Comment::create($data);
+
+        Alert::success('Success', 'Berhasil menambahkan komentar');
         return redirect()->back();
     }
 }
