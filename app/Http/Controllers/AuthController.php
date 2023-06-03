@@ -162,16 +162,18 @@ class AuthController extends Controller
     public function sendOtp()
     {
         $user = Auth::user();
-        $expired = $user->otp_expires_at;
         if ($user->phone_num_verified_at != null) {
             return redirect('/dashboard');
         }
 
-        if ($user->otp_expires_at <= Carbon::now()) {
+        if ($user->otp_expires_at == null) {
             $otp = $this->createOtp();
             $message = "OTP Verification, gunakan OTP " . $otp . " untuk memverifikasi akun aknda. Perhatikan! Jangan memberitahukan OTP ini ke pihak siapa pun.";
             $this->sendWhatsapp($user->phone_num, $message);
         }
+
+        $dataUser = User::where('id', $user->id)->first();
+        $expired = $dataUser->otp_expires_at;
 
         return view('pages.auth.new-verify-otp', compact('expired'));
     }

@@ -169,7 +169,7 @@ Verify Phone Number
 <!-- end auth-page-wrapper -->
 <script>
     const endDate = new Date(document.getElementById('expired').value);
-
+    
     let timer = setInterval(() => {
         let now = new Date().getTime();
         let timeRemaining = endDate - now;
