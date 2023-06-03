@@ -1,6 +1,8 @@
 <!-- ========== App Menu ========== -->
 <div class="app-menu navbar-menu">
+
     <!-- LOGO -->
+    @if ($logo == null)    
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
         <a href="/dashboard" class="logo logo-dark">
@@ -25,6 +27,33 @@
             <i class="ri-record-circle-line"></i>
         </button>
     </div>
+    @else
+    <div class="navbar-brand-box">
+        <!-- Dark Logo-->
+        <a href="/dashboard" class="logo logo-dark">
+            <span class="logo-sm">
+                <img src="{{ asset($logo) }}" alt="" height="40">
+            </span>
+            <span class="logo-lg">
+                <img src="{{ asset($logo) }}" alt="" height="30">
+            </span>
+        </a>
+        <!-- Light Logo-->
+        <a href="/dashboard" class="logo logo-light">
+            <span class="logo-sm">
+                <img src="{{ asset($logo) }}" alt="" height="40">
+            </span>
+            <span class="logo-lg">
+                <img src="{{ asset($logo) }}" alt="" height="30">
+            </span>
+        </a>
+        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
+            id="vertical-hover">
+            <i class="ri-record-circle-line"></i>
+        </button>
+    </div>
+        
+    @endif
 
     <div id="scrollbar">
         <div class="container-fluid">

@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\LandingPage;
 use App\Repositories\KategoryArticle\KategoryArticleRepository;
 use App\Repositories\KategoryArticle\KategoryArticleRepositoryImplement;
 use App\Services\KategoryArticle\KategoryArticleService;
 use App\Services\KategoryArticle\KategoryArticleServiceImplement;
+use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        view()->composer('*', function ($view) {
+            $logo = LandingPage::where('id', 1)->first();
+            $logo = $logo->logo;
+            $view->with('logo', $logo);
+        });
         Paginator::useBootstrap();
     }
 }
