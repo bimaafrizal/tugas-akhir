@@ -20,6 +20,7 @@ class DashboardController extends Controller
         $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
         $floodThisYear = Flood::where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
         $ews = Ews::all();
+        $no = 1;
 
         if ($user->role_id == 1) {
             $cuaca = null;
@@ -40,7 +41,7 @@ class DashboardController extends Controller
                     }
                 }
             }
-            return view('pages.dashboard2.index-user', compact('user', 'cuaca', 'time', 'cuacas', 'earthquakeThisYear', 'ews', 'floodThisYear'));
+            return view('pages.dashboard2.index-user', compact('user', 'cuaca', 'time', 'cuacas', 'earthquakeThisYear', 'ews', 'floodThisYear', 'no'));
         } else {
             return view('pages.dashboard2.index');
         }

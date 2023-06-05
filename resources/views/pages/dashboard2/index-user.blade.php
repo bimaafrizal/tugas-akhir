@@ -213,6 +213,17 @@ Dashboard
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <a class="twitter-timeline" data-width="100%" data-height="800" href="https://twitter.com/infoBMKG?ref_src=twsrc%5Etfw">
+                                Tweets by infoBMKG</a> 
+                                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -233,7 +244,6 @@ Dashboard
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{ $no = 1 }}
                                     @foreach ($earthquakeThisYear as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
@@ -491,26 +501,27 @@ Dashboard
     });
 
     let map3 = L.map('map3').setView([-3.00000, 115.000], 5);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-    }).addTo(map3);
-
+    
     let dataGempa = document.getElementById("gempa").value;
     let convertGempaObj = JSON.parse(dataGempa);
     // console.log(convertGempaObj[0]);
     let dataEws = document.getElementById("ews").value;
     let convertEwsObj = JSON.parse(dataEws);
-    console.log(typeof convertGempaObj[0].latitude);
+    // console.log(typeof convertGempaObj[0].latitude);
 
-    // L.marker([convertGempaObj[0].latitude, convertGempaObj[0].longitude]).addTo(map3);
-    convertGempaObj.forEach(e => {});
+    convertGempaObj.forEach(e => {
+        L.marker([e.longitude, e.latitude], {icon: earthquakeIcon}).addTo(map3).bindPopup('<p>Kekuatan:'+ e.strength +' SR</p><p> Kedalaman' + e.depth + ' KM</p><p>'+ e.time +','+e.date +'</p>');
+
+    });
     convertEwsObj.forEach(element => {
         L.marker([element.latitude, element.longitude], {
             icon: floodIcon
         }).addTo(map3).bindPopup(element.name);
     });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+    }).addTo(map3);
 
 </script>
 @endsection
