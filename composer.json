@@ -19,7 +19,8 @@
         "sendinblue/api-v3-sdk": "^8.4",
         "swooletw/laravel-swoole": "^2.12",
         "vxm/laravel-async": "^3.0",
-        "yaza/laravel-repository-service": "^3.2"
+        "yaza/laravel-repository-service": "^3.2",
+        "phpoffice/phpspreadsheet": "^1.17"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",

@@ -28,6 +28,8 @@ use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Crypt;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use SendinBlue\Client\Configuration;
 // use SendinBlue\Client\Api\SMTPApi;
 use SendinBlue\Client\Api\TransactionalEmailsApi;
@@ -306,36 +308,58 @@ class FloodController extends Controller
         return response()->json(compact('labels', 'data'));
     }
 
-    public function downloadData($id)
+    public function downloadData($id, Request $request)
     {
         try {
             $decrypted = Crypt::decrypt($id);
         } catch (DecryptException $e) {
             echo $e;
         }
-        $data = Flood::with('ews')->where('ews_id', $decrypted)->get();
-        if ($decrypted == 0) {
-            $data = Flood::with('ews')->get();
+
+        if ($request->tanggal_mulai == null || $request->tanggal_mulai == null) {
+            $data = Flood::with('ews')->where('ews_id', $decrypted)->get();
+            if ($decrypted == 0) {
+                $data = Flood::with('ews')->get();
+            }
+        } else {
+            $data = Flood::with('ews')->where('ews_id', $decrypted)->where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $request->tanggal_akhir)->get();
+            if ($decrypted == 0) {
+                $data = Flood::with('ews')->where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $request->tanggal_akhir)->get();
+            }
         }
 
-        //create a csv file with fatched data
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=data-ews" . Carbon::now() . '.csv',
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        ];
+        $spreadsheet = new Spreadsheet();
 
-        $callback = function () use ($data) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, array('Nama EWS', 'Lokasi', 'Level', 'Created At'));
-            foreach ($data as $row) {
-                fputcsv($file, array($row->ews->name, $row->ews->location, $row->level, $row->created_at));
-            }
-            fclose($file);
-        };
+        $sheet = $spreadsheet->getActiveSheet();
 
-        return Response::stream($callback, 200, $headers);
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama EWS');
+        $sheet->setCellValue('C1', 'Lokasi');
+        $sheet->setCellValue('D1', 'Level');
+        $sheet->setCellValue('E1', 'Created At');
+
+        $row = 2;
+        $number = 1;
+
+        foreach ($data as $item) {
+            $sheet->setCellValue('A' . $row, $number);
+            $sheet->setCellValue('B' . $row, $item->ews->name);
+            $sheet->setCellValue('C' . $row, $item->ews->regency->name . ',' . $item->ews->province->name);
+            $sheet->setCellValue('D' . $row, $item->level);
+            $sheet->setCellValue('E' . $row, $item->created_at);
+            $row++;
+            $number++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        $fileName = 'data-ews' . Carbon::now() . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=\"$fileName\"");
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

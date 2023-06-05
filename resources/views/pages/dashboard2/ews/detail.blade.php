@@ -96,7 +96,7 @@ EWS
                     <h1>Tabel Ketinggian Air</h1>
                 </div>
                 <div class="d-flex justify-content-start mb-2">
-                    <a href="{{ route('ews.download-data', ['id' => Crypt::encrypt($ews->id)]) }}" class="btn btn-primary">Download CSV</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Download Data</button>
                 </div>
                 <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                     style="width:100%">
@@ -125,7 +125,49 @@ EWS
 </div>
 
 <input type="text" name="" id="id" value="{{ Crypt::encrypt($ews->id) }}" hidden>
-
+<div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Download Data EWS {{ $ews->name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('ews.download-data', ['id' => Crypt::encrypt($ews->id)]) }}" method="GET">
+                    <div class="row g-3">
+                        <small class="bg-danger text-white">Jika ingin mendownload semua data, kosongkan form di bawah
+                            ini</small>
+                        @csrf
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="firstName" class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" data-provider="flatpickr"
+                                    data-date-format="d M, Y" id="firstDate" name="tanggal_mulai">
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="lastName" class="form-label">Tanggal Akhir</label>
+                                <input type="date" class="form-control" data-provider="flatpickr"
+                                    data-date-format="d M, Y" id="lasDate" name="tanggal_akhir">
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-lg-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Download Data</button>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')
