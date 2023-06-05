@@ -11,6 +11,13 @@ Dashboard
 {{-- leafet --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
+    type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('dashboard', 'active')
@@ -55,6 +62,7 @@ Dashboard
                         </div> <!-- end card-body-->
                     </div>
                 </div> <!-- end col-->
+
             </div> <!-- end row-->
 
             <div class="row">
@@ -63,7 +71,7 @@ Dashboard
                         <div class="container py-5 h-100">
 
                             <div class="row d-flex justify-content-center align-items-center h-100">
-                                <div class="col-12">
+                                <div class="col-md-6 col-sm-12">
 
                                     <div class="card" style="color: #4B515D; border-radius: 35px;">
                                         <div class="card-body p-4">
@@ -160,6 +168,33 @@ Dashboard
                                     </div>
 
                                 </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-start">
+                                                <h2 class="mb-2">Lokasi Anda</h2>
+                                            </div>
+                                            <div class="col-12">
+                                                <div id="map" style="height: 400px; width:100%; position: relative;">
+                                                </div>
+                                                <div id="map2" style="height: 400px; width:100%; position: relative;"
+                                                    hidden></div>
+                                                <p id="demo"></p>
+                                                <input type="text" id="latitude" name="latitude"
+                                                    value="{{ $user->latitude != null ? $user->latitude : '' }}" hidden>
+                                                <input type="text" id="longitude" name="longitude"
+                                                    value="{{ $user->longitude != null ? $user->longitude : '' }}"
+                                                    hidden>
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+
+                                                <button class="btn btn-primary" id="button-location"
+                                                    onclick="getLocation()">Get Your
+                                                    Location</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -171,23 +206,70 @@ Dashboard
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-start">
-                                <h2 class="mb-2">Get New Location</h2>
-                            </div>
-                            <div class="col-12">
-                                <div id="map" style="height: 400px; width:100%; position: relative;"></div>
-                                <div id="map2" style="height: 400px; width:100%; position: relative;" hidden></div>
-                                <p id="demo"></p>
-                                <input type="text" id="latitude" name="latitude"
-                                    value="{{ $user->latitude != null ? $user->latitude : '' }}" hidden>
-                                <input type="text" id="longitude" name="longitude"
-                                    value="{{ $user->longitude != null ? $user->longitude : '' }}" hidden>
-                            </div>
-                            <div class="d-flex justify-content-center">
-
-                                <button class="btn btn-primary" id="button-location" onclick="getLocation()">Get Your
-                                    Location</button>
-                            </div>
+                            <h3>Peta Lokasi Bencana Tahun Ini</h3>
+                            <div id="map3" style="height: 400px; width:100%; position: relative;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>Tabel Bencana Tahun Ini</h3>
+                            <table id="example"
+                                class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                                style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th data-ordering="false">No.</th>
+                                        <th data-ordering="false">Jenis</th>
+                                        <th>Lokasi</th>
+                                        <th>Kedalaman</th>
+                                        <th>Kekuatan</th>
+                                        <th>Level</th>
+                                        <th>Tanggal</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ $no = 1 }}
+                                    @foreach ($earthquakeThisYear as $item)
+                                    <tr>
+                                        <td>{{ $no++ }}</td>
+                                        <td>Gempa</td>
+                                        <td>{{ $item->latitude }}, {{ $item->longitude }}</td>
+                                        <td>{{ $item->depth }}</td>
+                                        <td>{{ $item->strength }}</td>
+                                        <td>-</td>
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary">Detail</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    @foreach ($floodThisYear as $item)
+                                    <tr>
+                                        <td>{{ $no++ }}</td>
+                                        <td>Banjir</td>
+                                        <td>{{ $item->ews->name }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        @if ($item->level == 1)
+                                        <td>Waspada</td>
+                                        @elseif($item->level == 2)
+                                        <td>Siaga</td>
+                                        @else
+                                        <td>Awas</td>
+                                        @endif
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>
+                                            <a href="" class="btn btn-primary">Detail</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -198,7 +280,8 @@ Dashboard
 
 </div> <!-- end row-->
 
-
+<input type="text" value="{{ $earthquakeThisYear }}" id="gempa" hidden>
+<input type="text" value="{{ $ews }}" id="ews" hidden>
 @endsection
 
 @section('script')
@@ -213,6 +296,16 @@ Dashboard
 <!-- App js -->
 <script src="{{ asset('/auth/assets/js/app.js') }} "></script>
 
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{{ asset('auth/assets/js/pages/datatables.init.js') }}"></script>
 
 {{-- geolocation --}}
 <script>
@@ -227,6 +320,7 @@ Dashboard
     }
 
     let map2;
+
     function showPosition(position) {
         document.getElementById('latitude').setAttribute('value', position.coords.latitude);
         document.getElementById('longitude').setAttribute('value', position.coords.longitude);
@@ -261,14 +355,14 @@ Dashboard
             })
         });
 
-        if(map2) {
+        if (map2) {
             map2.setView([latitude, longitude], 13);
             map2.remove();
         }
 
         document.getElementById('map2').hidden = false;
         map2 = L.map('map2').setView([latitude, longitude], 13);
-        document.getElementById('map').hidden = true;        
+        document.getElementById('map').hidden = true;
 
         // Add a tile layer to the map (in this example, we're using the OpenStreetMap tile layer)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -321,12 +415,13 @@ Dashboard
             });
         });
     }
+
 </script>
 
 {{-- manual --}}
 <script>
     // Create a map centered on a specific location
-    let map = L.map('map').setView([-7.50000, 111.000], 14);
+    let map = L.map('map').setView([-7.30000, 113.000], 14);
     let marker = null;
     if ($('#longitude').val() !== '') {
         map.setView([$('#latitude').val(), $('#longitude').val()], 14);
@@ -380,6 +475,41 @@ Dashboard
                 });
             })
         });
+    });
+
+</script>
+
+<script>
+    // icon
+    const floodIcon = L.icon({
+        iconUrl: 'auth/assets/images/flood.png',
+        iconSize: [20, 20],
+    });
+    const earthquakeIcon = L.icon({
+        iconUrl: 'auth/assets/images/earthquake.png',
+        iconSize: [30, 30],
+    });
+
+    let map3 = L.map('map3').setView([-3.00000, 115.000], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+    }).addTo(map3);
+
+    let dataGempa = document.getElementById("gempa").value;
+    let convertGempaObj = JSON.parse(dataGempa);
+    // console.log(convertGempaObj[0]);
+    let dataEws = document.getElementById("ews").value;
+    let convertEwsObj = JSON.parse(dataEws);
+    console.log(typeof convertGempaObj[0].latitude);
+
+    // L.marker([convertGempaObj[0].latitude, convertGempaObj[0].longitude]).addTo(map3);
+    convertGempaObj.forEach(e => {});
+    convertEwsObj.forEach(element => {
+        L.marker([element.latitude, element.longitude], {
+            icon: floodIcon
+        }).addTo(map3).bindPopup(element.name);
     });
 
 </script>
