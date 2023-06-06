@@ -316,15 +316,24 @@ class FloodController extends Controller
             echo $e;
         }
 
-        if ($request->tanggal_mulai == null || $request->tanggal_mulai == null) {
+        $nextDay = date('Y-m-d', strtotime($request->tanggal_akhir . '+1 day'));
+        $nextDay2 = date('Y-m-d', strtotime($request->tanggal_mulai . '+1 day'));
+
+        if ($request->tanggal_mulai == null || $request->tanggal_akhir == null) {
             $data = Flood::with('ews')->where('ews_id', $decrypted)->get();
             if ($decrypted == 0) {
                 $data = Flood::with('ews')->get();
             }
         } else {
-            $data = Flood::with('ews')->where('ews_id', $decrypted)->where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $request->tanggal_akhir)->get();
+            $data = Flood::with('ews')->where('ews_id', $decrypted)->where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $nextDay)->get();
             if ($decrypted == 0) {
-                $data = Flood::with('ews')->where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $request->tanggal_akhir)->get();
+                $data = Flood::with('ews')->where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $nextDay)->get();
+            }
+            if ($request->tanggal_mulai > $request->tanggal_akhir) {
+                $data = Flood::with('ews')->where('ews_id', $decrypted)->where('created_at', '>=', $request->tanggal_akhir)->where('created_at', '<=', $nextDay2)->get();
+                if ($decrypted == 0) {
+                    $data = Flood::with('ews')->where('created_at', '>=', $request->tanggal_akhir)->where('created_at', '<=', $nextDay2)->get();
+                }
             }
         }
 

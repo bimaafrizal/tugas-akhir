@@ -204,10 +204,16 @@ class EarthquakeController extends Controller
 
     public function downloadData(Request $request)
     {
-        if ($request->tanggal_mulai == null || $request->tanggal_mulai == null) {
+        $nextDay = date('Y-m-d', strtotime($request->tanggal_akhir . '+1 day'));
+        $nextDay2 = date('Y-m-d', strtotime($request->tanggal_mulai . '+1 day'));
+
+        if ($request->tanggal_mulai == null || $request->tanggal_akhir == null) {
             $data = Earthquake::orderBy('id', 'desc')->get();
         } else {
-            $data = Earthquake::where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $request->tanggal_akhir)->orderBy('id', 'desc')->get();
+            $data = Earthquake::where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $nextDay)->orderBy('id', 'desc')->get();
+            if ($request->tanggal_mulai > $request->tanggal_akhir) {
+                $data = Earthquake::where('created_at', '>=', $request->tanggal_akhir)->where('created_at', '<=', $nextDay2)->orderBy('id', 'desc')->get();
+            }
         }
 
         $spreadsheet = new Spreadsheet();
