@@ -10,17 +10,54 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user();
         $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
         $floodThisYear = Flood::where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
+        $total = count($earthquakeThisYear) + count($floodThisYear);
+        $countEarthquake = count($earthquakeThisYear);
+        $countFlood =  count($floodThisYear);
         $ews = Ews::all();
         $no = 1;
+
+        $bulan = array(
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        );
+
+        $currentMonth = date('n');
+        $listMonths = [];
+        for ($i = 1; $i <= $currentMonth; $i++) {
+            $listMonths[] = $bulan[$i];
+        }
+
+        $month = $request->month;
+        if ($request->month < 10) {
+            $month = '0' . $request->month;
+        }
+
+        if ($request->month != null) {
+            $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->whereRaw('SUBSTRING(created_at, 6, 2) = ?', [$month])->get();
+            $floodThisYear = Flood::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->whereRaw('SUBSTRING(created_at, 6, 2) = ?', [$month])->where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->get();
+        }
+
 
         if ($user->role_id == 1) {
             $cuaca = null;
@@ -41,7 +78,7 @@ class DashboardController extends Controller
                     }
                 }
             }
-            return view('pages.dashboard2.index-user', compact('user', 'cuaca', 'time', 'cuacas', 'earthquakeThisYear', 'ews', 'floodThisYear', 'no'));
+            return view('pages.dashboard2.index-user', compact('user', 'cuaca', 'time', 'cuacas', 'earthquakeThisYear', 'ews', 'floodThisYear', 'no', 'countEarthquake', 'countFlood', 'listMonths'));
         } else {
             return view('pages.dashboard2.index');
         }

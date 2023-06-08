@@ -18,11 +18,29 @@ Dashboard
 <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
     type="text/css" />
 <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+<script src="https://code.highcharts.com/highcharts.js"></script>
 @endsection
 
 @section('dashboard', 'active')
 
 @section('content')
+<style>
+    .legend {
+        background-color: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    .legend-icon {
+        width: 20px;
+        /* Adjust the width as needed */
+        height: 20px;
+        /* Adjust the height as needed */
+        margin-right: 5px;
+    }
+
+</style>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -206,7 +224,21 @@ Dashboard
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h3>Peta Lokasi Bencana Tahun Ini</h3>
+                            <div class="d-flex justify-content-between">
+                                <h3>Peta Lokasi Bencana Tahun Ini</h3>
+                                <div class="data mb-1">
+                                    <form action="" method="GET">
+                                        @csrf
+                                        <select name="month" id="" class="form-control d-inline" style="width: 150px">
+                                            <option value="" selected>Pilih Bulan</option>
+                                            @foreach ($listMonths as $index => $month)
+                                            <option value="{{ $index + 1 }}">{{ $month }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="btn btn-primary d-inline">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
                             <div id="map3" style="height: 400px; width:100%; position: relative;"></div>
                         </div>
                     </div>
@@ -216,9 +248,17 @@ Dashboard
                 <div class="col-md-6 col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                            <a class="twitter-timeline" data-width="100%" data-height="800" href="https://twitter.com/infoBMKG?ref_src=twsrc%5Etfw">
-                                Tweets by infoBMKG</a> 
-                                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            <a class="twitter-timeline" data-width="100%" data-height="800"
+                                href="https://twitter.com/infoBMKG?ref_src=twsrc%5Etfw">
+                                Tweets by infoBMKG</a>
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="pie-chart"></div>
                         </div>
                     </div>
                 </div>
@@ -244,6 +284,7 @@ Dashboard
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if ($earthquakeThisYear != null)
                                     @foreach ($earthquakeThisYear as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
@@ -254,10 +295,13 @@ Dashboard
                                         <td>-</td>
                                         <td>{{ $item->created_at }}</td>
                                         <td>
-                                            <a href="" class="btn btn-primary">Detail</a>
+                                            <a href="{{ route('earthquake.show', ['id' => Crypt::encrypt($item->id)]) }}"
+                                                class="btn btn-secondary">Detail</a>
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @endif
+                                    @if ($floodThisYear != null)
                                     @foreach ($floodThisYear as $item)
                                     <tr>
                                         <td>{{ $no++ }}</td>
@@ -274,10 +318,12 @@ Dashboard
                                         @endif
                                         <td>{{ $item->created_at }}</td>
                                         <td>
-                                            <a href="" class="btn btn-primary">Detail</a>
+                                            <a href="{{ route('ews.show', ['ew' => encrypt($item->ews->id)]) }}"
+                                                class="btn btn-secondary">Detail</a>
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -292,6 +338,8 @@ Dashboard
 
 <input type="text" value="{{ $earthquakeThisYear }}" id="gempa" hidden>
 <input type="text" value="{{ $ews }}" id="ews" hidden>
+<input type="text" value="{{ $countEarthquake }}" id="countGempa" hidden>
+<input type="text" value="{{ $countFlood }}" id="countBanjir" hidden>
 @endsection
 
 @section('script')
@@ -501,16 +549,21 @@ Dashboard
     });
 
     let map3 = L.map('map3').setView([-3.00000, 115.000], 5);
-    
+
     let dataGempa = document.getElementById("gempa").value;
+    if (dataGempa != "") {
+        console.log("Betul");
+    }
+    
     let convertGempaObj = JSON.parse(dataGempa);
-    // console.log(convertGempaObj[0]);
     let dataEws = document.getElementById("ews").value;
     let convertEwsObj = JSON.parse(dataEws);
-    // console.log(typeof convertGempaObj[0].latitude);
 
     convertGempaObj.forEach(e => {
-        L.marker([e.longitude, e.latitude], {icon: earthquakeIcon}).addTo(map3).bindPopup('<p>Kekuatan:'+ e.strength +' SR</p><p> Kedalaman' + e.depth + ' KM</p><p>'+ e.time +','+e.date +'</p>');
+        L.marker([e.longitude, e.latitude], {
+            icon: earthquakeIcon
+        }).addTo(map3).bindPopup('<p>Kekuatan:' + e.strength + ' SR</p><p> Kedalaman:' + e.depth +
+            ' KM</p><p>' + e.time + ',' + e.date + '</p>');
 
     });
     convertEwsObj.forEach(element => {
@@ -522,6 +575,87 @@ Dashboard
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
         maxZoom: 18,
     }).addTo(map3);
+
+    const legend = L.control({
+        position: "bottomright"
+    });
+    const pin_gempa = '/auth/assets/images/earthquake.png';
+    const pin_banjir = '/auth/assets/images/flood.png';
+
+    legend.onAdd = function (map) {
+        let div = L.DomUtil.create("div", "legend");
+        div.innerHTML = `<h6>Informasi</h6>
+    <div>
+      <img class="legend-icon" src="{{ asset('auth/assets/images/earthquake.png') }}" alt="Category 1 Icon">
+      <span>Gempa</span>
+    </div></br>
+    <div>
+      <img class="legend-icon" src="{{ asset('auth/assets/images/flood.png') }}" alt="Category 2 Icon">
+      <span>Alat EWS</span>
+    </div>`;
+        return div;
+    }
+
+    legend.addTo(map3);
+
+</script>
+
+<script>
+    let countGempa = parseInt($('#countGempa').val());
+    let countBanjir = parseInt($('#countBanjir').val());
+
+    let total = countBanjir + countGempa;
+    let percentGempa = countGempa / total * 100;
+    let percentBanjir = countBanjir / total * 100;
+
+    let dataPie = [{
+            name: 'Gempa',
+            y: countGempa,
+            persen: percentGempa,
+        },
+        {
+            name: 'Banjir',
+            y: countBanjir,
+            persen: percentBanjir
+        }
+    ];
+
+    Highcharts.chart('pie-chart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Bencana Tahun Ini',
+            align: 'center'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>({point.y:.0f}) | {point.persen} %</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: ({point.y:.0f}) | {point.persen} %'
+                }
+            }
+        },
+
+        series: [{
+            name: 'Jumlah',
+            colorByPoint: true,
+            data: dataPie
+        }]
+    });
 
 </script>
 @endsection
