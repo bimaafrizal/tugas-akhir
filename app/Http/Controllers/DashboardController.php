@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Earthquake;
 use App\Models\Ews;
 use App\Models\Flood;
+use App\Models\KategoryArticle;
 use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -17,7 +19,6 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        // dd($request->all());
         $user = Auth::user();
         $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
         $floodThisYear = Flood::where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
@@ -80,7 +81,14 @@ class DashboardController extends Controller
             }
             return view('pages.dashboard2.index-user', compact('user', 'cuaca', 'time', 'cuacas', 'earthquakeThisYear', 'ews', 'floodThisYear', 'no', 'countEarthquake', 'countFlood', 'listMonths'));
         } else {
-            return view('pages.dashboard2.index');
+            $countUser = User::where('role_id', 1)->count();
+            $countAdmin = User::where('role_id', 2)->count();
+            $countSuperAdmin = User::where('role_id', 3)->count();
+            $countEws = Ews::count();
+            $countArticle = Article::count();
+            $countKetegoryArticle = KategoryArticle::count();
+
+            return view('pages.dashboard2.index', compact('earthquakeThisYear', 'ews', 'floodThisYear', 'no', 'countEarthquake', 'countFlood', 'listMonths', 'countUser', 'countAdmin', 'countSuperAdmin', 'countEws', 'countKetegoryArticle', 'countArticle'));
         }
     }
 

@@ -116,10 +116,10 @@ Register
                                     </div>
 
                                     <div class="mb-4">
-                                        <p class="mb-0 fs-12 text-muted fst-italic">By registering you agree to the
+                                        {{-- <p class="mb-0 fs-12 text-muted fst-italic">By registering you agree to the
                                             Velzon <a href="#"
                                                 class="text-primary text-decoration-underline fst-normal fw-medium">Terms
-                                                of Use</a></p>
+                                                of Use</a></p> --}}
                                     </div>
 
                                     <div class="mt-4">
