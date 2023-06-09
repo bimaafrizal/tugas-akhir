@@ -26,7 +26,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = $this->service->all();
+        $user = Auth::user();
+        $articles = $this->service->allArticle($user);
         return view('pages.dashboard2.article.index', compact('articles'));
     }
 
