@@ -36,6 +36,8 @@
 </head>
 
 <body>
+  @include('sweetalert::alert')
+
   @include('components/landing-page/header')
 
   @yield('content')

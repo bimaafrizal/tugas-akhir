@@ -4,7 +4,7 @@
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-kategory">Tambah
                 Permintaan</button>
         </div>
-        <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+        <table class="table table-bordered dt-responsive nowrap table-striped align-middle"
             style="width:100%">
             <thead>
                 <tr>

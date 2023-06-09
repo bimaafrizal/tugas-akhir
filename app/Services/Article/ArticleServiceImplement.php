@@ -27,6 +27,13 @@ class ArticleServiceImplement extends Service implements ArticleService
   {
     return $this->mainRepository->getAll();
   }
+  public function allArticle($session)
+  {
+    if ($session->role_id == 2) {
+      return $this->mainRepository->allArticle($session->id);
+    }
+    return $this->mainRepository->getAll();
+  }
 
   public function storeArticle($data, $request, $id)
   {

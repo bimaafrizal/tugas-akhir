@@ -8,8 +8,8 @@ EWS
 
 @section('css')
 <!-- plugin css -->
+<link rel="stylesheet" href="{{ asset('/auth/assets/libs/@simonwep/@simonwep.min.css') }}" />
 <link href="{{ asset('/auth/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
-
 {{-- leafet --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
@@ -41,7 +41,8 @@ EWS
 
                     <div class="col-8 m-3">
                         <h3>EWS(Early Warning System)</h3>
-                        <p fs-1>Early warning system adalah sebuah alat produksi prodi D3 Teknik Informatika Universitas Sebelas Maret untuk mendeteksi banjir.</p>
+                        <p fs-1>Early warning system adalah sebuah alat produksi prodi D3 Teknik Informatika Universitas
+                            Sebelas Maret untuk mendeteksi banjir.</p>
                     </div>
                     <div class="col-3 my-2">
                         <img src="{{ asset('auth/assets/images/ews.jpeg') }}" class="img-fluid" alt=""
@@ -73,21 +74,24 @@ EWS
             </div>
         </div>
     </div>
-    
+
     <div class="d-flex justify-content-start mb-2">
+        @can('superAdmin')
         <div class="mx-1">
             <a href="{{ route('ews.create') }}" class="btn btn-primary">Tambah EWS</a>
         </div>
+        @endcan
         <div class="mx-1">
-            <a href="{{ route('ews.download-data', ['id' => Crypt::encrypt(0)]) }}" class="btn btn-success">Download Semua Data</a>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Download Semua
+                Data</button>
         </div>
     </div>
     @if (session()->has('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
     @foreach ($datas as $data)
     <div class="col-xl-3 col-md-4 col-sm-6">
         <div class="card">
@@ -101,26 +105,29 @@ EWS
                 </p>
                 <div class="d-flex justify-content-end">
                     <div class="mx-1">
+                        <a href="{{ route('ews.show', ['ew' => encrypt($data->id)]) }}"
+                            class="btn btn-secondary">Detail</a>
+                    </div>
+                    @can('notUser')
+                    <div class="mx-1">
                         <a href="{{ route('ews.edit', ['id' => encrypt($data->id)]) }}" class="btn btn-warning">Edit</a>
                     </div>
                     <div class="mx-1">
-                        <a href="{{ route('ews.show', ['ew' => encrypt($data->id)]) }}" class="btn btn-secondary">Detail</a>
-                    </div>
-                    <div class="mx-1">
                         @if ($data->status == 1)
-                            <form action="{{ route('ews.edit-status', ['id' => encrypt($data->id)]) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="is_active" value="0">
-                                <button type="submit" class="btn btn-danger">Non Active</button>
-                            </form>
-                            @else
-                            <form action="{{ route('ews.edit-status', ['id' => encrypt($data->id)]) }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="is_active" value="1">
-                                <button type="submit" class="btn btn-info">Active</button>
-                            </form>
+                        <form action="{{ route('ews.edit-status', ['id' => encrypt($data->id)]) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="is_active" value="0">
+                            <button type="submit" class="btn btn-danger">Non Active</button>
+                        </form>
+                        @else
+                        <form action="{{ route('ews.edit-status', ['id' => encrypt($data->id)]) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="is_active" value="1">
+                            <button type="submit" class="btn btn-info">Active</button>
+                        </form>
                         @endif
                     </div>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -131,27 +138,75 @@ EWS
     </div>
     <input type="text" value="{{ $allDatas }}" id="data" hidden>
 </div>
+
+<div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Download Semua Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('ews.download-data', ['id' => Crypt::encrypt(0)]) }}" method="GET">
+                    <div class="row g-3">
+                        <small class="bg-danger text-white">Jika ingin mendownload semua data, kosongkan form di bawah
+                            ini</small>
+                        @csrf
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="firstName" class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" data-provider="flatpickr"
+                                    data-date-format="d M, Y" id="firstDate" name="tanggal_mulai">
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="lastName" class="form-label">Tanggal Akhir</label>
+                                <input type="date" class="form-control" data-provider="flatpickr"
+                                    data-date-format="d M, Y" id="lasDate" name="tanggal_akhir">
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-lg-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Download Data</button>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+
 
 @section('script')
 <script src="{{ asset('/auth/assets/libs/masonry-layout/masonry-layout.min.js') }}"></script>
 <script src="{{ asset('/auth/assets/js/pages/card.init.js') }}"></script>
 <script src="{{ asset('/auth/assets/libs/prismjs/prismjs.min.js') }}"></script>
 
-<script src="{{ asset('/auth//assets/js/app.js') }}"></script>
+<script src="{{ asset('/auth/assets/libs/@simonwep/pickr/pickr.min.js') }}"></script>
+<script src="{{ asset('/auth/assets/js/pages/form-pickers.init.js') }}"></script>
+<script src="{{ asset('/auth/assets/js/app.js') }}"></script>
 
 <script>
-     let map = L.map('map').setView([-7.50000, 111.000], 8);
-     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-        }).addTo(map);
+    let map = L.map('map').setView([-7.50000, 111.000], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+    }).addTo(map);
 
     let data = document.getElementById("data").value;
     let convertObj = JSON.parse(data);
     convertObj.forEach(element => {
         let marker = L.marker([element.latitude, element.longitude]).addTo(map).bindPopup(element.name);
     });
-    
+
 </script>
 @endsection

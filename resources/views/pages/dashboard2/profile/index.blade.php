@@ -300,6 +300,7 @@ Profile
             </div>
         </div>
     </div>
+    @can('user')
     <div class="col-xxl-12">
         <div class="card">
             <div class="card-header">
@@ -321,6 +322,8 @@ Profile
             </div>
         </div>
     </div>
+        
+    @endcan
 </div>
 <!--end row-->
 

@@ -3,13 +3,16 @@
         <div class="navbar-header">
             <div class="d-flex">
                 <!-- LOGO -->
+                
+                @if ($logo == null)
+                    
                 <div class="navbar-brand-box horizontal-logo">
                     <a href="/dashboard" class="logo logo-dark">
                         <span class="logo-sm">
                             <img src=" {{ asset('auth/assets/images/logo-sm.png') }}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ asset('auth/assets/images/logo-sm.png') }} assets/images/logo-dark.png" alt="" height="17">
+                            <img src="{{ asset('auth/assets/images/logo-dark.png') }}" alt="" height="17">
                         </span>
                     </a>
 
@@ -22,6 +25,27 @@
                         </span>
                     </a>
                 </div>
+                @else
+                <div class="navbar-brand-box horizontal-logo">
+                    <a href="/dashboard" class="logo logo-dark">
+                        <span class="logo-sm">
+                            <img src=" {{ asset($logo) }}" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="{{ asset($logo) }}" alt="" height="17">
+                        </span>
+                    </a>
+
+                    <a href="/dashboard" class="logo logo-light">
+                        <span class="logo-sm">
+                            <img src="{{ asset($logo) }}" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="{{ asset($logo) }}" alt="" height="17">
+                        </span>
+                    </a>
+                </div>
+                @endif
 
                 <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
                     id="topnav-hamburger-icon">

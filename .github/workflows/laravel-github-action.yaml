@@ -1,44 +1,20 @@
-name: Deploy To Server
-
-# Trigger the workflow on push and
-# pull request events on the production branch
 on:
   push:
     branches:
-      - production
-
-# Authenticate to the the server via ssh
-# and run our deployment script
+      - master
+name: 🚀 Deploy website To Production
 jobs:
   web-deploy:
-    name: Deploy
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.1
-          tools: composer:v2
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer update
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: npm install
-        run: npm install
-
-      # - name: npm run production
-      #   run: npm run production
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2
 
       - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: 185.229.118.144
+          server: "awasbencana.website"
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
+          server-dir: "/public_html/"

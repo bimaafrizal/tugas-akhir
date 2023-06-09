@@ -24,6 +24,10 @@ class ArticleRepositoryImplement extends Eloquent implements ArticleRepository
     {
         return $this->model::all();
     }
+    public function allArticle($id)
+    {
+        return $this->model::where('user_id', $id)->get();
+    }
 
     public function store($data)
     {

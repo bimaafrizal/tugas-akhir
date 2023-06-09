@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ManajemenUserController extends Controller
 {
@@ -131,41 +133,74 @@ class ManajemenUserController extends Controller
             echo $e;
         }
         $data = User::with('role')->where('role_id', $decrypted)->get();
+        if ($decrypted == 2 || $decrypted == 3) {
+            $data = User::with('role')->where('role_id', 2)->orWhere('role_id', 3)->get();
+        }
 
-        $namaFile = 'Admin';
+        if ($decrypted)
+            $namaFile = 'Admin';
         if ($decrypted == 1) {
             $namaFile = 'User';
         }
 
-        //create a csv file with fatched data
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=" . $namaFile . '-' . Carbon::now() . '.csv',
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        ];
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
 
         if ($decrypted == 1) {
-            $callback = function () use ($data) {
-                $file = fopen('php://output', 'w');
-                fputcsv($file, array('Name', 'Email', 'Nomor Hp'));
-                foreach ($data as $row) {
-                    fputcsv($file, array($row->name, $row->email, $row->phone_num));
-                }
-                fclose($file);
-            };
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Nama');
+            $sheet->setCellValue('C1', 'Email');
+            $sheet->setCellValue('D1', 'Nomor HP');
+
+
+            $row = 2;
+            $number = 1;
+
+            foreach ($data as $item) {
+                $sheet->setCellValue('A' . $row, $number);
+                $sheet->setCellValue('B' . $row, $item->name);
+                $sheet->setCellValue('C' . $row, $item->email);
+                $sheet->setCellValue('D' . $row, $item->phone_num);
+                $row++;
+                $number++;
+            }
+
+            $writer = new Xlsx($spreadsheet);
         } else {
-            $callback = function () use ($data) {
-                $file = fopen('php://output', 'w');
-                fputcsv($file, array('Name', 'Email', 'Nomor Hp', 'Role', 'Status'));
-                foreach ($data as $row) {
-                    fputcsv($file, array($row->name, $row->email, $row->role->name, $row->status));
-                }
-                fclose($file);
-            };
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Nama');
+            $sheet->setCellValue('C1', 'Email');
+            $sheet->setCellValue('D1', 'Nomor HP');
+            $sheet->setCellValue('E1', 'Role');
+            $sheet->setCellValue('F1', 'Status');
+
+
+            $row = 2;
+            $number = 1;
+
+            foreach ($data as $item) {
+                $sheet->setCellValue('A' . $row, $number);
+                $sheet->setCellValue('B' . $row, $item->name);
+                $sheet->setCellValue('C' . $row, $item->email);
+                $sheet->setCellValue('D' . $row, $item->phone_num);
+                $sheet->setCellValue('E' . $row, $item->role->name);
+                $sheet->setCellValue('F' . $row, $item->status);
+                $row++;
+                $number++;
+            }
+
+            $writer = new Xlsx($spreadsheet);
         }
 
-        return Response::stream($callback, 200, $headers);
+
+        $fileName = $namaFile . ' ' . Carbon::now() . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=\"$fileName\"");
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

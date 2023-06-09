@@ -17,7 +17,10 @@ use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\Utils;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class EarthquakeController extends Controller
 {
@@ -29,7 +32,7 @@ class EarthquakeController extends Controller
     public function index()
     {
         $gempa = Earthquake::orderBy('id', 'desc')->first();
-        $gempas = Earthquake::orderBy('id', 'desc')->get();
+        $gempas = Earthquake::orderBy('id', 'desc')->take(30)->get();
         return view('pages.dashboard2.earthquake.index', compact('gempa', 'gempas'));
     }
 
@@ -199,28 +202,54 @@ class EarthquakeController extends Controller
         //
     }
 
-    public function downloadData()
+    public function downloadData(Request $request)
     {
-        $data = Earthquake::all();
+        $nextDay = date('Y-m-d', strtotime($request->tanggal_akhir . '+1 day'));
+        $nextDay2 = date('Y-m-d', strtotime($request->tanggal_mulai . '+1 day'));
 
-        //create a csv file with fatched data
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=data-gempa" . Carbon::now() . '.csv',
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        ];
-
-        $callback = function () use ($data) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, array('Longitude', 'Latitude', 'Strength', 'Depth', 'Date', 'Time', 'Created At', 'Inserted At', 'Potency'));
-            foreach ($data as $row) {
-                fputcsv($file, array($row->longitude, $row->latitude, $row->strength, $row->depth, $row->date, $row->time, $row->created_at, $row->inserted_at, $row->potency));
+        if ($request->tanggal_mulai == null || $request->tanggal_akhir == null) {
+            $data = Earthquake::orderBy('id', 'desc')->get();
+        } else {
+            $data = Earthquake::where('created_at', '>=', $request->tanggal_mulai)->where('created_at', '<=', $nextDay)->orderBy('id', 'desc')->get();
+            if ($request->tanggal_mulai > $request->tanggal_akhir) {
+                $data = Earthquake::where('created_at', '>=', $request->tanggal_akhir)->where('created_at', '<=', $nextDay2)->orderBy('id', 'desc')->get();
             }
-            fclose($file);
-        };
+        }
 
-        return Response::stream($callback, 200, $headers);
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Koordinat');
+        $sheet->setCellValue('C1', 'Kekuatan');
+        $sheet->setCellValue('D1', 'Kedalaman');
+        $sheet->setCellValue('E1', 'Created At');
+        $sheet->setCellValue('F1', 'Potensi');
+
+        $row = 2;
+        $number = 1;
+
+        foreach ($data as $item) {
+            $sheet->setCellValue('A' . $row, $number);
+            $sheet->setCellValue('B' . $row, $item->longitude . ',' . $item->latitude);
+            $sheet->setCellValue('C' . $row, $item->strength);
+            $sheet->setCellValue('D' . $row, $item->depth);
+            $sheet->setCellValue('E' . $row, $item->created_at);
+            $sheet->setCellValue('F' . $row, $item->potency);
+            $row++;
+            $number++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        $fileName = 'data-gempa' . Carbon::now() . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=\"$fileName\"");
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

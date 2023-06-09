@@ -18,6 +18,8 @@ Gempa
 <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
     type="text/css" />
 <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="{{ URL::asset('auth/assets/libs/@simonwep/@simonwep.min.css') }}" />
 @endsection
 
 @section('earthquake', 'active')
@@ -49,7 +51,10 @@ Gempa
                     <div class="card">
                         <div class="card-body p-0">
                             <div class="d-flex justify-content-start m-2">
-                                <a href="" class="btn btn-success">Download Semua Data</a>
+                                <div class="mx-1 mt-2">
+                                    <br>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid" class="btn btn-success">Download Semua Data</button>
+                                </div>
                             </div>
                             <div class="text-center mt-3">
                                 <h1>Gempa Terbaru</h1>
@@ -109,6 +114,49 @@ Gempa
 
 </div> <!-- end row-->
 
+<div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalgridLabel">Download Data Gempa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('earthquake.download') }}" method="GET">
+                    <div class="row g-3">
+                        <small class="bg-danger text-white">Jika ingin mendownload semua data, kosongkan form di bawah
+                            ini</small>
+                        @csrf
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="firstName" class="form-label">Tanggal Mulai</label>
+                                <input type="date" class="form-control" data-provider="flatpickr"
+                                    data-date-format="d M, Y" id="firstDate" name="tanggal_mulai">
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-xxl-6">
+                            <div>
+                                <label for="lastName" class="form-label">Tanggal Akhir</label>
+                                <input type="date" class="form-control" data-provider="flatpickr"
+                                    data-date-format="d M, Y" id="lasDate" name="tanggal_akhir">
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-lg-12">
+                            <div class="hstack gap-2 justify-content-end">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Download Data</button>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -121,6 +169,8 @@ Gempa
 <!-- Dashboard init -->
 <script src="{{ asset('/auth/assets/js/pages/dashboard-analytics.init.js') }}"></script>
 
+<script src="{{ URL::asset('auth/assets/libs/@simonwep/pickr/pickr.min.js') }}"></script>
+<script src="{{ URL::asset('auth/assets/js/pages/form-pickers.init.js') }}"></script>
 <!-- App js -->
 <script src="{{ asset('/auth/assets/js/app.js') }} "></script>
 
@@ -135,6 +185,7 @@ Gempa
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="{{ asset('auth/assets/js/pages/datatables.init.js') }}"></script>
+
 <script>
     let map = L.map('map').setView([$('#longitude').val(), $('#latitude').val()], 7);
     let marker = L.marker([$('#longitude').val(), $('#latitude').val()]).addTo(map);

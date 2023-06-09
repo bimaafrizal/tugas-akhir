@@ -1,17 +1,46 @@
 @extends('layouts.dashboard.main2')
 
 @section('title')
-    Dashboard
+Dashboard
 @endsection
 
 @section('css')
-    <!-- plugin css -->
-    <link href="{{ asset('/auth/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
+<!-- plugin css -->
+<link href="{{ asset('/auth/assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
+
+{{-- leafet --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
+    type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+<script src="https://code.highcharts.com/highcharts.js"></script>
 @endsection
 
 @section('dashboard', 'active')
 
 @section('content')
+<style>
+    .legend {
+        background-color: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    .legend-icon {
+        width: 20px;
+        /* Adjust the width as needed */
+        height: 20px;
+        /* Adjust the height as needed */
+        margin-right: 5px;
+    }
+
+</style>
 <!-- start page title -->
 <div class="row">
     <div class="col-12">
@@ -20,8 +49,7 @@
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                    <li class="breadcrumb-item active">Analytics</li>
+                    <li class="breadcrumb-item active"><a href="javascript: void(0);">Dashboards</a></li>
                 </ol>
             </div>
 
@@ -31,43 +59,21 @@
 <!-- end page title -->
 
 <div class="row">
-    <div class="col-xxl-5">
+    <div class="col-xxl-12">
         <div class="d-flex flex-column h-100">
             <div class="row h-100">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body p-0">
-                            <div class="alert alert-warning border-0 rounded-0 m-0 d-flex align-items-center"
-                                role="alert">
-                                <i data-feather="alert-triangle"
-                                    class="text-warning me-2 icon-sm"></i>
-                                <div class="flex-grow-1 text-truncate">
-                                    Your free trial expired in <b>17</b> days.
+                            <div class="row">
+                                <div class="col-8 m-3">
+                                    <h3>SELAMAT DATANG DI AWAS BENCANA</h3>
+                                    <p fs-1>Awas Bencana merupakan sebuah web yang memiliki fungsi untuk meningkatkan
+                                        kewaspadaan terhadap bencana.</p>
                                 </div>
-                                <div class="flex-shrink-0">
-                                    <a href="pages-pricing"
-                                        class="text-reset text-decoration-underline"><b>Upgrade</b></a>
-                                </div>
-                            </div>
-
-                            <div class="row align-items-end">
-                                <div class="col-sm-8">
-                                    <div class="p-3">
-                                        <p class="fs-16 lh-base">Upgrade your plan from a <span
-                                                class="fw-semibold">Free
-                                                trial</span>, to ‘Premium Plan’ <i
-                                                class="mdi mdi-arrow-right"></i></p>
-                                        <div class="mt-3">
-                                            <a href="pages-pricing"
-                                                class="btn btn-success">Upgrade Account!</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="px-3">
-                                        <img src="{{ asset('auth/assets/images/user-illustarator-2.png') }}"
-                                            class="img-fluid" alt="">
-                                    </div>
+                                <div class="col-3">
+                                    <img src="{{ asset('auth/assets/images/flood-pana.png') }}" class="img-fluid" alt=""
+                                        style="height: auto; width:100%">
                                 </div>
                             </div>
                         </div> <!-- end card-body-->
@@ -76,18 +82,14 @@
             </div> <!-- end row-->
 
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card card-animate">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <p class="fw-medium text-muted mb-0">Users</p>
-                                    <h2 class="mt-4 ff-secondary fw-semibold"><span
-                                            class="counter-value" data-target="28.05">0</span>k</h2>
-                                    <p class="mb-0 text-muted"><span
-                                            class="badge bg-light text-success mb-0">
-                                            <i class="ri-arrow-up-line align-middle"></i> 16.24 %
-                                        </span> vs. previous month</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                            data-target="{{ $countUser }}">0</span></h2>
                                 </div>
                                 <div>
                                     <div class="avatar-sm flex-shrink-0">
@@ -100,24 +102,101 @@
                         </div><!-- end card body -->
                     </div> <!-- end card-->
                 </div> <!-- end col-->
-
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card card-animate">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <p class="fw-medium text-muted mb-0">Sessions</p>
-                                    <h2 class="mt-4 ff-secondary fw-semibold"><span
-                                            class="counter-value" data-target="97.66">0</span>k</h2>
-                                    <p class="mb-0 text-muted"><span
-                                            class="badge bg-light text-danger mb-0">
-                                            <i class="ri-arrow-down-line align-middle"></i> 3.96 %
-                                        </span> vs. previous month</p>
+                                    <p class="fw-medium text-muted mb-0">Admin</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                            data-target="{{ $countAdmin }}">0</span></h2>
                                 </div>
                                 <div>
                                     <div class="avatar-sm flex-shrink-0">
                                         <span class="avatar-title bg-soft-info rounded-circle fs-2">
-                                            <i data-feather="activity" class="text-info"></i>
+                                            <i data-feather="user" class="text-info"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+                <div class="col-md-4">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="fw-medium text-muted mb-0">Super Admin</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                            data-target="{{ $countSuperAdmin }}">0</span></h2>
+                                </div>
+                                <div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-soft-info rounded-circle fs-2">
+                                            <i data-feather="user" class="text-info"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+            </div> <!-- end row-->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="fw-medium text-muted mb-0">Kategori Artikel</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                            data-target="{{ $countKetegoryArticle }}">0</span></h2>
+                                </div>
+                                <div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-soft-info rounded-circle fs-2">
+                                            <i data-feather="tag" class="text-info"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+                <div class="col-md-4">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="fw-medium text-muted mb-0">Artikel</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                            data-target="{{ $countArticle }}">0</span></h2>
+                                </div>
+                                <div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-soft-info rounded-circle fs-2">
+                                            <i data-feather="clipboard" class="text-info"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div> <!-- end card-->
+                </div> <!-- end col-->
+                <div class="col-md-4">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="fw-medium text-muted mb-0">Alat EWS</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                            data-target="{{ $countEws }}">0</span></h2>
+                                </div>
+                                <div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-soft-info rounded-circle fs-2">
+                                            <i data-feather="monitor" class="text-info"></i>
                                         </span>
                                     </div>
                                 </div>
@@ -128,537 +207,267 @@
             </div> <!-- end row-->
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card card-animate">
+                <div class="col-12">
+                    <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
-                                <div>
-                                    <p class="fw-medium text-muted mb-0">Avg. Visit Duration</p>
-                                    <h2 class="mt-4 ff-secondary fw-semibold"><span
-                                            class="counter-value" data-target="3">0</span>m
-                                        <span class="counter-value" data-target="40">0</span>sec
-                                    </h2>
-                                    <p class="mb-0 text-muted"><span
-                                            class="badge bg-light text-danger mb-0">
-                                            <i class="ri-arrow-down-line align-middle"></i> 0.24 %
-                                        </span> vs. previous month</p>
-                                </div>
-                                <div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-info rounded-circle fs-2">
-                                            <i data-feather="clock" class="text-info"></i>
-                                        </span>
-                                    </div>
+                                <h3>Peta Lokasi Bencana Tahun Ini</h3>
+                                <div class="data mb-1">
+                                    <form action="" method="GET">
+                                        @csrf
+                                        <select name="month" id="" class="form-control d-inline" style="width: 150px">
+                                            <option value="" selected>Pilih Bulan</option>
+                                            @foreach ($listMonths as $index => $month)
+                                            <option value="{{ $index + 1 }}">{{ $month }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="btn btn-primary d-inline">Submit</button>
+                                    </form>
                                 </div>
                             </div>
-                        </div><!-- end card body -->
-                    </div> <!-- end card-->
-                </div> <!-- end col-->
-
-                <div class="col-md-6">
-                    <div class="card card-animate">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p class="fw-medium text-muted mb-0">Bounce Rate</p>
-                                    <h2 class="mt-4 ff-secondary fw-semibold"><span
-                                            class="counter-value" data-target="33.48">0</span>%</h2>
-                                    <p class="mb-0 text-muted"><span
-                                            class="badge bg-light text-success mb-0">
-                                            <i class="ri-arrow-up-line align-middle"></i> 7.05 %
-                                        </span> vs. previous month</p>
-                                </div>
-                                <div>
-                                    <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-soft-info rounded-circle fs-2">
-                                            <i data-feather="external-link" class="text-info"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div> <!-- end card-->
-                </div> <!-- end col-->
-            </div> <!-- end row-->
-        </div>
-    </div> <!-- end col-->
-
-    <div class="col-xxl-7">
-        <div class="row h-100">
-            <div class="col-xl-6">
-                <div class="card card-height-100">
-                    <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Live Users By Country</h4>
-                        <div class="flex-shrink-0">
-                            <button type="button" class="btn btn-soft-primary btn-sm">
-                                Export Report
-                            </button>
+                            <div id="map3" style="height: 400px; width:100%; position: relative;"></div>
                         </div>
-                    </div><!-- end card header -->
-
-                    <!-- card body -->
-                    <div class="card-body">
-
-                        <div id="users-by-country" data-colors='["--vz-light"]' class="text-center"
-                            style="height: 252px"></div>
-
-                        <div class="table-responsive table-card mt-3">
-                            <table
-                                class="table table-borderless table-sm table-centered align-middle table-nowrap mb-1">
-                                <thead
-                                    class="text-muted border-dashed border border-start-0 border-end-0 bg-soft-light">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <a class="twitter-timeline" data-width="100%" data-height="800"
+                                href="https://twitter.com/infoBMKG?ref_src=twsrc%5Etfw">
+                                Tweets by infoBMKG</a>
+                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="pie-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>Tabel Bencana Tahun Ini</h3>
+                            <table id="example"
+                                class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                                style="width:100%">
+                                <thead>
                                     <tr>
-                                        <th>Duration (Secs)</th>
-                                        <th style="width: 30%;">Sessions</th>
-                                        <th style="width: 30%;">Views</th>
+                                        <th data-ordering="false">No.</th>
+                                        <th data-ordering="false">Jenis</th>
+                                        <th>Lokasi</th>
+                                        <th>Kedalaman</th>
+                                        <th>Kekuatan</th>
+                                        <th>Level</th>
+                                        <th>Tanggal</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody class="border-0">
+                                <tbody>
+                                    @if ($earthquakeThisYear != null)
+                                    @foreach ($earthquakeThisYear as $item)
                                     <tr>
-                                        <td>0-30</td>
-                                        <td>2,250</td>
-                                        <td>4,250</td>
+                                        <td>{{ $no++ }}</td>
+                                        <td>Gempa</td>
+                                        <td>{{ $item->latitude }}, {{ $item->longitude }}</td>
+                                        <td>{{ $item->depth }}</td>
+                                        <td>{{ $item->strength }}</td>
+                                        <td>-</td>
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>
+                                            <a href="{{ route('earthquake.show', ['id' => Crypt::encrypt($item->id)]) }}"
+                                                class="btn btn-secondary">Detail</a>
+                                        </td>
                                     </tr>
+                                    @endforeach
+                                    @endif
+                                    @if ($floodThisYear != null)
+                                    @foreach ($floodThisYear as $item)
                                     <tr>
-                                        <td>31-60</td>
-                                        <td>1,501</td>
-                                        <td>2,050</td>
+                                        <td>{{ $no++ }}</td>
+                                        <td>Banjir</td>
+                                        <td>{{ $item->ews->name }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        @if ($item->level == 1)
+                                        <td>Waspada</td>
+                                        @elseif($item->level == 2)
+                                        <td>Siaga</td>
+                                        @else
+                                        <td>Awas</td>
+                                        @endif
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>
+                                            <a href="{{ route('ews.show', ['ew' => encrypt($item->ews->id)]) }}"
+                                                class="btn btn-secondary">Detail</a>
+                                        </td>
                                     </tr>
-                                    <tr>
-                                        <td>61-120</td>
-                                        <td>750</td>
-                                        <td>1,600</td>
-                                    </tr>
-                                    <tr>
-                                        <td>121-240</td>
-                                        <td>540</td>
-                                        <td>1,040</td>
-                                    </tr>
+                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <!-- end card body -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-
-            <div class="col-xl-6">
-                <div class="card card-height-100">
-                    <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Sessions by Countries</h4>
-                        <div>
-                            <button type="button" class="btn btn-soft-secondary btn-sm">
-                                ALL
-                            </button>
-                            <button type="button" class="btn btn-soft-primary btn-sm">
-                                1M
-                            </button>
-                            <button type="button" class="btn btn-soft-secondary btn-sm">
-                                6M
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div>
-                            <div id="countries_charts"
-                                data-colors='["--vz-info", "--vz-info", "--vz-info", "--vz-info", "--vz-danger", "--vz-info", "--vz-info", "--vz-info", "--vz-info", "--vz-info"]'
-                                class="apex-charts" dir="ltr"></div>
-                        </div>
-                    </div><!-- end card body -->
-                </div><!-- end card -->
-            </div> <!-- end col-->
-
-        </div> <!-- end row-->
-    </div><!-- end col -->
-</div> <!-- end row-->
-
-<div class="row">
-    <div class="col-xl-6">
-        <div class="card">
-            <div class="card-header border-0 align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Audiences Metrics</h4>
-                <div>
-                    <button type="button" class="btn btn-soft-secondary btn-sm">
-                        ALL
-                    </button>
-                    <button type="button" class="btn btn-soft-secondary btn-sm">
-                        1M
-                    </button>
-                    <button type="button" class="btn btn-soft-secondary btn-sm">
-                        6M
-                    </button>
-                    <button type="button" class="btn btn-soft-primary btn-sm">
-                        1Y
-                    </button>
-                </div>
-            </div><!-- end card header -->
-            <div class="card-header p-0 border-0 bg-soft-light">
-                <div class="row g-0 text-center">
-                    <div class="col-6 col-sm-4">
-                        <div class="p-3 border border-dashed border-start-0">
-                            <h5 class="mb-1"><span class="counter-value" data-target="854">0</span>
-                                <span class="text-success ms-1 fs-12">49%<i
-                                        class="ri-arrow-right-up-line ms-1 align-middle"></i></span>
-                            </h5>
-                            <p class="text-muted mb-0">Avg. Session</p>
-                        </div>
-                    </div>
-                    <!--end col-->
-                    <div class="col-6 col-sm-4">
-                        <div class="p-3 border border-dashed border-start-0">
-                            <h5 class="mb-1"><span class="counter-value" data-target="1278">0</span>
-                                <span class="text-success ms-1 fs-12">60%<i
-                                        class="ri-arrow-right-up-line ms-1 align-middle"></i></span>
-                            </h5>
-                            <p class="text-muted mb-0">Conversion Rate</p>
-                        </div>
-                    </div>
-                    <!--end col-->
-                    <div class="col-6 col-sm-4">
-                        <div class="p-3 border border-dashed border-start-0 border-end-0">
-                            <h5 class="mb-1"><span class="counter-value" data-target="3">0</span>m
-                                <span class="counter-value" data-target="40">0</span>sec
-                                <span class="text-success ms-1 fs-12">37%<i
-                                        class="ri-arrow-right-up-line ms-1 align-middle"></i></span>
-                            </h5>
-                            <p class="text-muted mb-0">Avg. Session Duration</p>
-                        </div>
-                    </div>
-                    <!--end col-->
-                </div>
-            </div><!-- end card header -->
-            <div class="card-body p-0 pb-2">
-                <div>
-                    <div id="audiences_metrics_charts"
-                        data-colors='["--vz-success", "--vz-gray-300"]' class="apex-charts"
-                        dir="ltr"></div>
-                </div>
-            </div><!-- end card body -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-
-    <div class="col-xl-6">
-        <div class="card card-height-100">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Audiences Sessions by Country</h4>
-                <div class="flex-shrink-0">
-                    <div class="dropdown card-header-dropdown">
-                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="fw-semibold text-uppercase fs-12">Sort by: </span><span
-                                class="text-muted">Current Week<i
-                                    class="mdi mdi-chevron-down ms-1"></i></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">Today</a>
-                            <a class="dropdown-item" href="#">Last Week</a>
-                            <a class="dropdown-item" href="#">Last Month</a>
-                            <a class="dropdown-item" href="#">Current Year</a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- end card header -->
-            <div class="card-body p-0">
-                <div>
-                    <div id="audiences-sessions-country-charts"
-                        data-colors='["--vz-success", "--vz-info"]' class="apex-charts" dir="ltr">
-                    </div>
-                </div>
-            </div><!-- end cardbody -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-</div><!-- end row -->
-
-<div class="row">
-    <div class="col-xl-4">
-        <div class="card card-height-100">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Users by Device</h4>
-                <div class="flex-shrink-0">
-                    <div class="dropdown card-header-dropdown">
-                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="text-muted fs-16"><i
-                                    class="mdi mdi-dots-vertical align-middle"></i></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">Today</a>
-                            <a class="dropdown-item" href="#">Last Week</a>
-                            <a class="dropdown-item" href="#">Last Month</a>
-                            <a class="dropdown-item" href="#">Current Year</a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- end card header -->
-            <div class="card-body">
-                <div id="user_device_pie_charts"
-                    data-colors='["--vz-primary", "--vz-warning", "--vz-info"]' class="apex-charts"
-                    dir="ltr"></div>
-
-                <div class="table-responsive mt-3">
-                    <table
-                        class="table table-borderless table-sm table-centered align-middle table-nowrap mb-0">
-                        <tbody class="border-0">
-                            <tr>
-                                <td>
-                                    <h4 class="text-truncate fs-14 fs-medium mb-0"><i
-                                            class="ri-stop-fill align-middle fs-18 text-primary me-2"></i>Desktop
-                                        Users</h4>
-                                </td>
-                                <td>
-                                    <p class="text-muted mb-0"><i data-feather="users"
-                                            class="me-2 icon-sm"></i>78.56k</p>
-                                </td>
-                                <td class="text-end">
-                                    <p class="text-success fw-medium fs-12 mb-0"><i
-                                            class="ri-arrow-up-s-fill fs-5 align-middle"></i>2.08%
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h4 class="text-truncate fs-14 fs-medium mb-0"><i
-                                            class="ri-stop-fill align-middle fs-18 text-warning me-2"></i>Mobile
-                                        Users</h4>
-                                </td>
-                                <td>
-                                    <p class="text-muted mb-0"><i data-feather="users"
-                                            class="me-2 icon-sm"></i>105.02k</p>
-                                </td>
-                                <td class="text-end">
-                                    <p class="text-danger fw-medium fs-12 mb-0"><i
-                                            class="ri-arrow-down-s-fill fs-5 align-middle"></i>10.52%
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h4 class="text-truncate fs-14 fs-medium mb-0"><i
-                                            class="ri-stop-fill align-middle fs-18 text-info me-2"></i>Tablet
-                                        Users</h4>
-                                </td>
-                                <td>
-                                    <p class="text-muted mb-0"><i data-feather="users"
-                                            class="me-2 icon-sm"></i>42.89k</p>
-                                </td>
-                                <td class="text-end">
-                                    <p class="text-danger fw-medium fs-12 mb-0"><i
-                                            class="ri-arrow-down-s-fill fs-5 align-middle"></i>7.36%
-                                    </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div><!-- end card body -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-
-    <div class="col-xl-4 col-md-6">
-        <div class="card card-height-100">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Top Referrals Pages</h4>
-                <div class="flex-shrink-0">
-                    <button type="button" class="btn btn-soft-primary btn-sm">
-                        Export Report
-                    </button>
                 </div>
             </div>
+        </div>
+    </div> <!-- end col-->
+</div> <!-- end row-->
 
-            <div class="card-body">
-
-                <div class="row align-items-center">
-                    <div class="col-6">
-                        <h6 class="text-muted text-uppercase fw-semibold text-truncate fs-12 mb-3">
-                            Total Referrals Page</h6>
-                        <h4 class="fs- mb-0">725,800</h4>
-                        <p class="mb-0 mt-2 text-muted"><span class="badge badge-soft-success mb-0">
-                                <i class="ri-arrow-up-line align-middle"></i> 15.72 %
-                            </span> vs. previous month</p>
-                    </div><!-- end col -->
-                    <div class="col-6">
-                        <div class="text-center">
-                            <img src="{{ asset('auth/assets/images/illustrator-1.png') }}" class="img-fluid" alt="">
-                        </div>
-                    </div><!-- end col -->
-                </div><!-- end row -->
-                <div class="mt-3 pt-2">
-                    <div class="progress progress-lg rounded-pill">
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: 25%"
-                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 18%"
-                            aria-valuenow="18" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 22%"
-                            aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 16%"
-                            aria-valuenow="16" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 19%"
-                            aria-valuenow="19" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div><!-- end -->
-
-                <div class="mt-3 pt-2">
-                    <div class="d-flex mb-2">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate text-muted fs-14 mb-0"><i
-                                    class="mdi mdi-circle align-middle text-primary me-2"></i>www.google.com
-                            </p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <p class="mb-0">24.58%</p>
-                        </div>
-                    </div><!-- end -->
-                    <div class="d-flex mb-2">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate text-muted fs-14 mb-0"><i
-                                    class="mdi mdi-circle align-middle text-info me-2"></i>www.youtube.com
-                            </p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <p class="mb-0">17.51%</p>
-                        </div>
-                    </div><!-- end -->
-                    <div class="d-flex mb-2">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate text-muted fs-14 mb-0"><i
-                                    class="mdi mdi-circle align-middle text-success me-2"></i>www.meta.com
-                            </p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <p class="mb-0">23.05%</p>
-                        </div>
-                    </div><!-- end -->
-                    <div class="d-flex mb-2">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate text-muted fs-14 mb-0"><i
-                                    class="mdi mdi-circle align-middle text-warning me-2"></i>www.medium.com
-                            </p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <p class="mb-0">12.22%</p>
-                        </div>
-                    </div><!-- end -->
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <p class="text-truncate text-muted fs-14 mb-0"><i
-                                    class="mdi mdi-circle align-middle text-danger me-2"></i>Other
-                            </p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <p class="mb-0">17.58%</p>
-                        </div>
-                    </div><!-- end -->
-                </div><!-- end -->
-
-                <div class="mt-2 text-center">
-                    <a href="javascript:void(0);" class="text-muted text-decoration-underline">Show
-                        All</a>
-                </div>
-
-            </div><!-- end card body -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-
-    <div class="col-xl-4 col-md-6">
-        <div class="card card-height-100">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Top Pages</h4>
-                <div class="flex-shrink-0">
-                    <div class="dropdown card-header-dropdown">
-                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <span class="text-muted fs-16"><i
-                                    class="mdi mdi-dots-vertical align-middle"></i></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">Today</a>
-                            <a class="dropdown-item" href="#">Last Week</a>
-                            <a class="dropdown-item" href="#">Last Month</a>
-                            <a class="dropdown-item" href="#">Current Year</a>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- end card header -->
-            <div class="card-body">
-                <div class="table-responsive table-card">
-                    <table
-                        class="table align-middle table-borderless table-centered table-nowrap mb-0">
-                        <thead class="text-muted table-light">
-                            <tr>
-                                <th scope="col" style="width: 62;">Active Page</th>
-                                <th scope="col">Active</th>
-                                <th scope="col">Users</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/themesbrand/skote-25867</a>
-                                </td>
-                                <td>99</td>
-                                <td>25.3%</td>
-                            </tr><!-- end -->
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/dashonic/chat-24518</a>
-                                </td>
-                                <td>86</td>
-                                <td>22.7%</td>
-                            </tr><!-- end -->
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/skote/timeline-27391</a>
-                                </td>
-                                <td>64</td>
-                                <td>18.7%</td>
-                            </tr><!-- end -->
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/themesbrand/minia-26441</a>
-                                </td>
-                                <td>53</td>
-                                <td>14.2%</td>
-                            </tr><!-- end -->
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/dashon/dashboard-29873</a>
-                                </td>
-                                <td>33</td>
-                                <td>12.6%</td>
-                            </tr><!-- end -->
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/doot/chats-29964</a>
-                                </td>
-                                <td>20</td>
-                                <td>10.9%</td>
-                            </tr><!-- end -->
-                            <tr>
-                                <td>
-                                    <a href="javascript:void(0);">/minton/pages-29739</a>
-                                </td>
-                                <td>10</td>
-                                <td>07.3%</td>
-                            </tr><!-- end -->
-                        </tbody><!-- end tbody -->
-                    </table><!-- end table -->
-                </div><!-- end -->
-            </div><!-- end cardbody -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-</div><!-- end row -->
-
+<input type="text" value="{{ $earthquakeThisYear }}" id="gempa" hidden>
+<input type="text" value="{{ $ews }}" id="ews" hidden>
+<input type="text" value="{{ $countEarthquake }}" id="countGempa" hidden>
+<input type="text" value="{{ $countFlood }}" id="countBanjir" hidden>
 @endsection
 
 @section('script')
-    <!-- Vector map-->
-    <script src="{{ asset('/auth/assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('/auth/assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
+<!-- Vector map-->
+<script src="{{ asset('/auth/assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+<script src="{{ asset('/auth/assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
 
 
-    <!-- Dashboard init -->
-    <script src="{{ asset('/auth/assets/js/pages/dashboard-analytics.init.js') }}"></script>
+<!-- Dashboard init -->
+<script src="{{ asset('/auth/assets/js/pages/dashboard-analytics.init.js') }}"></script>
 
-    <!-- App js -->
-    <script src="{{ asset('/auth/assets/js/app.js') }} "></script>
+<!-- App js -->
+<script src="{{ asset('/auth/assets/js/app.js') }} "></script>
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{{ asset('auth/assets/js/pages/datatables.init.js') }}"></script>
+
+<script>
+    // icon
+    const floodIcon = L.icon({
+        iconUrl: 'auth/assets/images/flood.png',
+        iconSize: [20, 20],
+    });
+    const earthquakeIcon = L.icon({
+        iconUrl: 'auth/assets/images/earthquake.png',
+        iconSize: [30, 30],
+    });
+
+    let map3 = L.map('map3').setView([-3.00000, 115.000], 5);
+
+    let dataGempa = document.getElementById("gempa").value;
+    if (dataGempa != "") {
+        console.log("Betul");
+    }
+
+    let convertGempaObj = JSON.parse(dataGempa);
+    let dataEws = document.getElementById("ews").value;
+    let convertEwsObj = JSON.parse(dataEws);
+
+    convertGempaObj.forEach(e => {
+        L.marker([e.longitude, e.latitude], {
+            icon: earthquakeIcon
+        }).addTo(map3).bindPopup('<p>Kekuatan:' + e.strength + ' SR</p><p> Kedalaman:' + e.depth +
+            ' KM</p><p>' + e.time + ',' + e.date + '</p>');
+
+    });
+    convertEwsObj.forEach(element => {
+        L.marker([element.latitude, element.longitude], {
+            icon: floodIcon
+        }).addTo(map3).bindPopup(element.name);
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+    }).addTo(map3);
+
+    const legend = L.control({
+        position: "bottomright"
+    });
+    const pin_gempa = '/auth/assets/images/earthquake.png';
+    const pin_banjir = '/auth/assets/images/flood.png';
+
+    legend.onAdd = function (map) {
+        let div = L.DomUtil.create("div", "legend");
+        div.innerHTML = `<h6>Informasi</h6>
+    <div>
+      <img class="legend-icon" src="{{ asset('auth/assets/images/earthquake.png') }}" alt="Category 1 Icon">
+      <span>Gempa</span>
+    </div></br>
+    <div>
+      <img class="legend-icon" src="{{ asset('auth/assets/images/flood.png') }}" alt="Category 2 Icon">
+      <span>Alat EWS</span>
+    </div>`;
+        return div;
+    }
+
+    legend.addTo(map3);
+
+</script>
+
+<script>
+    let countGempa = parseInt($('#countGempa').val());
+    let countBanjir = parseInt($('#countBanjir').val());
+
+    let total = countBanjir + countGempa;
+    let percentGempa = countGempa / total * 100;
+    let percentBanjir = countBanjir / total * 100;
+
+    let dataPie = [{
+            name: 'Gempa',
+            y: countGempa,
+            persen: percentGempa,
+        },
+        {
+            name: 'Banjir',
+            y: countBanjir,
+            persen: percentBanjir
+        }
+    ];
+
+    Highcharts.chart('pie-chart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Bencana Tahun Ini',
+            align: 'center'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>({point.y:.0f}) | {point.persen} %</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: ({point.y:.0f}) | {point.persen} %'
+                }
+            }
+        },
+
+        series: [{
+            name: 'Jumlah',
+            colorByPoint: true,
+            data: dataPie
+        }]
+    });
+
+</script>
 @endsection

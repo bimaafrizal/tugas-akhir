@@ -41,11 +41,14 @@ Manajemen User
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-start mb-2">
+                    @can('superAdmin')
                     <div class="mx-1">
                         <a href="{{ route('manajemen-user.create') }}" class="btn btn-primary">Tambah Admin</a>
                     </div>
+                    @endcan
                     <div class="mx-1">
-                        <a href="{{ route('manajemen-user.download', ['id' => Crypt::encrypt($admins[0]->role_id)]) }}" class="btn btn-success">Download Data Admin</a>
+                        <a href="{{ route('manajemen-user.download', ['id' => Crypt::encrypt($admins[0]->role_id)]) }}"
+                            class="btn btn-success">Download Data Admin</a>
                     </div>
                 </div>
                 @if (session()->has('success'))
@@ -64,7 +67,9 @@ Manajemen User
                             <th>Nomor Hp</th>
                             <th>Role</th>
                             <th>Status</th>
+                            @can('superAdmin')
                             <th>Action</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -81,6 +86,7 @@ Manajemen User
                                 <span class="badge badge-soft-warning">Non Active</span>
                                 @endif
                             </td>
+                            @can('superAdmin')
                             <td>
                                 <div class="dropdown d-inline-block">
                                     <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
@@ -88,39 +94,45 @@ Manajemen User
                                         <i class="ri-more-fill align-middle"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a href="{{ route('manajemen-user.edit', ['id' => encrypt($admin->id)]) }}" class="dropdown-item edit-item-btn"><i
+                                        <li><a href="{{ route('manajemen-user.edit', ['id' => encrypt($admin->id)]) }}"
+                                                class="dropdown-item edit-item-btn"><i
                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
                                         </li>
                                         @if ($admin->id != 3)
-                                            @if ($admin->status == 1)
-                                            <form action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}" method="POST" class="d-inline">
-                                                <li>
-                                                    <button type="submit" class="dropdown-item remove-item-btn">
-                                                        @csrf
-                                                        <input type="hidden" name="is_active" value="0" id="">
-                                                        <i class="ri-eye-close-fill align-bottom me-2 text-muted">
-                                                            Non Active
-                                                        </i>
-                                                    </button>
-                                                </li>
-                                            </form>
-                                            @else
-                                            <form action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}" method="POST" class="d-inline">
-                                                <li>
-                                                    <button type="submit" class="dropdown-item remove-item-btn">
+                                        @if ($admin->status == 1)
+                                        <form
+                                            action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}"
+                                            method="POST" class="d-inline">
+                                            <li>
+                                                <button type="submit" class="dropdown-item remove-item-btn">
+                                                    @csrf
+                                                    <input type="hidden" name="is_active" value="0" id="">
+                                                    <i class="ri-eye-close-fill align-bottom me-2 text-muted">
+                                                        Non Active
+                                                    </i>
+                                                </button>
+                                            </li>
+                                        </form>
+                                        @else
+                                        <form
+                                            action="{{ route('manajemen-user.edit-status', ['id' => encrypt($admin->id) ]) }}"
+                                            method="POST" class="d-inline">
+                                            <li>
+                                                <button type="submit" class="dropdown-item remove-item-btn">
 
-                                                        <i class=" ri-eye-fill align-bottom me-2 text-muted">
-                                                            @csrf
-                                                            <input type="hidden" name="is_active" value="1" id="">
-                                                        </i> Active
-                                                    </button>
-                                                </li>
-                                            </form>
-                                            @endif
+                                                    <i class=" ri-eye-fill align-bottom me-2 text-muted">
+                                                        @csrf
+                                                        <input type="hidden" name="is_active" value="1" id="">
+                                                    </i> Active
+                                                </button>
+                                            </li>
+                                        </form>
+                                        @endif
                                         @endif
                                     </ul>
                                 </div>
                             </td>
+                            @endcan
                         </tr>
                         @endforeach
                     </tbody>
@@ -139,7 +151,8 @@ Manajemen User
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-start mb-2">
-                    <a href="{{ route('manajemen-user.download', ['id' => Crypt::encrypt($users[0]->role_id)]) }}" class="btn btn-success">Download Data User</a>
+                    <a href="{{ route('manajemen-user.download', ['id' => Crypt::encrypt($users[0]->role_id)]) }}"
+                        class="btn btn-success">Download Data User</a>
                 </div>
                 <table id="myTable" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                     style="width:100%">
@@ -166,7 +179,8 @@ Manajemen User
                                         <i class="ri-more-fill align-middle"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a href="{{ route('manajemen-user.edit', ['id' => encrypt($user->id)]) }}" class="dropdown-item edit-item-btn"><i
+                                        <li><a href="{{ route('manajemen-user.edit', ['id' => encrypt($user->id)]) }}"
+                                                class="dropdown-item edit-item-btn"><i
                                                     class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
                                         </li>
                                     </ul>

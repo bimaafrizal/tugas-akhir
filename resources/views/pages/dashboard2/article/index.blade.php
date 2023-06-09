@@ -41,9 +41,11 @@ Article
                 <h5 class="card-title mb-0">Daftar Article</h5>
             </div>
             <div class="card-body">
+                @can('admin')
                 <div class="d-flex justify-content-start mb-2">
                     <a href="{{ route('article.create') }}" class="btn btn-primary">Tambah Article</a>
                 </div>
+                @endcan
                 @if (session()->has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}

@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 
-class Otp
+class IsNotUser
 {
     /**
      * Handle an incoming request.
@@ -17,12 +16,8 @@ class Otp
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->phone_num_verified_at === null) {
-            // abort(403);
-            if (auth()->user()->otp_expires_at >= Carbon::now()) {
-                return redirect(route('verification.otp'));
-            }
-            return redirect(route('otp.resend'));
+        if (!auth()->check() || auth()->user()->role_id === 1) {
+            abort(403);
         }
         return $next($request);
     }
