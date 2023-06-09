@@ -45,27 +45,54 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index']);
     Route::get('send-location', [DashboardController::class, 'sendLocation'])->name('send-location');
 
-    Route::controller(KategoryArticleController::class)->group(function () {
-        Route::get('/kategory-article', 'index')->name('kategory-article');
-        Route::get('/kategory-article/{id}/edit', 'edit')->name('kategory-edit');
-    });
+    Route::middleware(['superadmin'])->group(function () {
+        Route::controller(KategoryArticleController::class)->group(function () {
+            Route::get('/kategory-article', 'index')->name('kategory-article');
+            Route::get('/kategory-article/{id}/edit', 'edit')->name('kategory-edit');
+        });
 
-    Route::controller(ArticleController::class)->group(function () {
-        Route::post('image-upload', 'imageUpload')->name('images-upload');
-        Route::get('/check-slug', 'checkSlug')->name('check-slug');
-        Route::prefix('article')->group(function () {
-            Route::get('/{slug}/edit', 'edit')->name('article.edit');
-            Route::post('/{slug}', 'update')->name('article.update');
-            Route::post('/edit-status/{slug}', 'editStatus')->name('article.edit-status');
+        Route::controller(DisasterController::class)->prefix('bencana')->group(function () {
+            Route::get('/', 'index')->name('disaster.index');
+            Route::get('/{id}/edit', 'edit')->name('disaster.edit');
+            Route::post('/{id}', 'update')->name('disaster.update');
+        });
+
+        Route::controller(SettingLandingPage::class)->prefix('/landing-pages')->group(function () {
+            Route::get('/', 'index')->name('landing-page.index');
+            Route::post('/home-edit', 'homeEdit')->name('landing-page.home-edit');
+            Route::post('/about-edit', 'aboutEdit')->name('landing-page.about-edit');
+            Route::post('/footer-edit', 'footerEdit')->name('landing-page.footer-edit');
+
+            //fitur
+            Route::get('create-fitur', 'createFitur')->name('landing-page.create-fitur');
+            Route::post('store-fitur', 'storeFitur')->name('landing-page.store-fitur');
+            Route::get('{id}/edit-fitur', 'editFitur')->name('landing-page.edit-fitur');
+            Route::post('update-fitur/{id}', 'updateFitur')->name('landing-page.update-fitur');
+            Route::post('delete-fitur/{id}', 'deleteFitur')->name('landing-page.delete-fitur');
+
+            //collaborations
+            Route::get('create-instansi', 'createInstansi')->name('landing-page.create-instansi');
+            Route::post('store-instansi', 'storeInstansi')->name('landing-page.store-instansi');
+            Route::get('{id}/edit-instansi', 'editInstansi')->name('landing-page.edit-instansi');
+            Route::post('update-instansi/{id}', 'updateInstansi')->name('landing-page.update-instansi');
+            Route::post('delete-instansi/{id}', 'deleteInstansi')->name('landing-page.delete-instansi');
         });
     });
-    Route::resource('/article', ArticleController::class)->only('index', 'create', 'store');
 
-    Route::resource('/ews', EwsController::class)->only('index', 'create', 'store', 'show');
+    // Route::resource('/ews', EwsController::class)->only('index', 'show');
     Route::controller(EwsController::class)->prefix('ews')->group(function () {
+        Route::get('/', 'index')->name('ews.index');
+        Route::get('show/{ew}', 'show')->name('ews.show');
+
+        Route::middleware('superadmin')->group(function () {
+            Route::get('/create', 'create')->name('ews.create');
+            Route::post('/', 'store')->name('ews.store');
+        });
         Route::post('edit-status/{id}', 'editStatus')->name('ews.edit-status');
-        Route::get('/{id}/edit', 'edit')->name('ews.edit');
-        Route::post('/{id}', 'update')->name('ews.update');
+        Route::middleware('isNotUser')->group(function () {
+            Route::get('/{id}/edit', 'edit')->name('ews.edit');
+            Route::post('/{id}', 'update')->name('ews.update');
+        });
     });
     Route::get('/get-regency', [RegencyController::class, 'getRegency'])->name('get-regency');
 
@@ -86,39 +113,39 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::post('/change-password', 'changePassword')->name('profile.change-password');
     });
 
-    Route::resource('manajemen-user', ManajemenUserController::class)->only('index', 'create', 'store');
-    Route::controller(ManajemenUserController::class)->prefix('manajemen-user')->group(function () {
-        Route::post('edit-status/{id}', 'editStatus')->name('manajemen-user.edit-status');
-        Route::get('/{id}/edit', 'edit')->name('manajemen-user.edit');
-        Route::post('/{id}', 'update')->name('manajemen-user.update');
-        Route::get('/download-data/{id}', 'downloadData')->name('manajemen-user.download');
-    });
+    Route::middleware(['isNotUser'])->group(function () {
+        Route::controller(ManajemenUserController::class)->prefix('manajemen-user')->group(function () {
+            Route::middleware(['superadmin'])->group(function () {
+                Route::get('create', 'create')->name('manajemen-user.create');
+                Route::post('/', 'store')->name('manajemen-user.store');
+            });
+            Route::get('/', 'index')->name('manajemen-user.index');
+            Route::post('edit-status/{id}', 'editStatus')->name('manajemen-user.edit-status');
+            Route::get('/{id}/edit', 'edit')->name('manajemen-user.edit');
+            Route::post('/{id}', 'update')->name('manajemen-user.update');
+            Route::get('/download-data/{id}', 'downloadData')->name('manajemen-user.download');
+        });
 
-    Route::controller(DisasterController::class)->prefix('bencana')->group(function () {
-        Route::get('/', 'index')->name('disaster.index');
-        Route::get('/{id}/edit', 'edit')->name('disaster.edit');
-        Route::post('/{id}', 'update')->name('disaster.update');
-    });
+        Route::controller(ArticleController::class)->group(function () {
+            Route::post('image-upload', 'imageUpload')->name('images-upload');
+            Route::get('/check-slug', 'checkSlug')->name('check-slug');
+            Route::prefix('article')->group(function () {
+                Route::middleware('admin')->group(function () {
+                    Route::get('create', 'create')->name('article.create');
+                    Route::post('/', 'store')->name('article.store');
+                });
+                Route::get('/', 'index')->name('article.index');
+                Route::get('/{slug}/edit', 'edit')->name('article.edit');
+                Route::post('/{slug}', 'update')->name('article.update');
+                Route::post('/edit-status/{slug}', 'editStatus')->name('article.edit-status');
+            });
+        });
 
-    Route::controller(SettingLandingPage::class)->prefix('/landing-pages')->group(function () {
-        Route::get('/', 'index')->name('landing-page.index');
-        Route::post('/home-edit', 'homeEdit')->name('landing-page.home-edit');
-        Route::post('/about-edit', 'aboutEdit')->name('landing-page.about-edit');
-        Route::post('/footer-edit', 'footerEdit')->name('landing-page.footer-edit');
-
-        //fitur
-        Route::get('create-fitur', 'createFitur')->name('landing-page.create-fitur');
-        Route::post('store-fitur', 'storeFitur')->name('landing-page.store-fitur');
-        Route::get('{id}/edit-fitur', 'editFitur')->name('landing-page.edit-fitur');
-        Route::post('update-fitur/{id}', 'updateFitur')->name('landing-page.update-fitur');
-        Route::post('delete-fitur/{id}', 'deleteFitur')->name('landing-page.delete-fitur');
-
-        //collaborations
-        Route::get('create-instansi', 'createInstansi')->name('landing-page.create-instansi');
-        Route::post('store-instansi', 'storeInstansi')->name('landing-page.store-instansi');
-        Route::get('{id}/edit-instansi', 'editInstansi')->name('landing-page.edit-instansi');
-        Route::post('update-instansi/{id}', 'updateInstansi')->name('landing-page.update-instansi');
-        Route::post('delete-instansi/{id}', 'deleteInstansi')->name('landing-page.delete-instansi');
+        Route::controller(TemplateController::class)->prefix('template')->group(function () {
+            Route::get('/', 'index')->name('template.index');
+            Route::get('/{id}/edit', 'edit')->name('template.edit');
+            Route::post('/{id}', 'update')->name('template.update');
+        });
     });
 
     Route::controller(NotificationController::class)->prefix('notification')->group(function () {
@@ -129,12 +156,6 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
 
     Route::controller(SettingDisasterController::class)->prefix('setting-disaster')->group(function () {
         Route::get('update/{id}', 'update')->name('update-setting');
-    });
-
-    Route::controller(TemplateController::class)->prefix('template')->group(function () {
-        Route::get('/', 'index')->name('template.index');
-        Route::get('/{id}/edit', 'edit')->name('template.edit');
-        Route::post('/{id}', 'update')->name('template.update');
     });
 });
 

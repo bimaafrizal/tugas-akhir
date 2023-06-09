@@ -76,9 +76,11 @@ EWS
     </div>
 
     <div class="d-flex justify-content-start mb-2">
+        @can('superAdmin')
         <div class="mx-1">
             <a href="{{ route('ews.create') }}" class="btn btn-primary">Tambah EWS</a>
         </div>
+        @endcan
         <div class="mx-1">
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Download Semua
                 Data</button>
@@ -103,11 +105,12 @@ EWS
                 </p>
                 <div class="d-flex justify-content-end">
                     <div class="mx-1">
-                        <a href="{{ route('ews.edit', ['id' => encrypt($data->id)]) }}" class="btn btn-warning">Edit</a>
-                    </div>
-                    <div class="mx-1">
                         <a href="{{ route('ews.show', ['ew' => encrypt($data->id)]) }}"
                             class="btn btn-secondary">Detail</a>
+                    </div>
+                    @can('notUser')
+                    <div class="mx-1">
+                        <a href="{{ route('ews.edit', ['id' => encrypt($data->id)]) }}" class="btn btn-warning">Edit</a>
                     </div>
                     <div class="mx-1">
                         @if ($data->status == 1)
@@ -124,6 +127,7 @@ EWS
                         </form>
                         @endif
                     </div>
+                    @endcan
                 </div>
             </div>
         </div>
