@@ -10,6 +10,7 @@
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" href="{{ $logo }}">
 
     <!-- Layout config Js -->
     <script src="{{ asset('auth/assets/js/layout.js') }}"></script>
