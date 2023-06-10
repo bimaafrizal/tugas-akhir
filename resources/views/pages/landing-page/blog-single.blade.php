@@ -3,6 +3,11 @@
 @section('title')
 {{ $article->title }}
 @endsection
+
+@section('blog')
+    class="active "
+@endsection
+
 @section('content')
 <main id="main">
 
@@ -86,7 +91,7 @@
         </div>
     </section>
 
-    <!-- ======= CTA Section ======= -->
+    {{-- <!-- ======= CTA Section ======= -->
     <section class="section cta-section">
         <div class="container">
             <div class="row align-items-center">
@@ -100,7 +105,7 @@
                 </div>
             </div>
         </div>
-    </section><!-- End CTA Section -->
+    </section><!-- End CTA Section --> --}}
 
 </main><!-- End #main -->
 @endsection

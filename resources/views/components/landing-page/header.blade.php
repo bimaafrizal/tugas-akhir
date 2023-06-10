@@ -18,8 +18,8 @@
 
           <nav id="navbar" class="navbar">
               <ul>
-                  <li><a class="active " href="/">Home</a></li>
-                  <li><a href="/blog">Blog</a></li>
+                  <li> <a @yield('home') href="/">Home</a></li>
+                  <li> <a @yield('blog') href="/blog">Blog</a></li>
                   @guest
                   <li><a href="/login">Login</a></li>
                   @else

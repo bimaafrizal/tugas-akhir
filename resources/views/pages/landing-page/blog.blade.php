@@ -4,6 +4,10 @@
 Blog
 @endsection
 
+@section('blog')
+    class="active "
+@endsection
+
 @section('content')
 <main id="main">
 
@@ -63,7 +67,7 @@ Blog
                         </a>
                         <div class="post-text">
                             <span class="post-meta">{{ $article->created_at->diffForHumans() }} &bullet; By <a href="#">{{ $article->user->name  }}</a></span>
-                            <h3><a href="#">{{ $article->title }}</a></h3>
+                            <h3><a href="{{ route('blog-slug', ['slug' => $article->slug]) }}">{{ $article->title }}</a></h3>
                             <p><a href="{{ route('blog-slug', ['slug' => $article->slug]) }}" class="readmore">Read more</a></p>
                         </div>
                     </div>
@@ -80,7 +84,7 @@ Blog
 
     </section>
 
-    <!-- ======= CTA Section ======= -->
+    {{-- <!-- ======= CTA Section ======= -->
     <section class="section cta-section">
         <div class="container">
             <div class="row align-items-center">
@@ -94,7 +98,7 @@ Blog
                 </div>
             </div>
         </div>
-    </section><!-- End CTA Section -->
+    </section><!-- End CTA Section --> --}}
 
 </main><!-- End #main -->
 @endsection

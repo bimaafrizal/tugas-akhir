@@ -3,6 +3,10 @@
 @section('title')
     Welcome
 @endsection
+
+@section('home')
+    class="active "
+@endsection
 @section('content')
     <!-- ======= Hero Section ======= -->
   <section class="hero-section" id="hero">
@@ -26,7 +30,7 @@
             <div class="col-lg-8 text-center text-lg-start">
               <h1 data-aos="fade-right">{{ $page->title }}</h1>
               <p class="mb-5" data-aos="fade-right" data-aos-delay="100">{{ $page->subtitle }}</p>
-              <p data-aos="fade-right" data-aos-delay="200" data-aos-offset="-500"><a href="#" class="btn btn-outline-white">Get started</a></p>
+              {{-- <p data-aos="fade-right" data-aos-delay="200" data-aos-offset="-500"><a href="#" class="btn btn-outline-white">Get started</a></p> --}}
             </div>
             <div class="col-lg-4 iphone-wrap">
               <img src="{{ $page->image_title != null ? asset($page->image_title) : asset('landing-page/img/phone_1.png') }} " alt="Image" class="phone-1" data-aos="fade-right">
@@ -90,7 +94,7 @@
           <div class="col-md-4 me-auto">
             <h2 class="mb-4">{{ $page->title_about1 }}</h2>
             <p class="mb-4">{{ $page->about1 }}</p>
-            <p><a href="#" class="btn btn-primary">Download Now</a></p>
+            {{-- <p><a href="#" class="btn btn-primary">Download Now</a></p> --}}
           </div>
           <div class="col-md-6" data-aos="fade-left">
             <img src="{{  $page->image1 != null ? asset($page->image1) : asset('landing-page/img/undraw_svg_2.svg') }}" alt="Image" class="img-fluid">
@@ -105,7 +109,7 @@
           <div class="col-md-4 ms-auto order-2">
             <h2 class="mb-4">{{ $page->title_about2 }}</h2>
             <p class="mb-4">{{ $page->about2 }}</p>
-            <p><a href="#" class="btn btn-primary">Download Now</a></p>
+            {{-- <p><a href="#" class="btn btn-primary">Download Now</a></p> --}}
           </div>
           <div class="col-md-6" data-aos="fade-right">
             <img src="{{  $page->image2 != null ? asset($page->image2) : asset('landing-page/img/undraw_svg_3.svg') }}" alt="Image" class="img-fluid">
