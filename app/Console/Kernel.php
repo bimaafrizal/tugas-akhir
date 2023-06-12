@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\EarthquakeCorn;
 use App\Console\Commands\FloodCorn;
+use App\Console\Commands\WeatherCorn;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -11,7 +12,8 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         FloodCorn::class,
-        EarthquakeCorn::class
+        EarthquakeCorn::class,
+        WeatherCorn::class,
     ];
     /**
      * Define the application's command schedule.
