@@ -1,20 +1,36 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Console\Commands;
 
-use App\Jobs\TestingWeatherEmailNotification;
-use App\Jobs\TestingWeatherWhatsappNotification;
 use App\Jobs\WeatherEmailNotification;
 use App\Jobs\WeatherWhatsappNotification;
 use App\Models\User;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
-use Illuminate\Http\Request;
+use Illuminate\Console\Command;
 
-class WeatherController extends Controller
+class WeatherCorn extends Command
 {
-    public function sendNotif()
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'weather:name';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Corn Job For Weather Notifitacion';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
     {
         $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
             [
@@ -39,12 +55,10 @@ class WeatherController extends Controller
         }
 
         $promise1 = new Promise();
-        $sendEmail = new TestingWeatherEmailNotification($usersWeatherData, $promise1);
+        $sendEmail = new WeatherEmailNotification($usersWeatherData, $promise1);
         $promise2 = new Promise();
-        $sendWhatsapp = new TestingWeatherWhatsappNotification($usersWeatherData, $promise2);
+        $sendWhatsapp = new WeatherWhatsappNotification($usersWeatherData, $promise2);
         dispatch($sendEmail);
         dispatch($sendWhatsapp);
-
-        dd($usersWeatherData);
     }
 }

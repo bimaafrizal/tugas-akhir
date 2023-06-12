@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('flood:corn')->everyFifteenMinutes()->runInBackground();
         $schedule->command('earthquake:corn')->everyMinute()->runInBackground();
+        $schedule->command('weather:corn')->dailyAt('21:00')->runInBackground();
     }
 
     /**

@@ -10,6 +10,12 @@ use App\Jobs\EmailSendNotification;
 use App\Jobs\GetDataEws;
 use App\Jobs\InsertFlood;
 use App\Jobs\InsertFloodNotification;
+use App\Jobs\TestingCheckLastData;
+use App\Jobs\TestingEmailSendNotification;
+use App\Jobs\TestingGetDataEws;
+use App\Jobs\TestingInsertFlood;
+use App\Jobs\TestingInsertFloodNotification;
+use App\Jobs\TestingWhatsappSendNotification;
 use App\Jobs\WhatsappSendNotification;
 use App\Models\Disaster;
 use App\Models\Ews;
@@ -68,9 +74,9 @@ class FloodController extends Controller
         //get data and check last data
         $ews = EWS::where('status', '1')->get();
         $promise1 =  new Promise();
-        $getDataEws = new GetDataEws($ews, $promise1);
+        $getDataEws = new TestingGetDataEws($ews, $promise1);
         $promise2 =  new Promise();
-        $getLastdata = new CheckLastData($promise2);
+        $getLastdata = new TestingCheckLastData($promise2);
         dispatch($getDataEws);
         dispatch($getLastdata);
         $promises[] = $promise1;
@@ -138,10 +144,9 @@ class FloodController extends Controller
 
         //insert to flood table
         $promise3 =  new Promise();
-        $insertFlood = new InsertFlood($convertLevel, $promise3);
+        $insertFlood = new TestingInsertFlood($convertLevel, $promise3);
         dispatch($insertFlood);
         $floodData = $insertFlood->getResult();
-        // dd( $insertFlood->getResult());
 
         $result3 = [];
         $result3 = $convertLevel; //delete in production
@@ -221,11 +226,11 @@ class FloodController extends Controller
         }
 
         $promise4 = new Promise();
-        $sendEmail = new EmailSendNotification($checkDistance, $promise4);
+        $sendEmail = new TestingEmailSendNotification($checkDistance, $promise4);
         $promise5 = new Promise();
-        $sendWhatsapp = new WhatsappSendNotification($checkDistance, $promise5);
+        $sendWhatsapp = new TestingWhatsappSendNotification($checkDistance, $promise5);
 
-        InsertFloodNotification::dispatch($dataNotif);
+        TestingInsertFloodNotification::dispatch($dataNotif);
 
         dispatch($sendEmail);
         dispatch($sendWhatsapp);

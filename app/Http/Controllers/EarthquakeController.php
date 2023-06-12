@@ -10,6 +10,10 @@ use App\Jobs\EarthquakeEmailNotification;
 use App\Jobs\EarthquakeWhatsappNotification;
 use App\Jobs\InsertEarthquake;
 use App\Jobs\InsertEarthquakeNotification;
+use App\Jobs\TestingCheckDistanceUserEarthquake;
+use App\Jobs\TestingEarthquakeEmailNotification;
+use App\Jobs\TestingEarthquakeWhatsappNotification;
+use App\Jobs\TestingInsertEarthquakeNotification;
 use App\Models\Disaster;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -124,9 +128,8 @@ class EarthquakeController extends Controller
         }
 
         $promise2 = new Promise();
-        $checkDistance = new CheckDistanceUserEarthquake($earthquake['latitude'], $earthquake['longitude'], $promise2);
+        $checkDistance = new TestingCheckDistanceUserEarthquake($earthquake['latitude'], $earthquake['longitude'], $promise2);
         dispatch($checkDistance);
-
 
         $distanceOfUser = $checkDistance->getResult();
 
@@ -143,12 +146,12 @@ class EarthquakeController extends Controller
         }
 
         //insert to notification tabele
-        $insertNotification = new InsertEarthquakeNotification($dataNotif);
+        $insertNotification = new TestingInsertEarthquakeNotification($dataNotif);
         //send notification
         $promise3 = new Promise();
-        $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+        $sendEmail = new TestingEarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
         $promise4 = new Promise();
-        $sendWa = new EarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
+        $sendWa = new  TestingEarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
         dispatch($sendEmail);
         dispatch($sendWa);
         dispatch($insertNotification);

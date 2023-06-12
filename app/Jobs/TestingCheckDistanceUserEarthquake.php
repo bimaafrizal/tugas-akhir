@@ -7,7 +7,7 @@ use App\Models\User;
 use GuzzleHttp\Promise\Promise;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class CheckDistanceUserEarthquake
+class TestingCheckDistanceUserEarthquake
 {
     use Dispatchable;
 
@@ -50,13 +50,13 @@ class CheckDistanceUserEarthquake
         foreach ($users as $user) {
             $distance = $this->calculateDistance($user->lat, $user->long, $earthquakeLat, $earthquakeLong);
             //under if on production
+            array_push($arrayUser, [
+                'distance' => $distance,
+                'user_id' => $user->id,
+                'email_user' => $user->email,
+                'phone_number' => $user->phone_num
+            ]);
             if ($distance <=  $disaster->distance) {
-                array_push($arrayUser, [
-                    'distance' => $distance,
-                    'user_id' => $user->id,
-                    'email_user' => $user->email,
-                    'phone_number' => $user->phone_num
-                ]);
             }
         }
 
