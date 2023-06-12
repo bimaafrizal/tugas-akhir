@@ -22,9 +22,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('flood:corn')->runInBackground();
-        $schedule->command('earthquake:corn')->runInBackground();
-        $schedule->command('weather:corn')->runInBackground();
+        $schedule->command('flood:corn')->everyFifteenMinutes()->runInBackground();
+        $schedule->command('earthquake:corn')->everyMinute()->runInBackground();
+        $schedule->command('weather:corn')->dailyAt('21:00')->runInBackground();
     }
 
     /**
