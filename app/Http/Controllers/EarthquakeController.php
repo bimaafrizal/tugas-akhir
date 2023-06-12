@@ -15,6 +15,7 @@ use App\Jobs\TestingEarthquakeEmailNotification;
 use App\Jobs\TestingEarthquakeWhatsappNotification;
 use App\Jobs\TestingInsertEarthquakeNotification;
 use App\Models\Disaster;
+use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
@@ -143,18 +144,18 @@ class EarthquakeController extends Controller
                     'created_at' => Carbon::now()
                 ]);
             }
+            //insert to notification tabele
+            $insertNotification = new TestingInsertEarthquakeNotification($dataNotif);
+            //send notification
+            $promise3 = new Promise();
+            $sendEmail = new TestingEarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+            $promise4 = new Promise();
+            $sendWa = new  TestingEarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
+            dispatch($sendEmail);
+            dispatch($sendWa);
+            dispatch($insertNotification);
         }
 
-        //insert to notification tabele
-        $insertNotification = new TestingInsertEarthquakeNotification($dataNotif);
-        //send notification
-        $promise3 = new Promise();
-        $sendEmail = new TestingEarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
-        $promise4 = new Promise();
-        $sendWa = new  TestingEarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
-        dispatch($sendEmail);
-        dispatch($sendWa);
-        dispatch($insertNotification);
         dd($dataNotif);
     }
 

@@ -122,18 +122,17 @@ class EarthquakeCorn extends Command
                     'created_at' => Carbon::now()
                 ]);
             }
+            //insert to notification tabele
+            $insertNotification = new InsertEarthquakeNotification($dataNotif);
+            //send notification
+            $promise3 = new Promise();
+            $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+            $promise4 = new Promise();
+            $sendWa = new EarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
+            dispatch($sendEmail);
+            dispatch($sendWa);
+            dispatch($insertNotification);
+            $this->info('Berhasil menambahkan data gempa');
         }
-
-        //insert to notification tabele
-        $insertNotification = new InsertEarthquakeNotification($dataNotif);
-        //send notification
-        $promise3 = new Promise();
-        $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
-        $promise4 = new Promise();
-        $sendWa = new EarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
-        dispatch($sendEmail);
-        dispatch($sendWa);
-        dispatch($insertNotification);
-        $this->info('Berhasil menambahkan data gempa');
     }
 }

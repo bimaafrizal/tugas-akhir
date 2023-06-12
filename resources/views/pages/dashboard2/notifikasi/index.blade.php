@@ -53,8 +53,6 @@ Notification
                             <th data-ordering="false">No.</th>
                             <th data-ordering="false">Name</th>
                             <th data-ordering="false">Jarak</th>
-                            <th>Status Email</th>
-                            <th>Status Whatsapp</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
@@ -65,8 +63,6 @@ Notification
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->user->name }}</td>
                             <td>{{ $item->distance }}</td>
-                            <td> - </td>
-                            <td> - </td>
                             <td> {{ $item->created_at }} </td>
                             <td> <a href="{{ route('detail-notif-gempa', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>
@@ -93,8 +89,6 @@ Notification
                             <th data-ordering="false">No.</th>
                             <th data-ordering="false">Name</th>
                             <th data-ordering="false">Jarak</th>
-                            <th>Status Email</th>
-                            <th>Status Whatsapp</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
@@ -105,8 +99,6 @@ Notification
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->user->name }}</td>
                             <td>{{ $item->distance }}</td>
-                            <td> - </td>
-                            <td> - </td>
                             <td> {{ $item->created_at }} </td>
                             <td> <a href="{{ route('detail-notif-banjir', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>

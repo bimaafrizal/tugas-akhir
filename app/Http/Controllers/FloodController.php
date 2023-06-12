@@ -88,7 +88,7 @@ class FloodController extends Controller
         $arrIdEwsLast = [];
         foreach ($lastDataEws as $data) {
             if ($data != null) {
-                array_push($arrIdEwsLast, $data->ews_id);
+                array_push($arrIdEwsLast, $data->id);
             }
         }
 
@@ -149,16 +149,16 @@ class FloodController extends Controller
         $floodData = $insertFlood->getResult();
 
         $result3 = [];
-        $result3 = $convertLevel; //delete in production
+        $result3 = $convertLevel;
 
-        //check if any new level
+        // check if any new level
         // foreach ($convertLevel as $value) {
         //     if (in_array($value['ews_id'], $arrIdEwsLast)) {
         //         $lastData =  Flood::where('ews_id', $value['ews_id'])->first();
         //         if ($lastData->level != $value['level']) {
         //             array_push($result3, $value);
         //         }
-        //     } else if ($value->lavel != 0) {
+        //     } else if ($value['level'] != 0) {
         //         array_push($result3, $value);
         //     }
         // }

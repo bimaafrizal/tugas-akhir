@@ -58,7 +58,7 @@ class FloodCorn extends Command
         $arrIdEwsLast = [];
         foreach ($lastDataEws as $data) {
             if ($data != null) {
-                array_push($arrIdEwsLast, $data->ews_id);
+                array_push($arrIdEwsLast, $data->id);
             }
         }
 
@@ -127,7 +127,7 @@ class FloodCorn extends Command
                 if ($lastData->level != $value['level']) {
                     array_push($result3, $value);
                 }
-            } else if ($value->lavel != 0) {
+            } else if ($value['level'] != 0) {
                 array_push($result3, $value);
             }
         }

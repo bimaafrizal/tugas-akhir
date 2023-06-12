@@ -26,11 +26,12 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
+        // dd($user);
 
-        if ($user->status == 0) {
-            return back()->with('loginError', 'Hubungi super admin untuk mengaktifkan akun');
-        }
         if (Auth::attempt($credentials)) {
+            if ($user->status == 0) {
+                return back()->with('loginError', 'Hubungi super admin untuk mengaktifkan akun');
+            }
             $request->session()->regenerate();
             return redirect()->intended('/dashboard');
         }

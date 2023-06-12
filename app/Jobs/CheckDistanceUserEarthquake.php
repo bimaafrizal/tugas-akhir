@@ -53,7 +53,7 @@ class CheckDistanceUserEarthquake
             if ($distance <=  $disaster->distance) {
                 array_push($arrayUser, [
                     'distance' => $distance,
-                    'user_id' => $user->id,
+                    'user_id' => $user->user_id,
                     'email_user' => $user->email,
                     'phone_number' => $user->phone_num
                 ]);

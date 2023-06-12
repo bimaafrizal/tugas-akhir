@@ -16,7 +16,7 @@ class WeatherCorn extends Command
      *
      * @var string
      */
-    protected $signature = 'weather:name';
+    protected $signature = 'weather:corn';
 
     /**
      * The console command description.
