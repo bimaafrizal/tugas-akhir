@@ -67,7 +67,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-widgets">Dashboard</span>
                     </a>
                 </li>
-                @can('superadmin')
+                @can('superAdmin')
                 <li class="nav-item">
                     <a class="nav-link menu-link  @yield('kategory-article')" href="{{ route('kategory-article') }}">
                         <i class=" ri-file-mark-line"></i> <span data-key="t-widgets">Kategori Article</span>

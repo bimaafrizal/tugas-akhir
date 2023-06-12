@@ -29,16 +29,16 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('notUser', function (User $user) {
-            return $user->role->name != 'User';
+            return $user->role_id != 1;
         });
         Gate::define('user', function (User $user) {
-            return $user->role->name == 'User';
+            return $user->role_id == 1;
         });
         Gate::define('admin', function (User $user) {
-            return $user->role->name == 'Admin';
+            return $user->role_id == 2;
         });
         Gate::define('superAdmin', function (User $user) {
-            return $user->role->name == 'Super Admin';
+            return $user->role_id == 3;
         });
     }
 }
