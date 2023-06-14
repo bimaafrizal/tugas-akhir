@@ -58,7 +58,7 @@ class LandingPageController extends Controller
         }
 
         $data = [];
-        $data = $request->body;
+        $data['body'] = $request->body;
         $article = Article::where('slug', $slug)->first();
         $data['user_id'] = Auth::user()->id;
         $data['article_id'] = $article->id;
