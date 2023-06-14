@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index']);
     Route::get('send-location', [DashboardController::class, 'sendLocation'])->name('send-location');
 
-    Route::middleware(['superadmin'])->group(function () {
+    Route::middleware('superadmin')->group(function () {
         Route::controller(KategoryArticleController::class)->group(function () {
             Route::get('/kategory-article', 'index')->name('kategory-article');
             Route::get('/kategory-article/{id}/edit', 'edit')->name('kategory-edit');
@@ -113,7 +113,7 @@ Route::middleware(['auth', 'verified', 'otp'])->group(function () {
         Route::post('/change-password', 'changePassword')->name('profile.change-password');
     });
 
-    Route::middleware(['isNotUser'])->group(function () {
+    Route::middleware('isNotUser')->group(function () {
         Route::controller(ManajemenUserController::class)->prefix('manajemen-user')->group(function () {
             Route::middleware(['superadmin'])->group(function () {
                 Route::get('create', 'create')->name('manajemen-user.create');
