@@ -16,7 +16,7 @@ class SuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!auth()->check() || auth()->user()->role_id !== 3) {
+        if (auth()->user()->role_id != 3) {
             abort(403);
         }
 
