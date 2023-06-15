@@ -28,7 +28,7 @@ Email Verifivcation
                                 <img src="" alt="" height="20">
                             </a>
                         </div>
-                        <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
+                        {{-- <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p> --}}
                     </div>
                 </div>
             </div>
@@ -65,22 +65,6 @@ Email Verifivcation
         <!-- end container -->
     </div>
     <!-- end auth page content -->
-
-    <!-- footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center">
-                        <p class="mb-0 text-muted">&copy;
-                            <script>document.write(new Date().getFullYear())</script> Velzon. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- end Footer -->
 </div>
 <!-- end auth-page-wrapper -->
 @endsection
