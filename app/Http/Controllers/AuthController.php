@@ -184,7 +184,7 @@ class AuthController extends Controller
         $user = Auth::user();
         $otp = $this->createOtp();
 
-        $message = "OTP Verification, gunakan OTP " . $otp . " untuk memverifikasi akun aknda. Perhatikan! Jangan memberitahukan OTP ini ke pihak siapa pun.";
+        $message = "OTP Verification, gunakan OTP " . $otp . " untuk memverifikasi akun anda. Perhatikan! Jangan memberitahukan OTP ini ke pihak siapa pun.";
         $this->sendWhatsapp($user->phone_num, $message);
 
         return redirect()->back()->with('success', 'Berhasil mengirim kode otp');
