@@ -60,26 +60,31 @@ Setting Bencana
                     </thead>
                     <tbody>
                         @foreach ($datas as $data)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $data->name }}</td>
-                                <td>{{ $data->depth != null ? $data->depth .' KM' : '-' }}</td>
-                                <td>{{ $data->distance != null ? $data->distance .' KM' : '-' }} </td>
-                                <td>{{ $data->strength != null ? $data->strength .' SR' : '-' }} </td>
-                                <td>
-                                    <div class="dropdown d-inline-block">
-                                        <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="ri-more-fill align-middle"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a href="{{ route('disaster.edit', ['id' => encrypt($data->id)]) }}" class="dropdown-item edit-item-btn"><i
-                                                        class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $data->name }}</td>
+                            <td>{{ $data->depth != null ? $data->depth .' KM' : '-' }}</td>
+                            <td>{{ $data->distance != null ? $data->distance .' KM' : '-' }} </td>
+                            <td>{{ $data->strength != null ? $data->strength .' SR' : '-' }} </td>
+                            <td>
+                                @if ($data->id != 3)
+                                <div class="dropdown d-inline-block">
+                                    <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ri-more-fill align-middle"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a href="{{ route('disaster.edit', ['id' => encrypt($data->id)]) }}"
+                                                class="dropdown-item edit-item-btn"><i
+                                                    class="ri-pencil-fill align-bottom me-2 text-muted"></i> Edit</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @else
+                                -
+                                @endif
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
