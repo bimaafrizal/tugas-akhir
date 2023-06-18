@@ -128,11 +128,31 @@ class EarthquakeController extends Controller
             }
         }
 
-        $promise2 = new Promise();
-        $checkDistance = new TestingCheckDistanceUserEarthquake($earthquake['latitude'], $earthquake['longitude'], $promise2);
-        dispatch($checkDistance);
+        //check distance
+        $distanceOfUser = [];
+        $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
+            [
+                ['users.status', '=', 1],
+                ['users.role_id', '=', 1],
+                ['setting_disasters.disaster_id', '=', 2],
+                ['setting_disasters.status', '=', '1'],
+            ],
+        )->whereNotNull('users.longitude')->whereNotNull('users.latitude')->get();
 
-        $distanceOfUser = $checkDistance->getResult();
+        $disaster = Disaster::where('id', 2)->first();
+
+        foreach ($users as $user) {
+            $distance = $this->calculateDistance($user->lat, $user->long, $earthquake['latitude'], $earthquake['longitude']);
+            //under if on production
+            if ($distance <=  $disaster->distance) {
+                array_push($distanceOfUser, [
+                    'distance' => $distance,
+                    'user_id' => $user->user_id,
+                    'email_user' => $user->email,
+                    'phone_number' => $user->phone_num
+                ]);
+            }
+        }
 
         $dataNotif = [];
         if ($idEarthquake != 0) {
@@ -145,18 +165,32 @@ class EarthquakeController extends Controller
                 ]);
             }
             //insert to notification tabele
-            $insertNotification = new TestingInsertEarthquakeNotification($dataNotif);
+            $insertNotification = new InsertEarthquakeNotification($dataNotif);
             //send notification
             $promise3 = new Promise();
-            $sendEmail = new TestingEarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+            $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
             $promise4 = new Promise();
-            $sendWa = new  TestingEarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
+            $sendWa = new EarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
             dispatch($sendEmail);
             dispatch($sendWa);
             dispatch($insertNotification);
+            $this->info('Berhasil menambahkan data gempa');
         }
 
         dd($dataNotif);
+    }
+    
+    function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $R = 6371; // Radius of the Earth in kilometers
+        $lat1Rad = deg2rad($lat1);
+        $lon1Rad = deg2rad($lon1);
+        $lat2Rad = deg2rad($lat2);
+        $lon2Rad = deg2rad($lon2);
+
+        $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
+
+        return $distance;
     }
 
     /**

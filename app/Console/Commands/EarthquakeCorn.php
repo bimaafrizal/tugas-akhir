@@ -156,4 +156,17 @@ class EarthquakeCorn extends Command
             $this->info('Berhasil menambahkan data gempa');
         }
     }
+
+    function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $R = 6371; // Radius of the Earth in kilometers
+        $lat1Rad = deg2rad($lat1);
+        $lon1Rad = deg2rad($lon1);
+        $lat2Rad = deg2rad($lat2);
+        $lon2Rad = deg2rad($lon2);
+
+        $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
+
+        return $distance;
+    }
 }
