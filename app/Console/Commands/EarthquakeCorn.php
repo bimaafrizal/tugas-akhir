@@ -9,6 +9,7 @@ use App\Jobs\InsertEarthquakeNotification;
 use App\Models\Disaster;
 use Illuminate\Console\Command;
 use App\Models\Earthquake;
+use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
@@ -106,11 +107,31 @@ class EarthquakeCorn extends Command
             }
         }
 
-        $promise2 = new Promise();
-        $checkDistance = new CheckDistanceUserEarthquake($earthquake['latitude'], $earthquake['longitude'], $promise2);
-        dispatch($checkDistance);
+        //check distance
+        $distanceOfUser = [];
+        $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
+            [
+                ['users.status', '=', 1],
+                ['users.role_id', '=', 1],
+                ['setting_disasters.disaster_id', '=', 2],
+                ['setting_disasters.status', '=', '1'],
+            ],
+        )->whereNotNull('users.longitude')->whereNotNull('users.latitude')->get();
 
-        $distanceOfUser = $checkDistance->getResult();
+        $disaster = Disaster::where('id', 2)->first();
+
+        foreach ($users as $user) {
+            $distance = $this->calculateDistance($user->lat, $user->long, $earthquake['latitude'], $earthquake['longitude']);
+            //under if on production
+            if ($distance <=  $disaster->distance) {
+                array_push($distanceOfUser, [
+                    'distance' => $distance,
+                    'user_id' => $user->user_id,
+                    'email_user' => $user->email,
+                    'phone_number' => $user->phone_num
+                ]);
+            }
+        }
 
         $dataNotif = [];
         if ($idEarthquake != 0) {
