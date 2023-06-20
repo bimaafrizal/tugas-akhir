@@ -51,8 +51,11 @@ Notification
                     <thead>
                         <tr>
                             <th data-ordering="false">No.</th>
+                            @can('notUser')
                             <th data-ordering="false">Name</th>
+                            @endcan
                             <th data-ordering="false">Jarak</th>
+                            <th data-ordering="false">Potensi</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
@@ -61,8 +64,11 @@ Notification
                         @foreach ($earthquakeNotif as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            @can('notUser')
                             <td>{{ $item->user->name }}</td>
-                            <td>{{ $item->distance }}</td>
+                            @endcan
+                            <td>{{ $item->earthquake->potency }}</td>
+                            <td>{{ $item->distance }} KM</td>
                             <td> {{ $item->created_at }} </td>
                             <td> <a href="{{ route('detail-notif-gempa', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>
@@ -87,8 +93,11 @@ Notification
                     <thead>
                         <tr>
                             <th data-ordering="false">No.</th>
+                            @can('notUser')
                             <th data-ordering="false">Name</th>
+                            @endcan
                             <th data-ordering="false">Jarak</th>
+                            <th data-ordering="false">Level</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
@@ -97,8 +106,22 @@ Notification
                         @foreach ($floodNotif as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            @can('notUser')
                             <td>{{ $item->user->name }}</td>
-                            <td>{{ $item->distance }}</td>
+                            @endcan
+                            <td>{{ $item->distance }} KM</td>
+                            @if ($item->flood->level == 0)
+                            <td> Normal </td>    
+                            @endif
+                            @if ($item->flood->level == 1)
+                            <td> Siaga </td>    
+                            @endif
+                            @if ($item->flood->level == 2)
+                            <td> Waspada</td>    
+                            @endif
+                            @if ($item->flood->level == 3)
+                            <td> Awas </td>    
+                            @endif
                             <td> {{ $item->created_at }} </td>
                             <td> <a href="{{ route('detail-notif-banjir', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>
