@@ -58,6 +58,9 @@ class EarthquakeController extends Controller
      */
     public function store()
     {
+        $coba = $this->calculateDistance(-7.5556917, 110.8605321, 0.63, 114.99);
+        // $coba = round($coba, 2);
+        // dd($coba);
         //get data
         $client = new Client();
         $response = $client->request('GET', 'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
@@ -66,8 +69,8 @@ class EarthquakeController extends Controller
         $insert = false;
 
         $earthquakeData = [
-            'latitude' => substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1),
-            'longitude' => substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ',')),
+            'longitude' => substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1),
+            'latitude' => substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ',')),
             'strength' => $detailData->Magnitude,
             'depth' => $detailData->Kedalaman,
             'tanggal' => $detailData->Tanggal,
@@ -142,8 +145,7 @@ class EarthquakeController extends Controller
         $disaster = Disaster::where('id', 2)->first();
 
         foreach ($users as $user) {
-            $distance = $this->calculateDistance($user->lat, $user->long, $earthquake['latitude'], $earthquake['longitude']);
-            //under if on production
+            $distance = $this->calculateDistance($user->latitude, $user->longitude, $earthquake['latitude'], $earthquake['longitude']);
             if ($distance <=  $disaster->distance) {
                 array_push($distanceOfUser, [
                     'distance' => $distance,
@@ -174,21 +176,29 @@ class EarthquakeController extends Controller
             dispatch($sendEmail);
             dispatch($sendWa);
             dispatch($insertNotification);
-            $this->info('Berhasil menambahkan data gempa');
+            // $this->info('Berhasil menambahkan data gempa');
         }
 
         dd($dataNotif);
     }
-    
+
     function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
-        $R = 6371; // Radius of the Earth in kilometers
-        $lat1Rad = deg2rad($lat1);
-        $lon1Rad = deg2rad($lon1);
-        $lat2Rad = deg2rad($lat2);
-        $lon2Rad = deg2rad($lon2);
+        // Convert degrees to radians
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
 
-        $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
+        // Earth radius in kilometers
+        $radius = 6371;
+
+        // Haversine formula
+        $deltaLat = $lat2 - $lat1;
+        $deltaLon = $lon2 - $lon1;
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos($lat1) * cos($lat2) * sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = round($radius * $c, 2);
 
         return $distance;
     }

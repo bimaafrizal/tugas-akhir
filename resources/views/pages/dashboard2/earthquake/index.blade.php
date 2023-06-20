@@ -63,8 +63,8 @@ Gempa
                                 <p>Tanggal: {{ $gempa->date }} </p>
                                 <p>Jam: {{ $gempa->time }}</p>
                                 <p>Potensi: <b>{{ $gempa->potency }}</b></p>
-                                <input type="text" id="latitude" value="{{ $gempa->latitude }}" hidden>
                                 <input type="text" id="longitude" value="{{ $gempa->longitude }}" hidden>
+                                <input type="text" id="latitude" value="{{ $gempa->latitude }}" hidden>
                             </div>
 
                             <div class="d-flex justify-content-center mx-5 mb-4">
@@ -187,8 +187,8 @@ Gempa
 <script src="{{ asset('auth/assets/js/pages/datatables.init.js') }}"></script>
 
 <script>
-    let map = L.map('map').setView([$('#longitude').val(), $('#latitude').val()], 7);
-    let marker = L.marker([$('#longitude').val(), $('#latitude').val()]).addTo(map);
+    let map = L.map('map').setView([$('#latitude').val(), $('#longitude').val()], 7);
+    let marker = L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
         maxZoom: 18,

@@ -45,8 +45,8 @@ class EarthquakeCorn extends Command
         $insert = false;
 
         $earthquakeData = [
-            'latitude' => substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1),
-            'longitude' => substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ',')),
+            'longitude' => substr($detailData->Coordinates, strpos($detailData->Coordinates, ',') + 1),
+            'latitude' => substr($detailData->Coordinates, '0', strpos($detailData->Coordinates, ',')),
             'strength' => $detailData->Magnitude,
             'depth' => $detailData->Kedalaman,
             'tanggal' => $detailData->Tanggal,
@@ -121,7 +121,7 @@ class EarthquakeCorn extends Command
         $disaster = Disaster::where('id', 2)->first();
 
         foreach ($users as $user) {
-            $distance = $this->calculateDistance($user->lat, $user->long, $earthquake['latitude'], $earthquake['longitude']);
+            $distance = $this->calculateDistance($user->latitude, $user->longitude, $earthquake['latitude'], $earthquake['longitude']);
             //under if on production
             if ($distance <=  $disaster->distance) {
                 array_push($distanceOfUser, [
