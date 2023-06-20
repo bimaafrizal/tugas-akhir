@@ -209,6 +209,7 @@ class FloodController extends Controller
                 }
             }
         }
+        // dd($checkDistance);
 
         //return data for insert to notification table
         $dataNotif = [];
@@ -235,7 +236,6 @@ class FloodController extends Controller
         dispatch($sendEmail);
         dispatch($sendWhatsapp);
 
-
         dd($dataNotif);
     }
 
@@ -249,6 +249,7 @@ class FloodController extends Controller
 
         $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
 
+        $distance = round($distance, 2);
         return $distance;
     }
 

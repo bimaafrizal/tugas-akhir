@@ -34,9 +34,13 @@ class WhatsappSendNotification
     {
         $datas = $this->datas;
         $body = Template::where('id', 1)->first();
-        $body = $body->body;
+        $body2 = $body->body;
 
         foreach ($datas as $data) {
+            $body = $body2;
+            $distance = 0;
+            $ews_name = "";
+
             $level = "normal";
             if ($data['level'] ==  1) {
                 $level = "Siaga";

@@ -34,31 +34,30 @@ class EmailSendNotification
     {
         $datas = $this->datas;
         $body = Template::where('id', 1)->first();
-        $body = $body->body;
+        $body2 = $body->body;
 
         $subject = "Flood Notification";
-        foreach ($datas as $data) {
+        for ($i = 0; $i < count($datas); $i++) {
+            $body = $body2;
+            $distance = 0;
+            $ews_name = "";
+
             $level = "normal";
-            if ($data['level'] ==  1) {
+            if ($datas[$i]['level'] ==  1) {
                 $level = "Siaga";
-            } else if ($data['level'] ==  2) {
+            } else if ($datas[$i]['level'] ==  2) {
                 $level = "Waspada";
-            } else if ($data['level'] ==  3) {
+            } else if ($datas[$i]['level'] ==  3) {
                 $level = "Awas";
             }
 
-            $distance = $data['distance'];
-            $ews_name = $data['ews_name'];
+            $distance = $datas[$i]['distance'];
+            $ews_name = $datas[$i]['ews_name'];
 
             eval("\$body = \"$body\";");
 
-            $this->sendEmail($data['email_user'], $subject, $body);
-
-            array_push($this->result, [
-                'user_id' => $data['user_id'],
-            ]);
+            $this->sendEmail($datas[$i]['email_user'], $subject, $body);
         }
-
 
         $this->promise->resolve($this->result);
     }
