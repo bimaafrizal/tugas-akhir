@@ -32,9 +32,15 @@ Notification
                 <h5 class="card-title mb-0">Notifikasi Gempa</h5>
             </div>
             <div class="card-body">
+                @can('notUser')
+                <p class="text-wrap" style="text-align: justify">User berada pada jarak {{ $data->distance }} km saat berada di titik {{ $data->user_latitude }}, {{ $data->user_longitude }} dari titik gempa. Gempa berada pada kedalaman {{ $data->earthquake->depth }} dengan kekuatan {{ $data->earthquake->strength }}, pukul {{ $data->earthquake->time }}, {{ $data->earthquake->date }}
+                </p>
+                @endcan
+                @can('user')
+                <p class="text-wrap" style="text-align: justify">Anda berada pada jarak {{ $data->distance }} km saat berada di titik {{ $data->user_latitude }}, {{ $data->user_longitude }} dari titik gempa. Gempa berada pada kedalaman {{ $data->earthquake->depth }} dengan kekuatan {{ $data->earthquake->strength }}, pukul {{ $data->earthquake->time }}, {{ $data->earthquake->date }}
+                </p>
                 
-               <p class="text-wrap" style="text-align: justify">User berada pada jarak {{ $data->distance }} km dari titik gempa. Gempa berada pada kedalaman {{ $data->earthquake->depth }} dengan kekuatan {{ $data->earthquake->strength }}, pukul {{ $data->earthquake->time }}, {{ $data->earthquake->date }}
-            </p>
+                @endcan
 
             <div class="d-flex justify-content-start">
                 <a href="{{ route('earthquake.show', ['id' => Crypt::encrypt($data->earthquake_id)]) }}" class="btn btn-primary">Detail Gempa</a>

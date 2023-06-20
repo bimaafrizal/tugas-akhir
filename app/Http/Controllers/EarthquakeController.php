@@ -150,6 +150,8 @@ class EarthquakeController extends Controller
                 array_push($distanceOfUser, [
                     'distance' => $distance,
                     'user_id' => $user->user_id,
+                    'user_latitude' => $user->latitude,
+                    'user_longitude' => $user->longitude,
                     'email_user' => $user->email,
                     'phone_number' => $user->phone_num
                 ]);
@@ -163,6 +165,8 @@ class EarthquakeController extends Controller
                     'user_id' => $distance['user_id'],
                     'earthquake_id' => $idEarthquake,
                     'distance' => $distance['distance'],
+                    'user_latitude' => $distance['user_latitude'],
+                    'user_longitude' => $distance['user_longitude'],
                     'created_at' => Carbon::now()
                 ]);
             }
@@ -176,7 +180,6 @@ class EarthquakeController extends Controller
             dispatch($sendEmail);
             dispatch($sendWa);
             dispatch($insertNotification);
-            // $this->info('Berhasil menambahkan data gempa');
         }
 
         dd($dataNotif);

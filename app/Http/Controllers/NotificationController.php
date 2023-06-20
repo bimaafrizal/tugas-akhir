@@ -13,12 +13,12 @@ class NotificationController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $earthquakeNotif = EarthquakeNotification::all();
-        $floodNotif = FloodNotification::all();
+        $earthquakeNotif = EarthquakeNotification::orderBy('id', 'desc')->get();
+        $floodNotif = FloodNotification::orderBy('id', 'desc')->get();
 
         if ($user->role_id == 1) {
-            $earthquakeNotif = EarthquakeNotification::where('user_id', $user->id)->get();
-            $floodNotif = FloodNotification::where('user_id', $user->id)->get();
+            $earthquakeNotif = EarthquakeNotification::where('user_id', $user->id)->orderBy('id', 'desc')->get();
+            $floodNotif = FloodNotification::where('user_id', $user->id)->orderBy('id', 'desc')->get();
         }
 
         return view('pages.dashboard2.notifikasi.index', compact('earthquakeNotif', 'floodNotif'));
@@ -29,7 +29,7 @@ class NotificationController extends Controller
         $decryptId = decrypt($id);
         $data = EarthquakeNotification::where('id', $decryptId)->first();
 
-         
+
         return view('pages.dashboard2.notifikasi.earthquake-detail', compact('data'));
     }
 

@@ -67,8 +67,8 @@ Notification
                             @can('notUser')
                             <td>{{ $item->user->name }}</td>
                             @endcan
-                            <td>{{ $item->earthquake->potency }}</td>
                             <td>{{ $item->distance }} KM</td>
+                            <td>{{ $item->earthquake->potency }}</td>
                             <td> {{ $item->created_at }} </td>
                             <td> <a href="{{ route('detail-notif-gempa', ['id' => Crypt::encrypt($item->id)]) }}" class="btn btn-primary">Detail</a> </td>
                         </tr>
@@ -96,6 +96,7 @@ Notification
                             @can('notUser')
                             <th data-ordering="false">Name</th>
                             @endcan
+                            <th data-ordering="false">Nama Unit</th>
                             <th data-ordering="false">Jarak</th>
                             <th data-ordering="false">Level</th>
                             <th>Created At</th>
@@ -106,6 +107,7 @@ Notification
                         @foreach ($floodNotif as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->flood->ews->name }}</td>
                             @can('notUser')
                             <td>{{ $item->user->name }}</td>
                             @endcan

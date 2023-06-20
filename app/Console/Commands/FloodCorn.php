@@ -172,6 +172,8 @@ class FloodCorn extends Command
                         'level' => $dataEWS[$i]['level'],
                         'distance' => $distance,
                         'user_id' => $users[$j]->id,
+                        'user_latitude' => $users[$j]->latitude,
+                        'user_longitude' => $users[$j]->longitude,
                         'email_user' => $users[$j]->email,
                         'phone_user' => $users[$j]->phone_num
                     ]);
@@ -188,6 +190,8 @@ class FloodCorn extends Command
                         'flood_id' => $floodData[$j]['flood_id'],
                         'user_id' => $checkDistance[$i]['user_id'],
                         'distance' => $checkDistance[$i]['distance'],
+                        'user_latitude' => $checkDistance[$i]['user_latitude'],
+                        'user_longitude' => $checkDistance[$i]['user_longitude'],
                         'created_at' => Carbon::now()
                     ]);
                 }

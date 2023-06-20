@@ -127,6 +127,8 @@ class EarthquakeCorn extends Command
                 array_push($distanceOfUser, [
                     'distance' => $distance,
                     'user_id' => $user->user_id,
+                    'user_latitude' => $user->latitude,
+                    'user_longitude' => $user->longitude,
                     'email_user' => $user->email,
                     'phone_number' => $user->phone_num
                 ]);
@@ -140,9 +142,12 @@ class EarthquakeCorn extends Command
                     'user_id' => $distance['user_id'],
                     'earthquake_id' => $idEarthquake,
                     'distance' => $distance['distance'],
+                    'user_latitude' => $distance['user_latitude'],
+                    'user_longitude' => $distance['user_longitude'],
                     'created_at' => Carbon::now()
                 ]);
             }
+
             //insert to notification tabele
             $insertNotification = new InsertEarthquakeNotification($dataNotif);
             //send notification

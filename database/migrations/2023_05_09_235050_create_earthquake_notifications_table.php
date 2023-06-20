@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('distance');
             $table->integer('status_whatsapp')->nullable();
             $table->integer('status_email')->nullable();
+            $table->string('user_latitude');
+            $table->string('user_longitude');
             $table->timestamps();
         });
     }

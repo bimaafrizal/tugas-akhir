@@ -32,18 +32,32 @@ Notification
                 <h5 class="card-title mb-0">Notifikasi Banjir</h5>
             </div>
             <div class="card-body">
-                {{-- {{ dd($data->flood) }} --}}
-               <p class="text-wrap" style="text-align: justify">User berada pada jarak {{ $data->distance }} km dari alat pemantauan {{ $data->flood->ews->name }} dengan kondisi berada di level 
-                <?php if($data->flood->level == 0) { ?>
-                    Aman
-                <?php } else if($data->flood->level == 1) { ?>
-                    Siaga
-                <?php } else if($data->flood->level == 2) { ?>
-                    Waspada
-                <?php } else if($data->flood->level == 3) { ?>
-                    Awas
-                <?php } ?>
-            </p>
+                @can('notUser')
+                <p class="text-wrap" style="text-align: justify">User berada pada jarak {{ $data->distance }} km saat anda berada di titik lokasi {{ $data->user_latitude }}, {{ $data->user_longitude }} dari alat pemantauan {{ $data->flood->ews->name }} dengan kondisi berada di level 
+                 <?php if($data->flood->level == 0) { ?>
+                     Aman
+                 <?php } else if($data->flood->level == 1) { ?>
+                     Siaga
+                 <?php } else if($data->flood->level == 2) { ?>
+                     Waspada
+                 <?php } else if($data->flood->level == 3) { ?>
+                     Awas
+                 <?php } ?>
+                </p>
+                @endcan
+                @can('user')
+                <p class="text-wrap" style="text-align: justify">Anda berada pada jarak {{ $data->distance }} km saat anda berada di titik lokasi {{ $data->user_latitude }}, {{ $data->user_longitude }} dari alat pemantauan {{ $data->flood->ews->name }} dengan kondisi berada di level 
+                 <?php if($data->flood->level == 0) { ?>
+                     Aman
+                 <?php } else if($data->flood->level == 1) { ?>
+                     Siaga
+                 <?php } else if($data->flood->level == 2) { ?>
+                     Waspada
+                 <?php } else if($data->flood->level == 3) { ?>
+                     Awas
+                 <?php } ?>
+                </p>
+                @endcan
             </div>
         </div>
     </div>
