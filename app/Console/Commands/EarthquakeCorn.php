@@ -164,13 +164,21 @@ class EarthquakeCorn extends Command
 
     function calculateDistance($lat1, $lon1, $lat2, $lon2)
     {
-        $R = 6371; // Radius of the Earth in kilometers
-        $lat1Rad = deg2rad($lat1);
-        $lon1Rad = deg2rad($lon1);
-        $lat2Rad = deg2rad($lat2);
-        $lon2Rad = deg2rad($lon2);
+        // Convert degrees to radians
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
 
-        $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
+        // Earth radius in kilometers
+        $radius = 6371;
+
+        // Haversine formula
+        $deltaLat = $lat2 - $lat1;
+        $deltaLon = $lon2 - $lon1;
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos($lat1) * cos($lat2) * sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = round($radius * $c, 2);
 
         return $distance;
     }

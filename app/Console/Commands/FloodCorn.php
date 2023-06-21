@@ -221,6 +221,7 @@ class FloodCorn extends Command
 
         $distance = $R * acos(sin($lat1Rad) * sin($lat2Rad) + cos($lat1Rad) * cos($lat2Rad) * cos($lon2Rad - $lon1Rad));
 
+        $distance = round($distance, 2);
         return $distance;
     }
 }
