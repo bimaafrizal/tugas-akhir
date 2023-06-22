@@ -283,7 +283,7 @@ class EarthquakeController extends Controller
 
         foreach ($data as $item) {
             $sheet->setCellValue('A' . $row, $number);
-            $sheet->setCellValue('B' . $row, $item->longitude . ',' . $item->latitude);
+            $sheet->setCellValue('B' . $row, $item->latitude . ',' . $item->longitude);
             $sheet->setCellValue('C' . $row, $item->strength);
             $sheet->setCellValue('D' . $row, $item->depth);
             $sheet->setCellValue('E' . $row, $item->created_at);
