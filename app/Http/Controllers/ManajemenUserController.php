@@ -101,7 +101,9 @@ class ManajemenUserController extends Controller
             'role_id' => ['required']
         ]);
         if ($request->password == null) {
-            $validateData['password'] = Hash::make($request->user()->password);
+            $validateData['password'] = $request->user()->password;
+        } else {
+            $validateData['password'] = Hash::make($validateData['password']);
         }
         $this->service->update($decryptId, $validateData);
         if ($request->user()->role_id == 1) {
