@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -100,10 +101,13 @@ class ManajemenUserController extends Controller
             'role_id' => ['required']
         ]);
         if ($request->password == null) {
-            $validateData['password'] = $request->user()->password;
+            $validateData['password'] = Hash::make($request->user()->password);
         }
         $this->service->update($decryptId, $validateData);
-        return redirect(route('manajemen-user.index'))->with('success', 'User berhasil diedit');
+        if ($request->user()->role_id == 1) {
+            return redirect(route('manajemen-user.index'))->with('success', 'User berhasil diedit');
+        }
+        return redirect(route('manajemen-user.index'))->with('success', 'Admin/Super Admin berhasil diedit');
     }
 
     /**
