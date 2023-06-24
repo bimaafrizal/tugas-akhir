@@ -100,8 +100,9 @@ class ManajemenUserController extends Controller
             'password' => ['nullable', 'confirmed', 'min:5', 'max:255'],
             'role_id' => ['required']
         ]);
+        $user = User::where('id', $decryptId)->first();
         if ($request->password == null) {
-            $validateData['password'] = $request->user()->password;
+            $validateData['password'] = $user->password;
         } else {
             $validateData['password'] = Hash::make($validateData['password']);
         }
