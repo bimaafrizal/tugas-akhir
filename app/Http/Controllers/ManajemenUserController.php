@@ -101,13 +101,16 @@ class ManajemenUserController extends Controller
             'role_id' => ['required']
         ]);
         $user = User::where('id', $decryptId)->first();
+
         if ($request->password == null) {
             $validateData['password'] = $user->password;
         } else {
             $validateData['password'] = Hash::make($validateData['password']);
         }
+
         $this->service->update($decryptId, $validateData);
-        if ($request->user()->role_id == 1) {
+
+        if ($user->role_id == 1) {
             return redirect(route('manajemen-user.index'))->with('success', 'User berhasil diedit');
         }
         return redirect(route('manajemen-user.index'))->with('success', 'Admin/Super Admin berhasil diedit');

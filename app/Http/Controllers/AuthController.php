@@ -26,7 +26,6 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
-        // dd($user);
 
         if (Auth::attempt($credentials)) {
             if ($user->status == 0) {
