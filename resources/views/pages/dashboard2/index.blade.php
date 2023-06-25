@@ -372,7 +372,7 @@ Dashboard
     let convertEwsObj = JSON.parse(dataEws);
 
     convertGempaObj.forEach(e => {
-        L.marker([e.longitude, e.latitude], {
+        L.marker([e.latitude, e.longitude], {
             icon: earthquakeIcon
         }).addTo(map3).bindPopup('<p>Kekuatan:' + e.strength + ' SR</p><p> Kedalaman:' + e.depth +
             ' KM</p><p>' + e.time + ',' + e.date + '</p>');

@@ -551,16 +551,18 @@ Dashboard
     let map3 = L.map('map3').setView([-3.00000, 115.000], 5);
 
     let dataGempa = document.getElementById("gempa").value;
-    if (dataGempa != "") {
-        console.log("Betul");
-    }
+    // if (dataGempa != "") {
+    //     console.log("Betul");
+    // }
     
     let convertGempaObj = JSON.parse(dataGempa);
     let dataEws = document.getElementById("ews").value;
     let convertEwsObj = JSON.parse(dataEws);
 
+    console.log(convertGempaObj);
+
     convertGempaObj.forEach(e => {
-        L.marker([e.longitude, e.latitude], {
+        L.marker([e.latitude, e.longitude], {
             icon: earthquakeIcon
         }).addTo(map3).bindPopup('<p>Kekuatan:' + e.strength + ' SR</p><p> Kedalaman:' + e.depth +
             ' KM</p><p>' + e.time + ',' + e.date + '</p>');
