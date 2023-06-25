@@ -2,7 +2,7 @@
     <div class="table-responsive">
         <div class="d-flex justify-content-start mb-2">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-kategory">Tambah
-                Permintaan</button>
+                Kategori</button>
         </div>
         <table class="table table-bordered dt-responsive nowrap table-striped align-middle"
             style="width:100%">
