@@ -551,10 +551,7 @@ Dashboard
     let map3 = L.map('map3').setView([-3.00000, 115.000], 5);
 
     let dataGempa = document.getElementById("gempa").value;
-    // if (dataGempa != "") {
-    //     console.log("Betul");
-    // }
-    
+
     let convertGempaObj = JSON.parse(dataGempa);
     let dataEws = document.getElementById("ews").value;
     let convertEwsObj = JSON.parse(dataEws);
