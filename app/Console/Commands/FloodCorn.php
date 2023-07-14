@@ -83,6 +83,7 @@ class FloodCorn extends Command
         $convertLevel = [];
         foreach ($results2 as $key => $data) {
             $arrTemp = [];
+            //untuk api field 1 saja
             if (property_exists($data, 'field2') == false) {
                 $arrTemp['ews_id'] = $key;
                 if ($data->field1 <= 1024) {
@@ -91,12 +92,14 @@ class FloodCorn extends Command
                     $arrTemp['level'] = 1;
                 } else if ($data->field1 > 2048 && $data->field1 <= 3072) {
                     $arrTemp['level'] = 2;
-                } else if ($data->field3 > 3072) {
+                } else if ($data->field1 > 3072) {
                     $arrTemp['level'] = 3;
                 }
                 $arrTemp['created_at'] = $data->created_at;
                 array_push($convertLevel, $arrTemp);
+                
             } else {
+                //untuk api field 1, field 2, dan field3
                 $arrTemp['ews_id'] = $key;
                 if ($data->field1 == 1) {
                     $arrTemp['level'] = 0;
