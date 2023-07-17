@@ -55,6 +55,11 @@ class EarthquakeCorn extends Command
             'potensi' => $detailData->Potensi
         ];
 
+        //get nama lokasi
+        $response2 = $client->request('GET', 'https://api.opencagedata.com/geocode/v1/json?q=' . $earthquakeData['latitude'] . ',' . $earthquakeData['longitude'] . '&key=' . config('services.OPENCAGEDATA_API') . '&language=id&pretty=1');
+        $data2 = json_decode($response2->getBody()->getContents());
+        $earthquakeData['location'] = $data2->results[0]->formatted;
+
         //get last data
         $earthquake = Earthquake::orderBy('id', 'desc')->first();
         if ($earthquake  == null) {
@@ -67,7 +72,8 @@ class EarthquakeCorn extends Command
                 'time' => $earthquakeData['jam'],
                 'created_at' => $earthquakeData['createdAt'],
                 'potency' => $earthquakeData['potensi'],
-                'inserted_at' => Carbon::now()
+                'inserted_at' => Carbon::now(),
+                'location' => $earthquakeData['location']
             ]);
         } else {
             if ($earthquake->longitude != $earthquakeData['longitude'] || $earthquake->latitude != $earthquakeData['latitude'] || $earthquake->date != $earthquakeData['tanggal'] || $earthquake->time  != $earthquakeData['jam']) {
@@ -80,7 +86,8 @@ class EarthquakeCorn extends Command
                     'time' => $earthquakeData['jam'],
                     'created_at' => $earthquakeData['createdAt'],
                     'potency' => $earthquakeData['potensi'],
-                    'inserted_at' => Carbon::now()
+                    'inserted_at' => Carbon::now(),
+                    'location' => $earthquakeData['location']
                 ]);
             }
         }

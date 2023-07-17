@@ -38,6 +38,7 @@ class TestingEarthquakeWhatsappNotification
         $latitude = $earthquakeData['latitude'];
         $depth = $earthquakeData['depth'];
         $strength = $earthquakeData['strength'];
+        $location = $earthquakeData['location'];
 
         $body = Template::where('id', 2)->first();
         $body = $body->body;
@@ -45,6 +46,7 @@ class TestingEarthquakeWhatsappNotification
         foreach ($users as $user) {
             $distance = $user['distance'];
             eval("\$body = \"$body\";");
+            // $body = "Gempa pada koordinat " . $latitude . ", " . $longitude . " berada di sekitar " . $location . " pada kedalaman " . $depth . " kekuatan sebesar " . $strength . " SR. Jarak anda dengan lokasi gempa adalah " . $distance . " km";
 
             $this->sendWhatsapp($user['phone_number'], $body);
         }

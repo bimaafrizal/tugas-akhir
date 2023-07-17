@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('created_at');
             $table->string('inserted_at');
             $table->string('potency');
+            $table->string('location')->nullable();
             // $table->timestamps();
         });
     }

@@ -49,6 +49,7 @@ Gempa
                                 <p>Tanggal: {{ $gempa->date }} </p>
                                 <p>Jam: {{ $gempa->time }}</p>
                                 <p>Potensi: <b>{{ $gempa->potency }}</b></p>
+                                <p>Lokasi: {{ $gempa->location }}</p>
                                 <input type="text" id="latitude" value="{{ $gempa->latitude }}" hidden>
                                 <input type="text" id="longitude" value="{{ $gempa->longitude }}" hidden>
                             </div>

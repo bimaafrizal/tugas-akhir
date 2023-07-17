@@ -58,9 +58,6 @@ class EarthquakeController extends Controller
      */
     public function store()
     {
-        $coba = $this->calculateDistance(-7.5556917, 110.8605321, 0.63, 114.99);
-        // $coba = round($coba, 2);
-        // dd($coba);
         //get data
         $client = new Client();
         $response = $client->request('GET', 'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
@@ -79,6 +76,11 @@ class EarthquakeController extends Controller
             'potensi' => $detailData->Potensi
         ];
 
+        //get nama lokasi
+        $response2 = $client->request('GET', 'https://api.opencagedata.com/geocode/v1/json?q=' . $earthquakeData['latitude'] . ',' . $earthquakeData['longitude'] . '&key=' . config('services.OPENCAGEDATA_API') . '&language=id&pretty=1');
+        $data2 = json_decode($response2->getBody()->getContents());
+        $earthquakeData['location'] = $data2->results[0]->formatted;
+
         //get last data
         $earthquake = Earthquake::orderBy('id', 'desc')->first();
         if ($earthquake  == null) {
@@ -91,7 +93,8 @@ class EarthquakeController extends Controller
                 'time' => $earthquakeData['jam'],
                 'created_at' => $earthquakeData['createdAt'],
                 'potency' => $earthquakeData['potensi'],
-                'inserted_at' => Carbon::now()
+                'inserted_at' => Carbon::now(),
+                'location' => $earthquakeData['location']
             ]);
         } else {
             if ($earthquake->longitude != $earthquakeData['longitude'] || $earthquake->latitude != $earthquakeData['latitude'] || $earthquake->date != $earthquakeData['tanggal'] || $earthquake->time  != $earthquakeData['jam']) {
@@ -104,7 +107,8 @@ class EarthquakeController extends Controller
                     'time' => $earthquakeData['jam'],
                     'created_at' => $earthquakeData['createdAt'],
                     'potency' => $earthquakeData['potensi'],
-                    'inserted_at' => Carbon::now()
+                    'inserted_at' => Carbon::now(),
+                    'location' => $earthquakeData['location']
                 ]);
             }
         }
@@ -174,9 +178,9 @@ class EarthquakeController extends Controller
             $insertNotification = new InsertEarthquakeNotification($dataNotif);
             //send notification
             $promise3 = new Promise();
-            $sendEmail = new EarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
+            $sendEmail = new TestingEarthquakeEmailNotification($distanceOfUser, $earthquakeData, $promise3);
             $promise4 = new Promise();
-            $sendWa = new EarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
+            $sendWa = new TestingEarthquakeWhatsappNotification($distanceOfUser, $earthquakeData, $promise4);
             dispatch($sendEmail);
             dispatch($sendWa);
             dispatch($insertNotification);
@@ -273,19 +277,21 @@ class EarthquakeController extends Controller
 
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Koordinat');
-        $sheet->setCellValue('C1', 'Kekuatan');
-        $sheet->setCellValue('D1', 'Kedalaman');
+        $sheet->setCellValue('C1', 'Kekuatan(SR)');
+        $sheet->setCellValue('D1', 'Kedalaman(Km)');
         $sheet->setCellValue('E1', 'Created At');
         $sheet->setCellValue('F1', 'Potensi');
 
         $row = 2;
         $number = 1;
+        $lengthOfString = 0;
 
         foreach ($data as $item) {
             $sheet->setCellValue('A' . $row, $number);
             $sheet->setCellValue('B' . $row, $item->latitude . ',' . $item->longitude);
             $sheet->setCellValue('C' . $row, $item->strength);
-            $sheet->setCellValue('D' . $row, $item->depth);
+            $lengthOfString = strlen($item->depth);
+            $sheet->setCellValue('D' . $row, (int) substr($item->depth, '0', $lengthOfString - strpos($item->depth, 'km')));
             $sheet->setCellValue('E' . $row, $item->created_at);
             $sheet->setCellValue('F' . $row, $item->potency);
             $row++;

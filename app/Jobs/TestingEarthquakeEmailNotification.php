@@ -39,6 +39,7 @@ class TestingEarthquakeEmailNotification
         $latitude = $earthquakeData['latitude'];
         $depth = $earthquakeData['depth'];
         $strength = $earthquakeData['strength'];
+        $location = $earthquakeData['location'];
 
         $body = Template::where('id', 2)->first();
         $body = $body->body;

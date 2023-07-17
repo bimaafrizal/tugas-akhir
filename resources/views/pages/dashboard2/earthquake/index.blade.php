@@ -82,6 +82,7 @@ Gempa
                                 <thead>
                                     <tr>
                                         <th data-ordering="false">No.</th>
+                                        <th data-ordering="false">Lokasi</th>
                                         <th data-ordering="false">Tanggal</th>
                                         <th data-ordering="false">Jam</th>
                                         <th>Kekuatan</th>
@@ -93,6 +94,7 @@ Gempa
                                     @foreach ($gempas as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $data->location }}</td>
                                         <td>{{ $data->date }}</td>
                                         <td>{{ $data->time }}</td>
                                         <td>{{ $data->strength }}</td>

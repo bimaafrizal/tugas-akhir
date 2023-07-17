@@ -59,6 +59,7 @@ Template Notifikasi
                             <?php } else if($data->disaster_id == 2) { ?>
                                     <button type="button" class="badge text-bg-primary option2">Longitude</button>
                                     <button type="button" class="badge text-bg-primary option2">Latitude</button>
+                                    <button type="button" class="badge text-bg-primary option2">Lokasi</button>
                                     <button type="button" class="badge text-bg-primary option2">Kedalaman</button>
                                     <button type="button" class="badge text-bg-primary option2">Kekuatan</button>
                                     <button type="button" class="badge text-bg-primary option2">Jarak</button>
@@ -136,6 +137,8 @@ Template Notifikasi
                     option = "$strength";
                 } else if(option == 'Jarak') {
                     option = "$distance";
+                } else if(option == 'Lokasi') {
+                    option = "$location";
                 }
 
                 let selectionStart = body.prop('selectionStart');
