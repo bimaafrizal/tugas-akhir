@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('province_id');
             $table->foreignId('regency_id');
+            $table->foreignId('standard_id');
             $table->string('detail')->nullable();
             $table->string('api_url');
             $table->string('api_key')->nullable();

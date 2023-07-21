@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateEwsRequest;
 use App\Models\Flood;
 use App\Models\Province;
 use App\Models\Regency;
+use App\Models\StandardEws;
 use App\Services\Ews\EwsService;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,8 @@ class EwsController extends Controller
     public function create()
     {
         $provinces = Province::all();
-        return view('pages.dashboard2.ews.create', compact('provinces'));
+        $standards = StandardEws::all();
+        return view('pages.dashboard2.ews.create', compact('provinces', 'standards'));
     }
 
     /**
@@ -83,7 +85,8 @@ class EwsController extends Controller
         $data = Ews::where('id', $decryptId)->first();
         $provinces = Province::all();
         $regencies = Regency::where('province_id', $data->province_id)->get();
-        return view('pages.dashboard2.ews.edit', compact('data', 'provinces', 'regencies'));
+        $standards = StandardEws::all();
+        return view('pages.dashboard2.ews.edit', compact('data', 'provinces', 'regencies', 'standards'));
     }
 
     /**

@@ -74,8 +74,7 @@ EWS
                                 <option value="{{ $item->id }}" selected>{{ $item->name }}</option> 
                                 @else
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endif
-                                    
+                                @endif      
                                 @endforeach
                                 
                             </select>
@@ -130,6 +129,21 @@ EWS
                             <input type="text" class="form-control @error('latitude') is-invalid
                             @enderror" id="latitude" name="latitude" value="{{ old('latitude', $data->latitude) }}">
                             @error('latitude')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Standarisasi*</label>
+                            <select class="form-select mb-3 @error('standard_id') is-invalid
+                            @enderror" name="standard_id">
+                                <option value="">Pilih Standar</option>
+                                @foreach ($standards as $standard)
+                                <option value="{{ old('standard_id', $standard->id) }}" {{ $data->standard_id == $standard->id ? 'selected' : '' }}>{{ $standard->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('standard_id')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

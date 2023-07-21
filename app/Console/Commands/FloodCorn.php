@@ -66,7 +66,7 @@ class FloodCorn extends Command
         //check if any new data 
         foreach ($lastDataEws as $last) {
             if ($last != null) {
-                if ($dataEWS[$last->ews_id]->created_at != date("Y-m-d\TH:i:s\Z", strtotime($last->created_at))) {
+                if ($dataEWS[$last->ews_id]['data']->created_at != date("Y-m-d\TH:i:s\Z", strtotime($last->created_at))) {
                     $results2[$last->ews_id] = $dataEWS[$last->ews_id];
                 }
             }
@@ -83,34 +83,63 @@ class FloodCorn extends Command
         $convertLevel = [];
         foreach ($results2 as $key => $data) {
             $arrTemp = [];
-            //untuk api field 1 saja
-            if (property_exists($data, 'field2') == false) {
+            if ($data['ews']->standard_id == 1) {
+                if (property_exists($data['data'], 'field1') == true && property_exists($data['data'], 'field2') == false && property_exists($data['data'], 'field3') == false) {
+                    $arrTemp['ews_id'] = $key;
+                    if ($data['data']->field1 <= 1024) {
+                        $arrTemp['level'] = 0;
+                    } else if ($data['data']->field1 > 1024 && $data['data']->field1 <= 2048) {
+                        $arrTemp['level'] = 1;
+                    } else if ($data['data']->field1 > 2048 && $data['data']->field1 <= 3072) {
+                        $arrTemp['level'] = 2;
+                    } else if ($data['data']->field1 > 3072) {
+                        $arrTemp['level'] = 3;
+                    }
+                    $arrTemp['created_at'] = $data['data']->created_at;
+                    $arrTemp['resume'] = serialize($data['data']);
+                    array_push($convertLevel, $arrTemp);
+                } else if (property_exists($data['data'], 'field1') == true && property_exists($data['data'], 'field2') == true && property_exists($data['data'], 'field3') == true && property_exists($data['data'], 'field4') == false && property_exists($data['data'], 'field5') == false && property_exists($data['data'], 'field6') == false) {
+                    $arrTemp['ews_id'] = $key;
+                    if ($data['data']->field1 == 1) {
+                        $arrTemp['level'] = 0;
+                    } else if ($data['data']->field1 == 0 && $data['data']->field2 == 1 && $data['data']->field3 == 1) {
+                        $arrTemp['level'] = 1;
+                    } else if ($data['data']->field2 == 0 && $data['data']->field2 == 0 && $data['data']->field3 == 1) {
+                        $arrTemp['level'] = 2;
+                    } else if ($data['data']->field3 == 0 && $data['data']->field2 == 0 && $data['data']->field3 == 0) {
+                        $arrTemp['level'] = 3;
+                    }
+                    $arrTemp['created_at'] = $data['data']->created_at;
+                    $arrTemp['resume'] = serialize($data['data']);
+                    array_push($convertLevel, $arrTemp);
+                } else if (property_exists($data['data'], 'field1') == true && property_exists($data['data'], 'field2') == true && property_exists($data['data'], 'field3') == true && property_exists($data['data'], 'field4') == true && property_exists($data['data'], 'field5') == true && property_exists($data['data'], 'field6') == true) {
+                    $arrTemp['ews_id'] = $key;
+                    $arrTemp['created_at'] = $data['data']->created_at;
+                    if ($data['data']->field6 == 0) {
+                        $arrTemp['level'] = 0;
+                    } else if ($data['data']->field6 >= 1 && $data['data']->field6 <= 3) {
+                        $arrTemp['level'] = 1;
+                    } else if ($data['data']->field6 >= 4 && $data['data']->field6 <= 6) {
+                        $arrTemp['level'] = 2;
+                    } else {
+                        $arrTemp['level'] = 3;
+                    }
+                    $arrTemp['resume'] = serialize($data['data']);
+                    array_push($convertLevel, $arrTemp);
+                }
+            } else if ($data['ews']->standard_id == 2) {
                 $arrTemp['ews_id'] = $key;
-                if ($data->field1 <= 1024) {
+                if ($data['data']->field1 == 0) {
                     $arrTemp['level'] = 0;
-                } else if ($data->field1 > 1024 && $data->field1 <= 2048) {
+                } else if ($data['data']->field1 == 1) {
                     $arrTemp['level'] = 1;
-                } else if ($data->field1 > 2048 && $data->field1 <= 3072) {
+                } else if ($data['data']->field1 == 2) {
                     $arrTemp['level'] = 2;
-                } else if ($data->field1 > 3072) {
+                } else if ($data['data']->field1 == 3) {
                     $arrTemp['level'] = 3;
                 }
-                $arrTemp['created_at'] = $data->created_at;
-                array_push($convertLevel, $arrTemp);
-                
-            } else {
-                //untuk api field 1, field 2, dan field3
-                $arrTemp['ews_id'] = $key;
-                if ($data->field1 == 1) {
-                    $arrTemp['level'] = 0;
-                } else if ($data->field1 == 0) {
-                    $arrTemp['level'] = 1;
-                } else if ($data->field2 == 0) {
-                    $arrTemp['level'] = 2;
-                } else if ($data->field3 == 0) {
-                    $arrTemp['level'] = 3;
-                }
-                $arrTemp['created_at'] = $data->created_at;
+                $arrTemp['created_at'] = $data['data']->created_at;
+                $arrTemp['resume'] = serialize($data['data']);
                 array_push($convertLevel, $arrTemp);
             }
         }

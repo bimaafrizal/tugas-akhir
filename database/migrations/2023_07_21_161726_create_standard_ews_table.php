@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('floods', function (Blueprint $table) {
+        Schema::create('standard_ews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ews_id');
-            $table->integer('level');
-            $table->string('created_at');
-            $table->longText('resume');
-            // $table->timestamps();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('floods');
+        Schema::dropIfExists('standard_ews');
     }
 };

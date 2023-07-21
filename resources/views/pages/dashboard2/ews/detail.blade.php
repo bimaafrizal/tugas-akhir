@@ -47,6 +47,9 @@ EWS
         <div class="card">
             <div class="card-body">
                 <div class="card-body">
+                    {{-- {{ dd($flood[0]->level) }} --}}
+                    {{-- {{ dd(gettype($flood)) }} --}}
+                    @if ($flood != "[]")
                     <h5>Level Ketinggian Air:
                         <?php if($flood[0]->level == 0) { ?>
                         Normal
@@ -58,6 +61,11 @@ EWS
                         Awas
                         <?php } ?>
                     </h5>
+                    @else
+                    <h5>Level Ketinggian Air: -
+                    </h5>
+                        
+                    @endif
 
                     <div class="text-center">
                         <h1>{{ $ews->name }}</h1>

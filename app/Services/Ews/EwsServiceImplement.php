@@ -55,6 +55,7 @@ class EwsServiceImplement extends Service implements EwsService
       'longitude' => $data['longitude'],
       'latitude' => $data['latitude'],
       'gmaps_link' => $data['gmaps_link'],
+      'standard_id' => $data['standard_id'],
     ];
 
     return $this->mainRepository->updateData($dataValidate, $id);

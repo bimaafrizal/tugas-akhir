@@ -37,8 +37,12 @@ class TestingGetDataEws
             $response = $client->request('GET', $ews->api_url);
             $data = json_decode($response->getBody()->getContents());
             // $detailData = $data->feeds[0];
-            $dataTemp[$ews->id] = $data->feeds[0];
+            $dataTemp[$ews->id] = [
+                'ews' => $ews,
+                'data' => $data->feeds[0],
+            ];
         }
+        // dd($dataTemp);
         // $response = Http::pool(function (Pool $pool) use ($dataEws) {
         //     foreach ($dataEws as $url) {
         //         $pool->get($url->api_url);

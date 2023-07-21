@@ -130,6 +130,21 @@ EWS
                             @enderror
                         </div>
                         <div class="mb-3">
+                            <label for="">Standarisasi*</label>
+                            <select class="form-select mb-3 @error('standard_id') is-invalid
+                            @enderror" name="standard_id">
+                                <option value="">Pilih Standar</option>
+                                @foreach ($standards as $standard)
+                                <option value="{{ old('standard_id', $standard->id) }}">{{ $standard->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('standard_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
                             <label for="gmaps_link" class="form-label">Gmaps Link</label>
                             <input type="text" class="form-control @error('gmaps_link') is-invalid
                             @enderror" id="gmaps_link" name="gmaps_link" value="{{ old('gmaps_link') }}">

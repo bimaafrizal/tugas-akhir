@@ -27,6 +27,7 @@ class StoreEwsRequest extends FormRequest
             'name' => ['required', 'max:255', 'min:5'],
             'province_id' => ['required'],
             'regency_id' => ['required'],
+            'standard_id' => ['required'],
             'detail' => ['nullable', 'max:255', 'min:5'],
             'api_url' => ['required', 'max:255', 'min:5'],
             'api_key' => ['nullable', 'max:255'],
