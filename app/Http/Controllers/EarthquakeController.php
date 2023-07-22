@@ -34,11 +34,25 @@ class EarthquakeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $gempa = Earthquake::orderBy('id', 'desc')->first();
         $gempas = Earthquake::orderBy('id', 'desc')->take(30)->get();
-        return view('pages.dashboard2.earthquake.index', compact('gempa', 'gempas'));
+        $search = false;
+        $tanggal_mulai = null;
+        $tanggal_akhir = null;
+        if ($request->tanggal_mulai != null && $request->tanggal_akhir != null) {
+            $tanggal_mulai = $request->tanggal_mulai;
+            $tanggal_akhir = $request->tanggal_akhir;
+
+            $gempas = Earthquake::where('created_at', '>=', $tanggal_mulai)->where('created_at', '<=', $tanggal_akhir)->orderBy('id', 'desc')->get();
+            if ($tanggal_mulai > $tanggal_akhir) {
+                $gempas = Earthquake::where('created_at', '>=', $tanggal_akhir)->where('created_at', '<=', $tanggal_mulai)->orderBy('id', 'desc')->get();
+            }
+            $search = true;
+        }
+
+        return view('pages.dashboard2.earthquake.index', compact('gempa', 'gempas', 'search', 'tanggal_mulai', 'tanggal_akhir'));
     }
 
     /**

@@ -42,7 +42,10 @@ Register
                             <div class="text-center mt-2">
                                 <h5 class="text-primary">Create New Account</h5>
                             </div>
-                            <div class="p-2 mt-4">
+                            <div class="text-center">
+                                <small class="text-danger">Gunakan device yang sama untuk verifikasi email</small>
+                            </div>
+                            <div class="p-2 mt-2">
                                 <form class="needs-validation" novalidate action="/register" method="POST">
                                     @csrf
                                     <div class="mb-3">

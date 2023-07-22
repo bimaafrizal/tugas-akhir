@@ -20,8 +20,8 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
-        $floodThisYear = Flood::where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->get();
+        $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->orderBy('id', 'desc')->get();
+        $floodThisYear = Flood::where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->orderBy('id', 'desc')->get();
         $total = count($earthquakeThisYear) + count($floodThisYear);
         $countEarthquake = count($earthquakeThisYear);
         $countFlood =  count($floodThisYear);
@@ -58,7 +58,6 @@ class DashboardController extends Controller
             $earthquakeThisYear = Earthquake::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->whereRaw('SUBSTRING(created_at, 6, 2) = ?', [$month])->get();
             $floodThisYear = Flood::whereDate('created_at', '>=', Carbon::now()->startOfYear())->whereDate('created_at', '<=', Carbon::now()->endOfYear())->whereRaw('SUBSTRING(created_at, 6, 2) = ?', [$month])->where('level', 1)->orWhere('level', 2)->orWhere('level', 3)->get();
         }
-
 
         if ($user->role_id == 1) {
             $cuaca = null;

@@ -53,7 +53,8 @@ Gempa
                             <div class="d-flex justify-content-start m-2">
                                 <div class="mx-1 mt-2">
                                     <br>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid" class="btn btn-success">Download Semua Data</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid"
+                                        class="btn btn-success">Download Data</button>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
@@ -76,6 +77,43 @@ Gempa
                 <div class="col-12 mt-3">
                     <div class="card">
                         <div class="card-body">
+                            <div class="mb-5">
+                                @if ($search)
+                                @if ($tanggal_mulai > $tanggal_akhir)
+                                <h4>Daftar Gempa Pada Tanggal {{ $tanggal_akhir }} Sampai {{ $tanggal_mulai }}</h4>
+                                @else
+                                <h4>Daftar Gempa Pada Tanggal {{ $tanggal_mulai }} Sampai {{ $tanggal_akhir }}</h4>
+                                @endif
+                                @else
+                                <h4>Daftar 30 Gempa Terbaru</h4>
+                                @endif
+                                <div class="d-flex justify-content-end">
+                                    <div class="col-6">
+                                        <form action="" method="GET">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label for="firstName" class="form-label">Tanggal Mulai</label>
+                                                    <input type="date" class="form-control" data-provider="flatpickr"
+                                                        data-date-format="d M, Y" id="firstDate" name="tanggal_mulai">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="firstName" class="form-label">Tanggal Akhir</label>
+                                                    <input type="date" class="form-control" data-provider="flatpickr"
+                                                        data-date-format="d M, Y" id="firstDate" name="tanggal_akhir">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="d-flex justify-content-end mb-2">
+                                                        <button type="submit"
+                                                            class="btn btn-primary mt-2">Filter</button>
+                                                    </div>
+                                                </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                             <table id="myTable"
                                 class="table table-bordered dt-responsive nowrap table-striped align-middle"
                                 style="width:100%">
@@ -100,7 +138,8 @@ Gempa
                                         <td>{{ $data->strength }}</td>
                                         <td>{{ $data->depth }}</td>
                                         <td>
-                                            <a href="{{ route('earthquake.show', ['id' => Crypt::encrypt($data->id)]) }}" class="btn btn-secondary">Detail</a>
+                                            <a href="{{ route('earthquake.show', ['id' => Crypt::encrypt($data->id)]) }}"
+                                                class="btn btn-secondary">Detail</a>
                                         </td>
                                     </tr>
                                     @endforeach

@@ -262,6 +262,7 @@ Dashboard
                                         <th data-ordering="false">No.</th>
                                         <th data-ordering="false">Jenis</th>
                                         <th>Lokasi</th>
+                                        <th>Detail Lokasi</th>
                                         <th>Kedalaman</th>
                                         <th>Kekuatan</th>
                                         <th>Level</th>
@@ -276,6 +277,7 @@ Dashboard
                                         <td>{{ $no++ }}</td>
                                         <td>Gempa</td>
                                         <td>{{ $item->latitude }}, {{ $item->longitude }}</td>
+                                        <td>{{ $item->location != null ? $item->location : '-' }}</td>
                                         <td>{{ $item->depth }}</td>
                                         <td>{{ $item->strength }}</td>
                                         <td>-</td>
@@ -293,6 +295,7 @@ Dashboard
                                         <td>{{ $no++ }}</td>
                                         <td>Banjir</td>
                                         <td>{{ $item->ews->name }}</td>
+                                        <td>{{ $item->ews->regency->name }},{{ $item->ews->province->name }}</td>
                                         <td>-</td>
                                         <td>-</td>
                                         @if ($item->level == 1)
