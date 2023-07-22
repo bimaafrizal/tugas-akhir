@@ -269,7 +269,18 @@ EWS
                                 second: 'numeric'
                             });
 
-                            label += ' - ' + formattedDate;
+                            if(value == 0){
+                                value = "normal";
+                            } else if(value == 1){
+                                value = "siaga";
+                            } else if(value == 2){
+                                value = "waspada";
+                            } else if(value == 3){
+                                value = "awas";
+                            }
+
+                            label = "";
+                            label += 'level: '+ value +' - ' + formattedDate;
                             return label;
                         }
                     }

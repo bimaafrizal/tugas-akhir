@@ -83,7 +83,7 @@ EWS
         @endcan
         <div class="mx-1">
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">Download Semua
-                Data</button>
+                Data EWS</button>
         </div>
     </div>
     @if (session()->has('success'))

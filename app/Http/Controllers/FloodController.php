@@ -33,6 +33,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -408,27 +409,50 @@ class FloodController extends Controller
         }
 
         $spreadsheet = new Spreadsheet();
-
         $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Nama EWS');
-        $sheet->setCellValue('C1', 'Lokasi');
-        $sheet->setCellValue('D1', 'Level');
-        $sheet->setCellValue('E1', 'Created At');
+        if (Auth::user()->role_id == 1) {
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Nama EWS');
+            $sheet->setCellValue('C1', 'Lokasi');
+            $sheet->setCellValue('D1', 'Level');
+            $sheet->setCellValue('E1', 'Created At');
 
-        $row = 2;
-        $number = 1;
+            $row = 2;
+            $number = 1;
 
-        foreach ($data as $item) {
-            $sheet->setCellValue('A' . $row, $number);
-            $sheet->setCellValue('B' . $row, $item->ews->name);
-            $sheet->setCellValue('C' . $row, $item->ews->regency->name . ',' . $item->ews->province->name);
-            $sheet->setCellValue('D' . $row, $item->level);
-            $sheet->setCellValue('E' . $row, $item->created_at);
-            $row++;
-            $number++;
+            foreach ($data as $item) {
+                $sheet->setCellValue('A' . $row, $number);
+                $sheet->setCellValue('B' . $row, $item->ews->name);
+                $sheet->setCellValue('C' . $row, $item->ews->regency->name . ',' . $item->ews->province->name);
+                $sheet->setCellValue('D' . $row, $item->level);
+                $sheet->setCellValue('E' . $row, $item->created_at);
+                $row++;
+                $number++;
+            }
+        } else {
+            $sheet->setCellValue('A1', 'No');
+            $sheet->setCellValue('B1', 'Nama EWS');
+            $sheet->setCellValue('C1', 'Lokasi');
+            $sheet->setCellValue('D1', 'Level');
+            $sheet->setCellValue('D1', 'Resume');
+            $sheet->setCellValue('E1', 'Created At');
+
+            $row = 2;
+            $number = 1;
+
+            foreach ($data as $item) {
+                $sheet->setCellValue('A' . $row, $number);
+                $sheet->setCellValue('B' . $row, $item->ews->name);
+                $sheet->setCellValue('C' . $row, $item->ews->regency->name . ',' . $item->ews->province->name);
+                $sheet->setCellValue('D' . $row, $item->level);
+                $sheet->setCellValue('D' . $row, $item->resume);
+                $sheet->setCellValue('E' . $row, $item->created_at);
+                $row++;
+                $number++;
+            }
         }
+
 
         $writer = new Xlsx($spreadsheet);
 
