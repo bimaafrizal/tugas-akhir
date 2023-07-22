@@ -374,11 +374,8 @@ class FloodController extends Controller
             echo $e;
         }
         $floods = Flood::where('ews_id', $decrypted)->orderBy('id', 'desc')->take(30)->get();
-        $labels = $floods->pluck('created_at');
-        // $labels = substr($label, strpos($label, 'T') + 1, -1);
-        $data = $floods->pluck('level');
 
-        return response()->json(compact('labels', 'data'));
+        return response()->json($floods);
     }
 
     public function downloadData($id, Request $request)

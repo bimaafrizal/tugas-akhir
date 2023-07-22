@@ -51,15 +51,18 @@ EWS
                     {{-- {{ dd(gettype($flood)) }} --}}
                     @if ($flood != "[]")
                     <h5>Level Ketinggian Air:
-                        <?php if($flood[0]->level == 0) { ?>
-                        Normal
-                        <?php } else if($flood[0]->level == 1) { ?>
-                        Waspada
-                        <?php} else if($flood[0]->level == 2) { ?>
-                        Siaga
-                        <?php } else { ?>
-                        Awas
-                        <?php } ?>
+                        @if ($flood[0]->level == 0)
+                            Normal
+                        @endif
+                        @if ($flood[0]->level == 1)
+                            Siaga
+                        @endif
+                        @if ($flood[0]->level == 2)
+                            Waspada
+                        @endif
+                        @if ($flood[0]->level == 3)
+                            Awas
+                        @endif
                     </h5>
                     @else
                     <h5>Level Ketinggian Air: -
@@ -207,19 +210,72 @@ EWS
             datasets: [{
                 label: 'Level',
                 data: [],
-                borderWidth: 1
+                borderWidth: 1,
+                fill: false,
             }]
         },
         options: {
-      scales: {
-        xAxes: [],
-        yAxes: [{
-          ticks: {
-            beginAtZero:true
-          }
-        }]
-      }
-    }
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Status',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    min: 0,
+                    max: 3,
+                    ticks: {
+                        font: {
+                            size: 12
+                        },
+                        callback: function(value, index, values) {
+                            if(value === 0) {
+                                return 'Normal';
+                            } else if(value === 1) {
+                                return 'Siaga';
+                            } else if(value === 2) {
+                                return 'Waspada';
+                            } else if(value === 3) {
+                                return 'Awas';
+                            }
+                        }
+                    },
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)',
+                        lineWidth: 1,
+                    }
+                },
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let value = context.parsed.y || 0;
+                            let index = context.dataIndex;
+                            let data = context.dataset.data;
+                            let created_at_data = context.dataset.created_at_data;
+                            let created_at = created_at_data[index];
+
+                            let formattedDate = new Date(created_at).toLocaleDateString('id-ID', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                second: 'numeric'
+                            });
+
+                            label += ' - ' + formattedDate;
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
     });
 
     var updateChart = function () {
@@ -236,11 +292,23 @@ EWS
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (data) {
-                // console.log(data);
-                myChart.data.labels = data.labels;
-                myChart.data.datasets[0].data = data.data;
-                myChart.update();
+                const level = data.map(item => item.level);
+                const lastValue = level[0];
 
+                let datasetColor = 'blue';
+                if(lastValue === 1) {
+                    datasetColor = 'yellow';
+                } else if(lastValue === 2) {
+                    datasetColor = 'orange';
+                } else if(lastValue === 3) {
+                    datasetColor = 'red';
+                }
+
+                myChart.data.labels = Array.from({ length: level.length }, (_, index) => index + 1);
+                myChart.data.datasets[0].data = level;
+                myChart.data.datasets[0].created_at_data = data.map(item => item.created_at);
+                myChart.data.datasets[0].backgroundColor = datasetColor;
+                myChart.update();
             },
             error: function (data) {
                 console.log(data);
@@ -251,7 +319,7 @@ EWS
     updateChart();
     setInterval(() => {
         updateChart();
-    }, 100);
+    }, 1000);
 </script>
 
 <script>
