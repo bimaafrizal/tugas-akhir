@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('collaborations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('landing_page_id');
             $table->string('title');
             $table->string('logo');
             $table->timestamps();

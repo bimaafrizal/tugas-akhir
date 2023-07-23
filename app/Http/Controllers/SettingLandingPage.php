@@ -105,6 +105,7 @@ class SettingLandingPage extends Controller
             'body' => 'required|min:10|max:250',
             'logo' => 'required',
         ]);
+        $validateRequest['landing_page_id'] = 1;
 
         Feature::create($validateRequest);
         return redirect(route('landing-page.index'))->with('success', 'Berhasil menambah data fitur');
@@ -124,6 +125,7 @@ class SettingLandingPage extends Controller
             'body' => 'required|min:10|max:250',
             'logo' => 'required',
         ]);
+        $validateRequest['landing_page_id'] = 1;
 
         $idDecrypt = decrypt($id);
         $data = Feature::where('id', $idDecrypt)->first();
@@ -149,10 +151,10 @@ class SettingLandingPage extends Controller
             'title' => 'required|min:3|max:255',
             'logo' => 'required|file|image|mimes:jpg,jpeg,png|max:50000',
         ]);
+        $validateRequest['landing_page_id'] = 1;
 
         $validateRequest['logo'] = $this->uploadImage(null, $request->file('logo'));
         Collaboration::create($validateRequest);
-
 
         return redirect(route('landing-page.index'))->with('success', 'Berhasil menambah data instansi');
     }
@@ -168,6 +170,7 @@ class SettingLandingPage extends Controller
             'title' => 'required|min:3|max:255',
             'logo' => 'file|image|mimes:jpg,jpeg,png|max:50000',
         ]);
+        $validateRequest['landing_page_id'] = 1;
         $idDecrypt = decrypt($id);
         $data = Collaboration::where('id', $idDecrypt)->first();
 
