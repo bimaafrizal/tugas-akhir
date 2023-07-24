@@ -90,7 +90,7 @@ class FloodController extends Controller
         $arrIdEwsLast = [];
         foreach ($lastDataEws as $data) {
             if ($data != null) {
-                array_push($arrIdEwsLast, $data->id);
+                array_push($arrIdEwsLast, $data->ews_id);
             }
         }
 
@@ -194,26 +194,25 @@ class FloodController extends Controller
             }
         }
 
+        $result3 = [];
+        // $result3 = $convertLevel;
+        // check if any new level
+        foreach ($convertLevel as $value) {
+            if (in_array($value['ews_id'], $arrIdEwsLast)) {
+                $lastData = $lastDataEws[array_search($value['ews_id'], array_column($lastDataEws, 'ews_id'))];
+                if ($lastData->level != $value['level']) {
+                    array_push($result3, $value);
+                }
+            } else if ($value['level'] != 0) {
+                array_push($result3, $value);
+            }
+        }
+
         //insert to flood table
         $promise3 =  new Promise();
         $insertFlood = new TestingInsertFlood($convertLevel, $promise3);
         dispatch($insertFlood);
         $floodData = $insertFlood->getResult();
-
-        $result3 = [];
-        $result3 = $convertLevel;
-
-        // check if any new level
-        // foreach ($convertLevel as $value) {
-        //     if (in_array($value['ews_id'], $arrIdEwsLast)) {
-        //         $lastData =  Flood::where('ews_id', $value['ews_id'])->first();
-        //         if ($lastData->level != $value['level']) {
-        //             array_push($result3, $value);
-        //         }
-        //     } else if ($value['level'] != 0) {
-        //         array_push($result3, $value);
-        //     }
-        // }
 
         //get users where longitude & latitude not null
         $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
@@ -224,7 +223,6 @@ class FloodController extends Controller
                 ['setting_disasters.status', '=', '1'],
             ],
         )->whereNotNull('users.longitude')->whereNotNull('users.latitude')->get();
-
 
         //get longitude latitude of ews
         $dataEWS = [];
