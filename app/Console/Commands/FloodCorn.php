@@ -58,7 +58,7 @@ class FloodCorn extends Command
         $arrIdEwsLast = [];
         foreach ($lastDataEws as $data) {
             if ($data != null) {
-                array_push($arrIdEwsLast, $data->id);
+                array_push($arrIdEwsLast, $data->ews_id);
             }
         }
 
@@ -144,18 +144,11 @@ class FloodCorn extends Command
             }
         }
 
-        //insert to flood table
-        $promise3 =  new Promise();
-        $insertFlood = new InsertFlood($convertLevel, $promise3);
-        dispatch($insertFlood);
-        $floodData = $insertFlood->getResult();
-
         $result3 = [];
-
         //check if any new level
         foreach ($convertLevel as $value) {
             if (in_array($value['ews_id'], $arrIdEwsLast)) {
-                $lastData =  Flood::where('ews_id', $value['ews_id'])->first();
+                $lastData = $lastDataEws[array_search($value['ews_id'], array_column($lastDataEws, 'ews_id'))];
                 if ($lastData->level != $value['level']) {
                     array_push($result3, $value);
                 }
@@ -163,6 +156,13 @@ class FloodCorn extends Command
                 array_push($result3, $value);
             }
         }
+
+        //insert to flood table
+        $promise3 =  new Promise();
+        $insertFlood = new InsertFlood($convertLevel, $promise3);
+        dispatch($insertFlood);
+        $floodData = $insertFlood->getResult();
+
 
         //get users where longitude & latitude not null
         $users = User::join('setting_disasters', 'users.id', '=', 'setting_disasters.user_id')->where(
