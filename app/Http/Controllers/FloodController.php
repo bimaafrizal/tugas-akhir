@@ -116,18 +116,18 @@ class FloodController extends Controller
             }
         }
 
-        // $cobaObj = new stdClass();
-        // $cobaObj->standard_id = 1;
+        $cobaObj = new stdClass();
+        $cobaObj->standard_id = 2;
 
-        // $cobaObj2 = new stdClass();
-        // $cobaObj2->field1 = 0;
+        $cobaObj2 = new stdClass();
+        $cobaObj2->field1 = 3;
         // $cobaObj2->field2 = 1;
         // $cobaObj2->field3 = 1;
-        // $cobaObj2->created_at = date("Y-m-d\TH:i:s\Z", strtotime(Carbon::now()));
-        // $results2[1] = [
-        //     'ews' => $cobaObj,
-        //     'data' => $cobaObj2
-        // ];
+        $cobaObj2->created_at = date("Y-m-d\TH:i:s\Z", strtotime(Carbon::now()));
+        $results2[4] = [
+            'ews' => $cobaObj,
+            'data' => $cobaObj2
+        ];
 
         //convert to level
         $convertLevel = [];
@@ -193,6 +193,8 @@ class FloodController extends Controller
                 array_push($convertLevel, $arrTemp);
             }
         }
+
+        dd($convertLevel);
 
         $result3 = [];
         // $result3 = $convertLevel;

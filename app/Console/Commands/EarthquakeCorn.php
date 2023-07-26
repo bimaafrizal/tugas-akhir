@@ -165,6 +165,8 @@ class EarthquakeCorn extends Command
             dispatch($sendEmail);
             dispatch($sendWa);
             dispatch($insertNotification);
+
+            // return true;
             $this->info('Berhasil menambahkan data gempa');
         }
     }

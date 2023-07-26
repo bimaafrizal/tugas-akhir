@@ -37,6 +37,7 @@ class WeatherController extends Controller
                 'user' => $user
             ]);
         }
+        // dd($usersWeatherData);
 
         $promise1 = new Promise();
         $sendEmail = new TestingWeatherEmailNotification($usersWeatherData, $promise1);
